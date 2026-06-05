@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 48781252}
   - component: {fileID: 48781253}
+  - component: {fileID: 48781254}
   m_Layer: 5
   m_Name: GameObject (2)
   m_TagString: Untagged
@@ -167,6 +168,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb1a86cfcbcc2842acd0a6ccc41d564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkStartPosition
+--- !u!114 &48781254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 48781251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a2939577d0c59479e75ce5b640c9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUIAnchor
+  SlotIndex: 2
 --- !u!1 &165833601
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,6 +226,7 @@ GameObject:
   m_Component:
   - component: {fileID: 407669033}
   - component: {fileID: 407669034}
+  - component: {fileID: 407669035}
   m_Layer: 5
   m_Name: GameObject (3)
   m_TagString: Untagged
@@ -250,6 +265,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb1a86cfcbcc2842acd0a6ccc41d564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkStartPosition
+--- !u!114 &407669035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407669032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a2939577d0c59479e75ce5b640c9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUIAnchor
+  SlotIndex: 3
 --- !u!1 &459144546
 GameObject:
   m_ObjectHideFlags: 0
@@ -827,6 +855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1730424168}
   - component: {fileID: 1730424169}
+  - component: {fileID: 1730424170}
   m_Layer: 5
   m_Name: GameObject
   m_TagString: Untagged
@@ -865,6 +894,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb1a86cfcbcc2842acd0a6ccc41d564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkStartPosition
+--- !u!114 &1730424170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730424167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a2939577d0c59479e75ce5b640c9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUIAnchor
+  SlotIndex: 0
 --- !u!1 &1871748309
 GameObject:
   m_ObjectHideFlags: 0
@@ -875,6 +917,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1871748310}
   - component: {fileID: 1871748311}
+  - component: {fileID: 1871748312}
   m_Layer: 5
   m_Name: GameObject (1)
   m_TagString: Untagged
@@ -913,6 +956,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb1a86cfcbcc2842acd0a6ccc41d564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkStartPosition
+--- !u!114 &1871748312
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1871748309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a2939577d0c59479e75ce5b640c9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUIAnchor
+  SlotIndex: 1
 --- !u!1 &1994383989
 GameObject:
   m_ObjectHideFlags: 0
@@ -999,6 +1055,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2084474961}
   - component: {fileID: 2084474962}
+  - component: {fileID: 2084474963}
   m_Layer: 5
   m_Name: GameObject (4)
   m_TagString: Untagged
@@ -1037,6 +1094,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb1a86cfcbcc2842acd0a6ccc41d564, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NetworkStartPosition
+--- !u!114 &2084474963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2084474960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6a2939577d0c59479e75ce5b640c9ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerUIAnchor
+  SlotIndex: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -79,3 +79,5 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   PlayerName: Unknown
+  isReady: 0
+  uiOffset: {x: 0, y: 0}

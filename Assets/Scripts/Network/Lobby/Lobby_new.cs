@@ -185,8 +185,8 @@ public class NetworkManagerLobby : NetworkManager
         for (int i = 0; i < playerConnections.Count; i++)
         {
             var conn = playerConnections[i];
-            if (conn == null) continue;
 
+            if (conn == null) continue;
             if (!conn.isReady) continue;
 
             Transform startPos = startPositions.Length > 0
@@ -195,13 +195,19 @@ public class NetworkManagerLobby : NetworkManager
 
             GameObject gamePlayer;
 
+            Vector3 uiPosition = Vector3.zero;
+
             if (startPos != null)
             {
+                uiPosition = startPos.position;
+
                 Vector3 spawnPosition = startPos.position + new Vector3(0, 25f, 0);
+
                 gamePlayer = Instantiate(playerPrefab, spawnPosition, startPos.rotation);
                 gamePlayer.transform.localScale = Vector3.one;
 
                 NetworkGamePlayer netPlayer = gamePlayer.GetComponent<NetworkGamePlayer>();
+
                 if (netPlayer != null)
                 {
                     foreach (var player in RoomPlayers)
@@ -218,9 +224,21 @@ public class NetworkManagerLobby : NetworkManager
             {
                 gamePlayer = Instantiate(playerPrefab);
                 gamePlayer.transform.localScale = Vector3.one;
+
+                uiPosition = gamePlayer.transform.position;
             }
 
-            NetworkServer.ReplacePlayerForConnection(conn, gamePlayer, ReplacePlayerOptions.KeepAuthority);
+            NetworkServer.ReplacePlayerForConnection(
+                conn,
+                gamePlayer,
+                ReplacePlayerOptions.KeepAuthority
+            );
+            NetworkGamePlayer spawnedPlayer = gamePlayer.GetComponent<NetworkGamePlayer>();
+
+            if (spawnedPlayer != null)
+            {
+                spawnedPlayer.ServerSetSlotIndex(i);
+            }
         }
 
         playerConnections.Clear();
