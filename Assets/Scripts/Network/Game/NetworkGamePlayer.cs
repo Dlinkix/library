@@ -17,7 +17,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     [Header("UI")]
     [SerializeField] private Vector2 uiOffset = Vector2.zero;
-
+    
     private GameObject uiObject;
     private RectTransform uiRect;
     private bool uiCreated = false;
