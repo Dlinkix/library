@@ -14,29 +14,235 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DataGame
   allenemyData: []
   allCards:
-  - lightCost: 0
+  - cardId: 1
+    cardName: Ember Cut
+    lightCost: 1
+    cardSprite: {fileID: -3715471705655931315, guid: ee7f0f584198a8f4a9f6d2474fa7e4cc, type: 3}
     attacks:
-    - attackName: 
-      RollMin: 0
-      RollMax: 0
-      staggerDamage: 0
-      attackDuration: 0
-      onHitEffects:
-      - type: 0
+    - attackName: Ember Slash
+      RollMin: 2
+      RollMax: 5
+      staggerDamage: 1
+      attackDuration: 1
+      onHitEffects: []
+      attackSound: {fileID: 0}
+    passiveActions:
+    - effectType: 14
+      value: 1
+      statusToApply:
+        type: 12
         intensity: 0
         duration: 0
         canStack: 0
         maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Gain 1 Strength this scene.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 2
+    cardName: Scorch Drive
+    lightCost: 2
+    cardSprite: {fileID: 2476480219918378237, guid: 628e12a469f758d4a93382c407b49e01, type: 3}
+    attacks:
+    - attackName: Blazing Drive
+      RollMin: 3
+      RollMax: 7
+      staggerDamage: 2
+      attackDuration: 1
+      onHitEffects:
+      - type: 5
+        intensity: 1
+        duration: 1
+        canStack: 1
+        maxStack: 3
       attackSound: {fileID: 0}
-    - attackName: 
-      RollMin: 0
-      RollMax: 0
-      staggerDamage: 0
-      attackDuration: 0
-      onHitEffects: []
-      attackSound: {fileID: 0}
-    cardName: 
-    cardSprite: {fileID: 0}
     passiveActions: []
     endOfTurnEffects: []
     onDiscardEffects: []
+  - cardId: 3
+    cardName: Flash Notes
+    lightCost: 1
+    cardSprite: {fileID: -7418382926054524929, guid: 8702263a578bdef4baf4a039adc21a38, type: 3}
+    attacks: []
+    passiveActions:
+    - effectType: 4
+      value: 1
+      statusToApply:
+        type: 0
+        intensity: 0
+        duration: 0
+        canStack: 0
+        maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Draw 1 card.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 4
+    cardName: Quiet Barrier
+    lightCost: 1
+    cardSprite: {fileID: -2984177655028594761, guid: 525018fdc4aded54895dbbb29d12b21f, type: 3}
+    attacks:
+    - attackName: Shield Bash
+      RollMin: 1
+      RollMax: 4
+      staggerDamage: 3
+      attackDuration: 1
+      onHitEffects: []
+      attackSound: {fileID: 0}
+    passiveActions:
+    - effectType: 10
+      value: 2
+      statusToApply:
+        type: 9
+        intensity: 0
+        duration: 0
+        canStack: 0
+        maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Gain 2 Protection.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 5
+    cardName: Lantern Mend
+    lightCost: 2
+    cardSprite: {fileID: -8155942866807174169, guid: dbf97f5da493c1846826c4c305b846e3, type: 3}
+    attacks: []
+    passiveActions:
+    - effectType: 6
+      value: 4
+      statusToApply:
+        type: 0
+        intensity: 0
+        duration: 0
+        canStack: 0
+        maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Heal 4 HP.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 6
+    cardName: Violet Knot
+    lightCost: 1
+    cardSprite: {fileID: -6560209596134947786, guid: fc4e6985d08be664f84188134879393b, type: 3}
+    attacks:
+    - attackName: Snare Lash
+      RollMin: 2
+      RollMax: 4
+      staggerDamage: 1
+      attackDuration: 1
+      onHitEffects:
+      - type: 13
+        intensity: 1
+        duration: 1
+        canStack: 1
+        maxStack: 3
+      attackSound: {fileID: 0}
+    passiveActions: []
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 7
+    cardName: Burning Margin
+    lightCost: 1
+    cardSprite: {fileID: -3715471705655931315, guid: ee7f0f584198a8f4a9f6d2474fa7e4cc, type: 3}
+    attacks:
+    - attackName: Margin Burn
+      RollMin: 1
+      RollMax: 5
+      staggerDamage: 2
+      attackDuration: 1
+      onHitEffects:
+      - type: 5
+        intensity: 1
+        duration: 2
+        canStack: 1
+        maxStack: 3
+      attackSound: {fileID: 0}
+    passiveActions: []
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 8
+    cardName: Flame Advance
+    lightCost: 2
+    cardSprite: {fileID: 2476480219918378237, guid: 628e12a469f758d4a93382c407b49e01, type: 3}
+    attacks:
+    - attackName: Arc Step
+      RollMin: 4
+      RollMax: 6
+      staggerDamage: 2
+      attackDuration: 1
+      onHitEffects: []
+      attackSound: {fileID: 0}
+    passiveActions:
+    - effectType: 5
+      value: 1
+      statusToApply:
+        type: 0
+        intensity: 0
+        duration: 0
+        canStack: 0
+        maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Gain 1 Light.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 9
+    cardName: Library Echo
+    lightCost: 0
+    cardSprite: {fileID: -7418382926054524929, guid: 8702263a578bdef4baf4a039adc21a38, type: 3}
+    attacks: []
+    passiveActions:
+    - effectType: 2
+      value: 1
+      statusToApply:
+        type: 0
+        intensity: 0
+        duration: 0
+        canStack: 0
+        maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Copy the last card drawn.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  - cardId: 10
+    cardName: Pale Wall
+    lightCost: 1
+    cardSprite: {fileID: -2984177655028594761, guid: 525018fdc4aded54895dbbb29d12b21f, type: 3}
+    attacks: []
+    passiveActions:
+    - effectType: 11
+      value: 2
+      statusToApply:
+        type: 10
+        intensity: 0
+        duration: 0
+        canStack: 0
+        maxStack: 0
+      onPlay: 1
+      onDiscard: 0
+      onDraw: 0
+      customDescription: Gain 2 Stagger Protection.
+    endOfTurnEffects: []
+    onDiscardEffects: []
+  startPlayerPoolCardIds:
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10

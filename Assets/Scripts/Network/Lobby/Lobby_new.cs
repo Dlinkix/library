@@ -241,6 +241,7 @@ public class NetworkManagerLobby : NetworkManager
             if (spawnedPlayer != null)
             {
                 spawnedPlayer.ServerSetSlotIndex(i);
+                spawnedPlayer.PrepareStartingHand();
             }
         }
        

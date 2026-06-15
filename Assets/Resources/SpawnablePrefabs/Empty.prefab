@@ -81,3 +81,5 @@ MonoBehaviour:
   PlayerName: Unknown
   isReady: 0
   uiOffset: {x: 0, y: 0}
+  dataGame: {fileID: 11400000, guid: b6cf575015377b540a2471c5f6b256f4, type: 2}
+  cardsToDrawAfterReadyCycle: 1

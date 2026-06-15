@@ -1,11 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "DataGame", menuName = "Game/Game Data")]
 public class DataGame : ScriptableObject
 {
-    #region enemy
     [System.Serializable]
     public class EnemyData
     {
@@ -15,45 +13,58 @@ public class DataGame : ScriptableObject
         public int damage = 10;
         public Color color = Color.red;
     }
-    #endregion
 
-    #region card
-
-    [System.Serializable] 
+    [System.Serializable]
     public class CardData
     {
+        public int cardId;
+        public string cardName;
         public int lightCost;
-
-        [Header("Атаки карты")]
+        public Sprite cardSprite;
         public AttackData[] attacks;
-
-        public string cardName;  // переименовал с Name на cardName (чтобы не путать)
-
-        [Header("Визуал")]
-        public Sprite cardSprite;  // Image нельзя хранить в SO, используй Sprite
-
-        [Header("Пассивные эффекты при розыгрыше")]
         public PassiveAction[] passiveActions;
-
-        [Header("Эффекты в конце хода")]
         public StatusEffect[] endOfTurnEffects;
-
-        [Header("Эффекты при сбросе")]
         public PassiveAction[] onDiscardEffects;
+
+        public string GetShortDescription()
+        {
+            if (passiveActions != null)
+            {
+                for (int i = 0; i < passiveActions.Length; i++)
+                {
+                    PassiveAction action = passiveActions[i];
+                    if (action != null)
+                    {
+                        return action.GetDescription();
+                    }
+                }
+            }
+
+            if (attacks != null)
+            {
+                for (int i = 0; i < attacks.Length; i++)
+                {
+                    AttackData attack = attacks[i];
+                    if (attack != null)
+                    {
+                        return $"{attack.attackName} {attack.RollMin}-{attack.RollMax}";
+                    }
+                }
+            }
+
+            return "No effect";
+        }
     }
 
     [System.Serializable]
     public class AttackData
     {
-        public string attackName = "Обычная атака";
+        public string attackName = "Basic Strike";
         public int RollMin;
         public int RollMax;
         public int staggerDamage;
         public float attackDuration = 1f;
-
-        [Header("Эффекты от атаки")]
         public StatusEffect[] onHitEffects;
-
         public AudioClip attackSound;
     }
 
@@ -61,74 +72,72 @@ public class DataGame : ScriptableObject
     public class PassiveAction
     {
         public PassiveEffectType effectType;
-
-        [Header("Параметры для разных эффектов")]
         public int value = 1;
         public StatusEffect statusToApply;
         public bool onPlay = true;
         public bool onDiscard = false;
         public bool onDraw = false;
-
-        [TextArea(2, 3)]
-        public string customDescription;
+        [TextArea(2, 3)] public string customDescription;
 
         public string GetDescription()
         {
             if (!string.IsNullOrEmpty(customDescription))
+            {
                 return customDescription;
+            }
 
             switch (effectType)
             {
                 case PassiveEffectType.DrawCard:
-                    return $"Вытянуть {value} карт(у)";
+                    return $"Draw {value}";
                 case PassiveEffectType.GainLight:
-                    return $"Получить {value} света";
+                    return $"Gain {value} Light";
                 case PassiveEffectType.HealPlayer:
-                    return $"Восстановить {value} HP";
+                    return $"Heal {value}";
                 case PassiveEffectType.ReduceCardCost:
-                    return $"Следующая карта стоит на {value} меньше";
+                    return $"Next card costs {value} less";
                 case PassiveEffectType.CopyCard:
-                    return "Скопировать карту";
+                    return "Copy a card";
                 case PassiveEffectType.Discard:
-                    return $"Сбросить {value} карт(у)";
+                    return $"Discard {value}";
                 case PassiveEffectType.Burn:
-                    return $"Наложить Горение ({value} урона в конце сцены)";
+                    return $"Burn {value}";
                 case PassiveEffectType.Paralysis:
-                    return $"Наложить Паралич (до {value} кубов теряют 3 к макс. значения)";
+                    return $"Paralysis {value}";
                 case PassiveEffectType.Bleed:
-                    return $"Наложить Кровотечение ({value} урона при атаке)";
+                    return $"Bleed {value}";
                 case PassiveEffectType.Fairy:
-                    return $"Наложить Фею ({value} урона при броске куба)";
+                    return $"Fairy {value}";
                 case PassiveEffectType.Protection:
-                    return $"Наложить Защиту (-{value} к получаемому урону)";
+                    return $"Protection {value}";
                 case PassiveEffectType.StaggerProtection:
-                    return $"Наложить Защиту стаггера (-{value} к стаггер урону)";
+                    return $"Stagger Protection {value}";
                 case PassiveEffectType.Fragile:
-                    return $"Наложить Хрупкость (+{value} к получаемому урону)";
+                    return $"Fragile {value}";
                 case PassiveEffectType.Strength:
-                    return $"Наложить Силу (+{value} к атакующим кубам)";
+                    return $"Strength {value}";
                 case PassiveEffectType.Feeble:
-                    return $"Наложить Слабость (-{value} к атакующим кубам)";
+                    return $"Feeble {value}";
                 case PassiveEffectType.Endurance:
-                    return $"Наложить Выносливость (+{value} к защитным кубам)";
+                    return $"Endurance {value}";
                 case PassiveEffectType.Disarm:
-                    return $"Наложить Обезоруживание (-{value} к защитным кубам)";
+                    return $"Disarm {value}";
                 case PassiveEffectType.Haste:
-                    return $"Наложить Ускорение (+{value} к скорости)";
+                    return $"Haste {value}";
                 case PassiveEffectType.Bind:
-                    return $"Наложить Связывание (-{value} к скорости)";
+                    return $"Bind {value}";
                 case PassiveEffectType.NullifyPower:
-                    return "Наложить Аннулирование силы (игнорирует эффекты силы)";
+                    return "Nullify Power";
                 case PassiveEffectType.Immobilized:
-                    return "Наложить Обездвиживание (не может действовать)";
+                    return "Immobilized";
                 case PassiveEffectType.Charge:
-                    return $"Получить {value} Заряда(ов)";
+                    return $"Charge {value}";
                 case PassiveEffectType.Smoke:
-                    return $"Наложить Дым ({value}%, +5% урона за стек)";
+                    return $"Smoke {value}";
                 case PassiveEffectType.Persistence:
-                    return $"Наложить Стойкость ({value}% шанс воскреснуть)";
+                    return $"Persistence {value}";
                 case PassiveEffectType.Erosion:
-                    return $"Наложить Эрозию ({value} урона в конце сцены и при попадании)";
+                    return $"Erosion {value}";
                 default:
                     return effectType.ToString();
             }
@@ -204,11 +213,120 @@ public class DataGame : ScriptableObject
         public int maxStack;
     }
 
-    #endregion
-
     [Header("Enemy Data")]
     public List<EnemyData> allenemyData = new List<EnemyData>();
 
     [Header("All Cards")]
     public List<CardData> allCards = new List<CardData>();
+
+    [Header("Starter Player Pool")]
+    [SerializeField] private List<int> startPlayerPoolCardIds = new List<int>();
+
+    private Dictionary<int, CardData> cardLookup;
+
+    public IReadOnlyList<int> GetStartPlayerPoolCardIds()
+    {
+        if (startPlayerPoolCardIds != null && startPlayerPoolCardIds.Count > 0)
+        {
+            return startPlayerPoolCardIds;
+        }
+
+        List<int> fallbackIds = new List<int>();
+        for (int i = 0; i < allCards.Count && fallbackIds.Count < 10; i++)
+        {
+            CardData card = allCards[i];
+            if (card != null)
+            {
+                fallbackIds.Add(card.cardId);
+            }
+        }
+
+        return fallbackIds;
+    }
+
+    public bool TryGetCardById(int cardId, out CardData cardData)
+    {
+        BuildLookupIfNeeded();
+        return cardLookup.TryGetValue(cardId, out cardData);
+    }
+
+    public CardData GetCardById(int cardId)
+    {
+        TryGetCardById(cardId, out CardData cardData);
+        return cardData;
+    }
+
+    private void OnValidate()
+    {
+        EnsureCardIds();
+        BuildLookupIfNeeded(true);
+
+        if ((startPlayerPoolCardIds == null || startPlayerPoolCardIds.Count == 0) && allCards.Count > 0)
+        {
+            startPlayerPoolCardIds = new List<int>();
+            for (int i = 0; i < allCards.Count && startPlayerPoolCardIds.Count < 10; i++)
+            {
+                CardData card = allCards[i];
+                if (card != null)
+                {
+                    startPlayerPoolCardIds.Add(card.cardId);
+                }
+            }
+        }
+    }
+
+    private void EnsureCardIds()
+    {
+        HashSet<int> usedIds = new HashSet<int>();
+        int nextId = 1;
+
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            CardData card = allCards[i];
+            if (card == null)
+            {
+                continue;
+            }
+
+            if (card.cardId <= 0 || usedIds.Contains(card.cardId))
+            {
+                while (usedIds.Contains(nextId))
+                {
+                    nextId++;
+                }
+
+                card.cardId = nextId;
+            }
+
+            usedIds.Add(card.cardId);
+
+            if (card.cardId >= nextId)
+            {
+                nextId = card.cardId + 1;
+            }
+        }
+    }
+
+    private void BuildLookupIfNeeded(bool forceRebuild = false)
+    {
+        if (cardLookup != null && !forceRebuild)
+        {
+            return;
+        }
+
+        cardLookup = new Dictionary<int, CardData>();
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            CardData card = allCards[i];
+            if (card == null || card.cardId <= 0)
+            {
+                continue;
+            }
+
+            if (!cardLookup.ContainsKey(card.cardId))
+            {
+                cardLookup.Add(card.cardId, card);
+            }
+        }
+    }
 }
