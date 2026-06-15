@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 public class NetworkGamePlayer : NetworkBehaviour
 {
@@ -11,6 +12,18 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnReadyChanged))]
     public bool isReady = false;
+
+    [SyncVar(hook = nameof(OnHpChanged))]
+    public int hp;
+
+    [SyncVar(hook = nameof(OnHpChanged))]
+    public int Maxhp = 40;
+
+    [SyncVar(hook = nameof(OnHpChanged))]
+    public int stagger;
+
+    [SyncVar(hook = nameof(OnHpChanged))]
+    public int Maxstagger = 16;
 
     [SyncVar(hook = nameof(OnSlotIndexChanged))]
     private int slotIndex = -1;
@@ -21,7 +34,12 @@ public class NetworkGamePlayer : NetworkBehaviour
     private GameObject uiObject;
     private RectTransform uiRect;
     private bool uiCreated = false;
-
+    private Slider hpSlider;
+    private Slider staggerSlider;
+    float percentHp;
+    float percentStagger;
+    private TMP_Text HpText;
+    private TMP_Text staggerText;
     private TMP_Text rollText;
     private Button readyButton;
     private bool isShowingRollResult = false;
@@ -32,8 +50,8 @@ public class NetworkGamePlayer : NetworkBehaviour
     public override void OnStartServer(){
         if (!AllPlayers.Contains(this))
             AllPlayers.Add(this);
-
-     
+        hp = Maxhp;
+        stagger = Maxstagger;
     }
 
     public override void OnStartClient()
@@ -74,32 +92,66 @@ public class NetworkGamePlayer : NetworkBehaviour
         UpdateReadyText();
     }
 
+    private void OnHpChanged(int  oldValue, int newValue)
+    {
+        UpdateHpView();
+    }
     private void CreateUI()
     {
         if (uiCreated) return;
 
         GameObject uiPrefab = Resources.Load<GameObject>("UI/PlayerUI");
-
         Canvas canvas = FindFirstObjectByType<Canvas>();
 
         uiObject = Instantiate(uiPrefab);
         uiObject.transform.SetParent(canvas.transform, false);
 
         uiRect = uiObject.GetComponent<RectTransform>();
-
         if (uiRect == null)
         {
             Destroy(uiObject);
             return;
         }
 
-        rollText = uiObject.transform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+        Transform rollTextTransform = uiObject.transform.Find("Text (TMP)");
+        if (rollTextTransform != null)
+            rollText = rollTextTransform.GetComponent<TMP_Text>();
 
-        if (rollText == null)
-            rollText = uiObject.GetComponentInChildren<TMP_Text>();
+        Transform hpTextTransform = uiObject.transform.Find("HpText");
+        if (hpTextTransform != null)
+            HpText = hpTextTransform.GetComponent<TMP_Text>();
+
+        Transform staggerTextTransform = uiObject.transform.Find("StaggerText");
+        if (staggerTextTransform != null)
+            staggerText = staggerTextTransform.GetComponent<TMP_Text>();  
+
+  
+        Transform sliderhpTransform = uiObject.transform.Find("HpSlider");
+        if (sliderhpTransform != null)
+        {
+            hpSlider = sliderhpTransform.GetComponent<Slider>();
+            if (hpSlider != null)
+            {
+                hpSlider.minValue = 0;
+                hpSlider.maxValue = 100;
+                hpSlider.wholeNumbers = true;
+            }
+        }
+
+
+        Transform sliderstaggerTransform = uiObject.transform.Find("StaggerSlider");
+        if (sliderstaggerTransform != null)
+        {
+            staggerSlider = sliderstaggerTransform.GetComponent<Slider>();
+            if (staggerSlider != null) 
+            {
+                staggerSlider.minValue = 0;
+                staggerSlider.maxValue = 100;
+                staggerSlider.wholeNumbers = true;
+            }
+        }
 
         readyButton = uiObject.transform.Find("ReadyButton")?.GetComponent<Button>();
-
         if (readyButton != null)
         {
             readyButton.onClick.RemoveAllListeners();
@@ -109,6 +161,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         uiCreated = true;
 
         SetupUIForLocalOrRemotePlayer();
+        UpdateHpView();
         UpdateReadyText();
         ApplyUIPositionBySlot();
 
@@ -180,6 +233,24 @@ public class NetworkGamePlayer : NetworkBehaviour
                 : $"{PlayerName}: не готов";
         }
     }
+    private void UpdateHpView() { 
+        if (HpText == null || staggerText == null) { return; }
+
+
+        HpText.text = $"{hp}";
+        staggerText.text = $"{stagger}";
+
+
+        percentHp = (hp / Maxhp) * hpSlider.maxValue;
+        //
+        hpSlider.value = percentHp;
+
+        percentStagger = (stagger / Maxstagger) * staggerSlider.maxValue;
+
+        staggerSlider.value = percentStagger;
+
+
+    }
 
     private void OnReadyButtonClick()
     {
@@ -244,7 +315,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         isShowingRollResult = true;
 
-        rollText.text = $"{playerName} выбросил: {roll}";
+        rollText.text = $"{playerName}: {roll}";
 
         CancelInvoke(nameof(ClearRollText));
         Invoke(nameof(ClearRollText), 3f);

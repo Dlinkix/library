@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class NetworkManagerLobby : NetworkManager
 {
+
     [SerializeField] private int minPlayers = 1;
     [Scene][SerializeField] private string menuScene = string.Empty;
     [Scene][SerializeField] private string gameScene = string.Empty;
@@ -16,6 +17,8 @@ public class NetworkManagerLobby : NetworkManager
     public static event System.Action OnClientDisconnected;
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
+
+    #region zalupa
 
     public override void OnStartServer()
     {
@@ -143,7 +146,7 @@ public class NetworkManagerLobby : NetworkManager
 
         base.ServerChangeScene(newSceneName);
     }
-
+    //
     public override void OnServerSceneChanged(string sceneName)
     {
         string sceneNameOnly = System.IO.Path.GetFileNameWithoutExtension(sceneName);
@@ -240,7 +243,9 @@ public class NetworkManagerLobby : NetworkManager
                 spawnedPlayer.ServerSetSlotIndex(i);
             }
         }
-
+       
         playerConnections.Clear();
     }
+
+    #endregion
 }
