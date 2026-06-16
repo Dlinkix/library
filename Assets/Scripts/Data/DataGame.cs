@@ -265,6 +265,63 @@ public class DataGame : ScriptableObject
         return fallbackIds;
     }
 
+    public PlayerData GetPlayerData(int index = 0)
+    {
+        if (playerData == null || index < 0 || index >= playerData.Count)
+        {
+            return null;
+        }
+
+        return playerData[index];
+    }
+
+    public List<int> GetPlayerCardIds(int index = 0)
+    {
+        List<int> cardIds = new List<int>();
+        PlayerData selectedPlayerData = GetPlayerData(index);
+        if (selectedPlayerData == null || selectedPlayerData.cardPlayer == null)
+        {
+            return cardIds;
+        }
+
+        for (int i = 0; i < selectedPlayerData.cardPlayer.Count; i++)
+        {
+            CardData card = selectedPlayerData.cardPlayer[i];
+            if (card == null || card.cardId <= 0)
+            {
+                continue;
+            }
+
+            cardIds.Add(card.cardId);
+        }
+
+        return cardIds;
+    }
+
+    public int GetRandomAllCardId()
+    {
+        List<int> validCardIds = new List<int>();
+
+        for (int i = 0; i < allCards.Count; i++)
+        {
+            CardData card = allCards[i];
+            if (card == null || card.cardId <= 0)
+            {
+                continue;
+            }
+
+            validCardIds.Add(card.cardId);
+        }
+
+        if (validCardIds.Count == 0)
+        {
+            return -1;
+        }
+
+        int randomIndex = Random.Range(0, validCardIds.Count);
+        return validCardIds[randomIndex];
+    }
+
     public bool TryGetCardById(int cardId, out CardData cardData)
     {
         BuildLookupIfNeeded();

@@ -38,6 +38,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     private readonly List<int> playerDeck = new List<int>();
     private readonly List<int> playerHand = new List<int>();
     private readonly List<int> localHandCardIds = new List<int>();
+    private DataGame.PlayerData activePlayerData;
 
     private GameObject uiObject;
     private RectTransform uiRect;
@@ -64,8 +65,7 @@ public class NetworkGamePlayer : NetworkBehaviour
             AllPlayers.Add(this);
         }
 
-        hp = Maxhp;
-        stagger = Maxstagger;
+        ApplyPlayerStatsFromData();
         InitializeCardState();
     }
 
@@ -95,6 +95,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     public void InitializeCardState()
     {
         EnsureDataGameReference();
+        activePlayerData = GetActivePlayerData();
 
         playerPool.Clear();
         playerDeck.Clear();
@@ -107,10 +108,33 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        IReadOnlyList<int> startPoolIds = dataGame.GetStartPlayerPoolCardIds();
-        for (int i = 0; i < startPoolIds.Count; i++)
+        if (activePlayerData == null)
         {
-            playerPool.Add(startPoolIds[i]);
+            Debug.LogWarning($"Player data is missing in DataGame for {name}. Cards will not initialize.");
+            SyncHandToOwner();
+            return;
+        }
+
+        List<int> configuredCardIds = dataGame.GetPlayerCardIds();
+        if (configuredCardIds.Count == 0)
+        {
+            Debug.LogWarning($"Player data for {name} does not contain any valid cards. Cards will not initialize.");
+            SyncHandToOwner();
+            return;
+        }
+
+        int deckLimit = Mathf.Max(0, activePlayerData.dekaPlayer);
+        if (configuredCardIds.Count > deckLimit && deckLimit > 0)
+        {
+            Debug.LogWarning($"Player data for {name} contains more cards ({configuredCardIds.Count}) than dekaPlayer ({deckLimit}). Extra cards will be ignored.");
+        }
+
+        int cardsToUse = deckLimit > 0 ? Mathf.Min(configuredCardIds.Count, deckLimit) : 0;
+        for (int i = 0; i < cardsToUse; i++)
+        {
+            int cardId = configuredCardIds[i];
+            playerPool.Add(cardId);
+            playerDeck.Add(cardId);
         }
 
         SyncHandToOwner();
@@ -119,6 +143,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Server]
     public void PrepareStartingHand()
     {
+        ApplyPlayerStatsFromData();
         InitializeCardState();
         DrawCardFromDeck(startingHandSize);
     }
@@ -126,21 +151,35 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Server]
     public void AddRandomCardFromPoolToDeck()
     {
-        if (playerPool.Count == 0)
+        EnsureDataGameReference();
+
+        if (dataGame == null)
         {
             return;
         }
 
-        int randomIndex = Random.Range(0, playerPool.Count);
-        int cardId = playerPool[randomIndex];
+        int cardId = dataGame.GetRandomAllCardId();
+        if (cardId <= 0)
+        {
+            Debug.LogWarning($"AllCards does not contain a valid random card for {name}.");
+            return;
+        }
+
         playerDeck.Add(cardId);
     }
 
     [Server]
     public void DrawCardFromDeck(int count = 1)
     {
+        int maxCardsInHand = GetMaxCardsInHand();
+
         for (int i = 0; i < count; i++)
         {
+            if (playerHand.Count >= maxCardsInHand)
+            {
+                break;
+            }
+
             if (playerDeck.Count == 0)
             {
                 AddRandomCardFromPoolToDeck();
@@ -403,7 +442,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         for (int i = 0; i < AllPlayers.Count; i++)
         {
             NetworkGamePlayer player = AllPlayers[i];
-            int roll = Random.Range(1, 7);
+            int roll = player.GetRollValue();
             player.RpcShowRollResult(roll, player.PlayerName);
         }
 
@@ -671,6 +710,69 @@ public class NetworkGamePlayer : NetworkBehaviour
         {
             dataGame = loadedData[0];
         }
+    }
+
+    [Server]
+    private void ApplyPlayerStatsFromData()
+    {
+        EnsureDataGameReference();
+        activePlayerData = GetActivePlayerData();
+
+        if (activePlayerData == null)
+        {
+            Debug.LogWarning($"Player data is missing in DataGame for {name}. Using current stat defaults.");
+            hp = Maxhp;
+            stagger = Maxstagger;
+            return;
+        }
+
+        Maxhp = activePlayerData.maxHealth;
+        Maxstagger = activePlayerData.maxStagger;
+        hp = Maxhp;
+        stagger = Maxstagger;
+    }
+
+    private DataGame.PlayerData GetActivePlayerData()
+    {
+        EnsureDataGameReference();
+
+        if (dataGame == null || dataGame.playerData == null || dataGame.playerData.Count == 0)
+        {
+            return null;
+        }
+
+        return dataGame.GetPlayerData();
+    }
+
+    private int GetMaxCardsInHand()
+    {
+        DataGame.PlayerData playerData = activePlayerData ?? GetActivePlayerData();
+        if (playerData == null)
+        {
+            return int.MaxValue;
+        }
+
+        return Mathf.Max(0, playerData.maxCardOnHand);
+    }
+
+    private int GetRollValue()
+    {
+        DataGame.PlayerData playerData = activePlayerData ?? GetActivePlayerData();
+        if (playerData == null)
+        {
+            return 0;
+        }
+
+        int minSpeed = playerData.baseSpeedMin;
+        int maxSpeed = playerData.baseSpeedMax;
+        if (minSpeed > maxSpeed)
+        {
+            int temp = minSpeed;
+            minSpeed = maxSpeed;
+            maxSpeed = temp;
+        }
+
+        return Random.Range(minSpeed, maxSpeed + 1);
     }
 
     public override void OnStopClient()
