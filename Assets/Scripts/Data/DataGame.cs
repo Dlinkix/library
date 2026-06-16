@@ -1,9 +1,27 @@
 using System.Collections.Generic;
+using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "DataGame", menuName = "Game/Game Data")]
 public class DataGame : ScriptableObject
 {
+
+    [System.Serializable]
+    public class PlayerData
+    {
+        public string playerName;
+        public int maxHealth = 40;
+        public int maxStagger = 16;
+        public int baseSpeedMin = 1;
+        public int baseSpeedMax = 4;
+        public int maxCardOnHand = 16;
+        public int dekaPlayer = 10;
+        public int baseStartLight = 3;
+        public List<CardData> cardPlayer = new List<CardData>();
+    }
+
+
+
     [System.Serializable]
     public class EnemyData
     {
@@ -13,6 +31,7 @@ public class DataGame : ScriptableObject
         public int damage = 10;
         public Color color = Color.red;
     }
+
 
     [System.Serializable]
     public class CardData
@@ -212,6 +231,8 @@ public class DataGame : ScriptableObject
         public bool canStack;
         public int maxStack;
     }
+    [Header("Enemy Data")]
+    public List<PlayerData> playerData = new List<PlayerData>();
 
     [Header("Enemy Data")]
     public List<EnemyData> allenemyData = new List<EnemyData>();

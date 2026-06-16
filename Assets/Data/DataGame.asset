@@ -12,6 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce0201b39dbd6e447ae066817db96f46, type: 3}
   m_Name: DataGame
   m_EditorClassIdentifier: Assembly-CSharp::DataGame
+  playerData:
+  - playerName: 
+    maxHealth: 40
+    maxStagger: 16
+    baseSpeedMin: 1
+    baseSpeedMax: 4
+    maxCardOnHand: 15
+    dekaPlayer: 10
+    baseStartLight: 3
+    cardPlayer: []
   allenemyData: []
   allCards:
   - cardId: 1
@@ -235,14 +245,4 @@ MonoBehaviour:
       customDescription: Gain 2 Stagger Protection.
     endOfTurnEffects: []
     onDiscardEffects: []
-  startPlayerPoolCardIds:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
-  - 6
-  - 7
-  - 8
-  - 9
-  - 10
+  startPlayerPoolCardIds: 0100000002000000030000000400000005000000060000000700000008000000090000000a000000
