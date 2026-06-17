@@ -356,7 +356,7 @@ public class DataGame : ScriptableObject
             return 0;
         }
 
-        return Mathf.Clamp(enemyCount, 0, enemyData.Count);
+        return Mathf.Max(0, enemyCount);
     }
 
     public int GetRandomAllCardId()

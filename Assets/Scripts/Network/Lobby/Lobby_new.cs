@@ -293,6 +293,7 @@ public class NetworkManagerLobby : NetworkManager
         for (int i = 0; i < enemyCount; i++)
         {
             EnemySpawnPoint spawnPoint = spawnPoints[i];
+            int enemyDataIndex = i % dataGame.enemyData.Count;
             Quaternion enemyFacingRightRotation = Quaternion.Euler(0f, 180f, 0f);
             GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.transform.position, enemyFacingRightRotation);
             enemyObject.transform.localScale = Vector3.one;
@@ -305,7 +306,7 @@ public class NetworkManagerLobby : NetworkManager
                 continue;
             }
 
-            networkEnemy.InitializeEnemy(i, spawnPoint.SpawnIndex);
+            networkEnemy.InitializeEnemy(enemyDataIndex, spawnPoint.SpawnIndex);
             NetworkServer.Spawn(enemyObject);
         }
     }
