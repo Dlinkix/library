@@ -446,6 +446,8 @@ public class NetworkGamePlayer : NetworkBehaviour
             player.RpcShowRollResult(roll, player.PlayerName);
         }
 
+        NetworkGameEnemy.RunEnemyReadyCycle();
+
         for (int i = 0; i < AllPlayers.Count; i++)
         {
             NetworkGamePlayer player = AllPlayers[i];

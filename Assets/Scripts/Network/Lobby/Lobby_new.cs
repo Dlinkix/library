@@ -244,8 +244,70 @@ public class NetworkManagerLobby : NetworkManager
                 spawnedPlayer.PrepareStartingHand();
             }
         }
+
+        SpawnEnemiesForFightScene();
        
         playerConnections.Clear();
+    }
+
+    [Server]
+    private void SpawnEnemiesForFightScene()
+    {
+        GameObject enemyPrefab = Resources.Load<GameObject>("SpawnablePrefabs/Enemy");
+        if (enemyPrefab == null)
+        {
+            Debug.LogWarning("Enemy prefab was not found in Resources/SpawnablePrefabs.");
+            return;
+        }
+
+        DataGame[] loadedData = Resources.FindObjectsOfTypeAll<DataGame>();
+        if (loadedData == null || loadedData.Length == 0 || loadedData[0] == null)
+        {
+            Debug.LogWarning("DataGame was not found. Enemies will not spawn.");
+            return;
+        }
+
+        DataGame dataGame = loadedData[0];
+        if (dataGame.enemyData == null || dataGame.enemyData.Count == 0)
+        {
+            return;
+        }
+
+        EnemySpawnPoint[] spawnPoints = FindObjectsByType<EnemySpawnPoint>(FindObjectsSortMode.None)
+            .OrderBy(point => point.SpawnIndex)
+            .ToArray();
+
+        if (spawnPoints.Length == 0)
+        {
+            Debug.LogWarning("Enemy spawn points were not found in Fight scene.");
+            return;
+        }
+
+        int configuredEnemyCount = dataGame.GetEnemyCount();
+        int enemyCount = Mathf.Min(configuredEnemyCount, spawnPoints.Length);
+        if (configuredEnemyCount > spawnPoints.Length)
+        {
+            Debug.LogWarning($"Not enough enemy spawn points for all enemies. Spawning {enemyCount} of {configuredEnemyCount}.");
+        }
+
+        for (int i = 0; i < enemyCount; i++)
+        {
+            EnemySpawnPoint spawnPoint = spawnPoints[i];
+            Quaternion enemyFacingRightRotation = Quaternion.Euler(0f, 180f, 0f);
+            GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.transform.position, enemyFacingRightRotation);
+            enemyObject.transform.localScale = Vector3.one;
+
+            NetworkGameEnemy networkEnemy = enemyObject.GetComponent<NetworkGameEnemy>();
+            if (networkEnemy == null)
+            {
+                Destroy(enemyObject);
+                Debug.LogWarning("Enemy prefab does not contain NetworkGameEnemy.");
+                continue;
+            }
+
+            networkEnemy.InitializeEnemy(i, spawnPoint.SpawnIndex);
+            NetworkServer.Spawn(enemyObject);
+        }
     }
 
     #endregion

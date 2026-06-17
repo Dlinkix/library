@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting.ReorderableList;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 [CreateAssetMenu(fileName = "DataGame", menuName = "Game/Game Data")]
 public class DataGame : ScriptableObject
@@ -239,7 +240,9 @@ public class DataGame : ScriptableObject
     public List<PlayerData> playerData = new List<PlayerData>();
 
     [Header("Enemy Data")]
-    public List<EnemyData> allenemyData = new List<EnemyData>();
+    [FormerlySerializedAs("allenemyData")]
+    public List<EnemyData> enemyData = new List<EnemyData>();
+    public int enemyCount = 1;
 
     [Header("All Cards")]
     public List<CardData> allCards = new List<CardData>();
@@ -300,6 +303,60 @@ public class DataGame : ScriptableObject
         }
 
         return cardIds;
+    }
+
+    public EnemyData GetEnemyData(int index = 0)
+    {
+        if (enemyData == null || index < 0 || index >= enemyData.Count)
+        {
+            return null;
+        }
+
+        return enemyData[index];
+    }
+
+    public List<int> GetEnemyCardIds(int index = 0)
+    {
+        List<int> cardIds = new List<int>();
+        EnemyData selectedEnemyData = GetEnemyData(index);
+        if (selectedEnemyData == null || selectedEnemyData.cardPlayer == null)
+        {
+            return cardIds;
+        }
+
+        for (int i = 0; i < selectedEnemyData.cardPlayer.Count; i++)
+        {
+            CardData card = selectedEnemyData.cardPlayer[i];
+            if (card == null || card.cardId <= 0)
+            {
+                continue;
+            }
+
+            cardIds.Add(card.cardId);
+        }
+
+        return cardIds;
+    }
+
+    public int GetEnemyBaseSpeedMax(int index = 0)
+    {
+        EnemyData enemyData = GetEnemyData(index);
+        if (enemyData == null)
+        {
+            return 0;
+        }
+
+        return enemyData.baseSpeedMaxn;
+    }
+
+    public int GetEnemyCount()
+    {
+        if (enemyData == null || enemyData.Count == 0)
+        {
+            return 0;
+        }
+
+        return Mathf.Clamp(enemyCount, 0, enemyData.Count);
     }
 
     public int GetRandomAllCardId()
