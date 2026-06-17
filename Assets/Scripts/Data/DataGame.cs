@@ -27,8 +27,12 @@ public class DataGame : ScriptableObject
     {
         public string enemyName;
         public int maxHealth = 100;
-        public float speed = 5f;
-        public int damage = 10;
+        public int maxStagger = 16;
+        public int baseSpeedMin = 1;
+        public int baseSpeedMaxn = 3;
+        public int dekaPlayer = 10;
+        public int baseStartLight = 3;
+        public List<CardData> cardPlayer = new List<CardData>();
         public Color color = Color.red;
     }
 
