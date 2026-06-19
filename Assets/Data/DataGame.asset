@@ -22,7 +22,44 @@ MonoBehaviour:
     dekaPlayer: 10
     baseStartLight: 3
     cardPlayer: []
-  allenemyData: []
+  enemyData:
+  - enemyName: 
+    maxHealth: 10
+    maxStagger: 1
+    baseSpeedMin: 2
+    baseSpeedMaxn: 4
+    dekaPlayer: 10
+    baseStartLight: 3
+    cardPlayer:
+    - cardId: 1
+      cardName: Ember Cut
+      lightCost: 1
+      cardSprite: {fileID: 0}
+      attacks:
+      - attackName: Ember Slash
+        RollMin: 2
+        RollMax: 5
+        staggerDamage: 1
+        attackDuration: 1
+        onHitEffects: []
+        attackSound: {fileID: 0}
+      passiveActions:
+      - effectType: 14
+        value: 1
+        statusToApply:
+          type: 0
+          intensity: 0
+          duration: 0
+          canStack: 0
+          maxStack: 0
+        onPlay: 1
+        onDiscard: 0
+        onDraw: 0
+        customDescription: 
+      endOfTurnEffects: []
+      onDiscardEffects: []
+    color: {r: 0, g: 0, b: 0, a: 0}
+  enemyCount: 1
   allCards:
   - cardId: 1
     cardName: Ember Cut

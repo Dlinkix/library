@@ -48,6 +48,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     private TMP_Text hpText;
     private TMP_Text staggerText;
     private TMP_Text rollText;
+    private TMP_Text nametext;
     private Button readyButton;
     private bool isShowingRollResult;
 
@@ -263,12 +264,18 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        rollText = uiObject.transform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+        Transform imageTransform = uiObject.transform.Find("Image");
+        if (imageTransform != null)
+        {
+            rollText = imageTransform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+        }
         hpText = uiObject.transform.Find("HpText")?.GetComponent<TMP_Text>();
         staggerText = uiObject.transform.Find("StaggerText")?.GetComponent<TMP_Text>();
         hpSlider = uiObject.transform.Find("HpSlider")?.GetComponent<Slider>();
         staggerSlider = uiObject.transform.Find("StaggerSlider")?.GetComponent<Slider>();
         readyButton = uiObject.transform.Find("ReadyButton")?.GetComponent<Button>();
+        nametext = uiObject.transform.Find("NameText")?.GetComponent<TMP_Text>();
+
 
         if (hpSlider != null)
         {
@@ -351,11 +358,11 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            rollText.text = isReady ? "Waiting for other players..." : "Press SPACE to ready";
+            nametext.text = isReady ? "Waiting for other players..." : "Press SPACE to ready";
         }
         else
         {
-            rollText.text = isReady ? $"{PlayerName}: ready" : $"{PlayerName}: not ready";
+            nametext.text = isReady ? $"{PlayerName}: ready" : $"{PlayerName}: not ready";
         }
     }
 
@@ -479,10 +486,11 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
 
         isShowingRollResult = true;
-        rollText.text = $"{playerName}: {roll}";
+        rollText.text = $"{roll}";
+        nametext.text = $"{playerName}";
 
-        CancelInvoke(nameof(ClearRollText));
-        Invoke(nameof(ClearRollText), 3f);
+        //CancelInvoke(nameof(ClearRollText));
+        //Invoke(nameof(ClearRollText), 3f);
     }
 
     private void ClearRollText()
