@@ -22,60 +22,151 @@ public class UIAimLine : MonoBehaviour
     [SerializeField] private float animationSpeed = 200f;
     [SerializeField] private int blocksForMaxHeight = 5;
 
-    // Закэшированные компоненты
     private Canvas canvas;
     private RectTransform canvasRect;
-    private bool isLocalPlayer;
+    private bool isLocalPlayer = false;
+    private bool isInitialized = false;
+    private bool isDestroyed = false;
     private Sprite squareSprite;
     private float animationOffset;
-
-    // Пул точек (оптимизированный)
+    private NetworkGamePlayer ownerPlayer;
+    private NetworkGameEnemy ownerEnemy;
     private List<RectTransform> dotRects = new List<RectTransform>();
     private List<Image> dotImages = new List<Image>();
     private const int POOL_SIZE = 50;
 
-    // Переиспользуемые массивы (вместо создания новых каждый кадр)
     private Vector2[] basePositions;
     private float[] dotAngles;
     private int currentDotCount;
 
-    // UI элементы
     private GameObject lineContainer;
     private GameObject endIconObject;
     private RectTransform endIconRect;
     private Image endIconImage;
 
-    // Для Raycast (переиспользуемый)
     private List<RaycastResult> raycastResults = new List<RaycastResult>();
     private PointerEventData pointerData;
 
-    // Состояние
     private bool isCardSelected = false;
+
+    public void SetOwner(NetworkGamePlayer player)
+    {
+        ownerPlayer = player;
+        if (ownerPlayer != null)
+        {
+            isLocalPlayer = ownerPlayer.isLocalPlayer;
+            Debug.Log($"UIAimLine: Owner set to {ownerPlayer.PlayerName}, isLocal: {isLocalPlayer}");
+
+            if (!isLocalPlayer)
+            {
+                
+                Destroy(this); 
+                Debug.Log("UIAimLine: Removed component from non-local player UI");
+            }
+            else
+            {
+                InitializeComponents();
+            }
+        }
+    }
+    public void SetOwner(NetworkGameEnemy enemy)
+    {
+        ownerEnemy = enemy;
+        Debug.Log("UIAimLine: Destroyed on enemy UI");
+        Destroy(this); 
+    }
+
+    void Awake()
+    {
+        // Ничего не делаем в Awake - ждем SetOwner
+    }
 
     void Start()
     {
+        // Если владелец не установлен, пробуем найти через GetComponentInParent
+        if (ownerPlayer == null && ownerEnemy == null)
+        {
+            // Пробуем найти NetworkGamePlayer на родительских объектах
+            NetworkGamePlayer player = GetComponentInParent<NetworkGamePlayer>();
+            if (player != null)
+            {
+                ownerPlayer = player;
+                isLocalPlayer = player.isLocalPlayer;
+                Debug.Log($"UIAimLine: Found owner via GetComponentInParent: {player.PlayerName}, isLocal: {isLocalPlayer}");
+
+                if (!isLocalPlayer)
+                {     
+                    Destroy(this);
+                    return;
+                }
+                else
+                {
+                    InitializeComponents();
+                    return;
+                }
+            }
+
+            // Пробуем найти NetworkGameEnemy на родительских объектах
+            NetworkGameEnemy enemy = GetComponentInParent<NetworkGameEnemy>();
+            if (enemy != null)
+            {
+                ownerEnemy = enemy;
+                Debug.Log("UIAimLine: Found enemy via GetComponentInParent, destroying");
+                Destroy(gameObject);
+                return;
+            }
+
+            // Если ничего не нашли - удаляем
+            Debug.Log("UIAimLine: No owner set and not found in parent, destroying");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Если владелец установлен, но это не локальный игрок - удаляем
+        if (!isLocalPlayer)
+        {
+            Debug.Log("UIAimLine: Not local player, destroying");
+            Destroy(gameObject);
+            return;
+        }
+
+        // Если все ок и еще не инициализированы - инициализируем
+        if (!isInitialized)
+        {
+            InitializeComponents();
+        }
+    }
+
+    private void InitializeComponents()
+    {
+        if (isInitialized || isDestroyed) return;
+
         canvas = GetComponentInParent<Canvas>();
         if (canvas == null) canvas = Object.FindFirstObjectByType<Canvas>();
+        if (canvas == null)
+        {
+            Debug.LogError("UIAimLine: No canvas found!");
+            Destroy(gameObject);
+            return;
+        }
+
         canvasRect = canvas.transform as RectTransform;
-
         if (playerRect == null) playerRect = GetComponent<RectTransform>();
-
-        NetworkGamePlayer player = GetComponent<NetworkGamePlayer>();
-        isLocalPlayer = player != null ? player.isLocalPlayer : true;
 
         lineColor = new Color(0.2f, 0.6f, 1f, 1f);
 
-        // Инициализация массивов
         basePositions = new Vector2[POOL_SIZE];
         dotAngles = new float[POOL_SIZE];
 
-        // Инициализация PointerEventData
         pointerData = new PointerEventData(EventSystem.current);
 
         CreateSquareSprite();
         CreateLineContainer();
         CreateEndIcon();
         CreateDotPool(POOL_SIZE);
+
+        isInitialized = true;
+        Debug.Log("UIAimLine: Initialized successfully");
     }
 
     void CreateSquareSprite()
@@ -156,6 +247,8 @@ public class UIAimLine : MonoBehaviour
 
     void Update()
     {
+        if (isDestroyed || !isInitialized) return;
+
         if (!isLocalPlayer)
         {
             if (lineContainer != null) lineContainer.SetActive(false);
@@ -163,7 +256,6 @@ public class UIAimLine : MonoBehaviour
             return;
         }
 
-        // --- ОТСЛЕЖИВАНИЕ КЛИКА ПО КАРТЕ (оптимизировано) ---
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -187,8 +279,8 @@ public class UIAimLine : MonoBehaviour
         if (Input.GetMouseButtonUp(0))
         {
             isCardSelected = false;
-            lineContainer.SetActive(false);
-            endIconObject.SetActive(false);
+            if (lineContainer != null) lineContainer.SetActive(false);
+            if (endIconObject != null) endIconObject.SetActive(false);
             animationOffset = 0f;
         }
 
@@ -196,13 +288,13 @@ public class UIAimLine : MonoBehaviour
         {
             animationOffset += Time.deltaTime * animationSpeed;
             UpdateLine();
-            lineContainer.SetActive(true);
-            endIconObject.SetActive(true);
+            if (lineContainer != null) lineContainer.SetActive(true);
+            if (endIconObject != null) endIconObject.SetActive(true);
         }
-        else if (!isCardSelected || !Input.GetMouseButton(0))
+        else
         {
-            if (lineContainer.activeSelf) lineContainer.SetActive(false);
-            if (endIconObject.activeSelf) endIconObject.SetActive(false);
+            if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
+            if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
         }
     }
 
@@ -214,7 +306,7 @@ public class UIAimLine : MonoBehaviour
 
         Vector2 mousePos;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvasRect, // Используем закэшированный
+            canvasRect,
             Input.mousePosition,
             null,
             out mousePos
@@ -246,17 +338,14 @@ public class UIAimLine : MonoBehaviour
         int dotCount = Mathf.FloorToInt(distance / spacing);
         if (dotCount < 2) dotCount = 2;
 
-        // Ограничиваем размер массивов
         int arraySize = dotCount + 1;
         if (arraySize > basePositions.Length)
         {
-            // Если нужно больше - расширяем
             int newSize = Mathf.Max(arraySize, POOL_SIZE);
             basePositions = new Vector2[newSize];
             dotAngles = new float[newSize];
         }
 
-        // Вычисляем высоту дуги
         float heightProgress = Mathf.Clamp01(dotCount / (float)blocksForMaxHeight);
         float heightMultiplier = heightProgress * heightProgress;
         float currentArcHeight = arcHeight * heightMultiplier;
@@ -279,7 +368,6 @@ public class UIAimLine : MonoBehaviour
         directionMultiplier = Mathf.Clamp(directionMultiplier, 0.15f, 1f);
         currentArcHeight *= directionMultiplier;
 
-        // Заполняем массивы
         Vector2 previousDotPos = startPos;
 
         for (int i = 0; i <= dotCount; i++)
@@ -313,7 +401,6 @@ public class UIAimLine : MonoBehaviour
             previousDotPos = dotPos;
         }
 
-        // Иконка на конце
         float lastAngle = dotAngles[dotCount];
         Vector2 lastDirection = new Vector2(
             Mathf.Cos(lastAngle * Mathf.Deg2Rad),
@@ -321,7 +408,6 @@ public class UIAimLine : MonoBehaviour
         );
         UpdateEndIcon(endPos, lastDirection);
 
-        // Обновляем точки из пула
         int dotsToShow = dotCount + 1;
         float normalizedOffset = animationOffset / distance;
         normalizedOffset = (normalizedOffset % 1f + 1f) % 1f;
@@ -382,6 +468,7 @@ public class UIAimLine : MonoBehaviour
 
     void OnDestroy()
     {
+        isDestroyed = true;
         if (lineContainer != null) Destroy(lineContainer);
         if (endIconObject != null) Destroy(endIconObject);
     }

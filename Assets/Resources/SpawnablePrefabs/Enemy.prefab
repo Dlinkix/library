@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Mirror::Mirror.NetworkIdentity
   sceneId: 0
-  _assetId: 1442387654
+  _assetId: 699911544
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
@@ -79,6 +79,11 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   EnemyName: Enemy
+  hp: 0
+  Maxhp: 100
+  stagger: 0
+  Maxstagger: 16
   uiOffset: {x: 0, y: 0}
   dataGame: {fileID: 11400000, guid: b6cf575015377b540a2471c5f6b256f4, type: 2}
+  startingHandSize: 4
   cardsToDrawAfterReadyCycle: 1

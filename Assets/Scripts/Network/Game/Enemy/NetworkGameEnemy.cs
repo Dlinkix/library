@@ -34,12 +34,14 @@ public class NetworkGameEnemy : NetworkBehaviour
     private readonly List<int> enemyHand = new List<int>();
     private DataGame.EnemyData activeEnemyData;
     private int enemyDataIndex = -1;
-
+    private bool isAimLineRemoved = false;
     private GameObject uiObject;
     private bool uiCreated;
     private Slider hpSlider;
     private Slider staggerSlider;
+    private Image imagechar;
     private TMP_Text hpText;
+    private TMP_Text nametext;
     private TMP_Text staggerText;
     private TMP_Text rollText;
     private Button readyButton;
@@ -70,6 +72,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         ApplyEnemyStatsFromData();
         InitializeCardState();
         DrawCardFromDeck(startingHandSize);
+
     }
 
     [Server]
@@ -90,6 +93,9 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
     }
 
+   
+
+ 
     [Server]
     private void InitializeCardState()
     {
@@ -208,13 +214,29 @@ public class NetworkGameEnemy : NetworkBehaviour
             return;
         }
 
+        
+
         uiObject = Instantiate(uiPrefab, canvas.transform, false);
-        rollText = uiObject.transform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+        Transform imageTransform = uiObject.transform.Find("Image");
+        if (imageTransform != null)
+        {
+            rollText = imageTransform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+        }
+
+        UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
+        if (aimLine != null)
+        {
+            Destroy(aimLine);
+            Debug.Log("UIAimLine removed from enemy UI");
+        }
+        imagechar = uiObject.transform.Find("ImageChar")?.GetComponent<Image>();
+        imagechar.transform.localRotation = Quaternion.Euler(0, 180, 0);
         hpText = uiObject.transform.Find("HpText")?.GetComponent<TMP_Text>();
         staggerText = uiObject.transform.Find("StaggerText")?.GetComponent<TMP_Text>();
         hpSlider = uiObject.transform.Find("HpSlider")?.GetComponent<Slider>();
         staggerSlider = uiObject.transform.Find("StaggerSlider")?.GetComponent<Slider>();
         readyButton = uiObject.transform.Find("ReadyButton")?.GetComponent<Button>();
+        nametext = uiObject.transform.Find("NameText")?.GetComponent<TMP_Text>();
 
         if (hpSlider != null)
         {
@@ -315,17 +337,12 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
 
         isShowingRollResult = true;
-        rollText.text = $"{enemyName}: {roll}";
+        rollText.text = $"{roll}";
+        nametext.text = $"{enemyName}";
 
-        CancelInvoke(nameof(ClearRollText));
-        Invoke(nameof(ClearRollText), 3f);
+
     }
 
-    private void ClearRollText()
-    {
-        isShowingRollResult = false;
-        UpdateStatusText();
-    }
 
     private Canvas FindStatusCanvas()
     {

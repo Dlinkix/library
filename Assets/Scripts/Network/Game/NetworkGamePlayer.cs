@@ -74,6 +74,18 @@ public class NetworkGamePlayer : NetworkBehaviour
     {
         CreateUI();
         ApplyUIPositionBySlot();
+
+        if (!isLocalPlayer)
+        {
+            UIAimLine[] aimLines = FindObjectsByType<UIAimLine>(FindObjectsSortMode.None);
+            foreach (var line in aimLines)
+            {
+                if (line.gameObject.GetComponentInParent<NetworkGamePlayer>() == this)
+                {
+                    Destroy(line.gameObject);
+                }
+            }
+        }
     }
 
     public override void OnStartLocalPlayer()
@@ -255,15 +267,35 @@ public class NetworkGamePlayer : NetworkBehaviour
             Debug.LogWarning("No canvas found for player status UI.");
             return;
         }
-
+        
         uiObject = Instantiate(uiPrefab, canvas.transform, false);
         uiRect = uiObject.GetComponent<RectTransform>();
         if (uiRect == null)
         {
             Destroy(uiObject);
             return;
-        }
 
+        }
+        if (isLocalPlayer)
+        {
+            UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
+            if (aimLine == null)
+            {
+                aimLine = uiObject.AddComponent<UIAimLine>();
+            }
+            // Вызываем SetOwner ДО того как Start() сработает
+            aimLine.SetOwner(this);
+            Debug.Log("UIAimLine added to local player UI");
+        }
+        else
+        {
+            UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
+            if (aimLine != null)
+            {
+                // Для нелокального игрока тоже вызываем SetOwner до Start()
+                aimLine.SetOwner(this);
+            }
+        }
         Transform imageTransform = uiObject.transform.Find("Image");
         if (imageTransform != null)
         {
