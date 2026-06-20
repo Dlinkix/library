@@ -207,17 +207,36 @@ public class NetworkGameEnemy : NetworkBehaviour
             return;
         }
 
-        Canvas canvas = FindStatusCanvas();
-        if (canvas == null)
+        if (spawnIndex < 0)
         {
-            Debug.LogWarning("No canvas found for enemy status UI.");
+            Debug.LogWarning($"Spawn index not set for {EnemyName}, waiting...");
             return;
         }
 
-        
+        EnemySpawnPoint[] spawnPoints = FindObjectsByType<EnemySpawnPoint>(FindObjectsSortMode.None);
+        EnemySpawnPoint targetPoint = null;
+        for (int i = 0; i < spawnPoints.Length; i++)
+        {
+            if (spawnPoints[i].SpawnIndex == spawnIndex)
+            {
+                targetPoint = spawnPoints[i];
+                break;
+            }
+        }
 
-        uiObject = Instantiate(uiPrefab, canvas.transform, false);
-        Transform imageTransform = uiObject.transform.Find("Image");
+        if (targetPoint == null)
+        {
+            Debug.LogWarning($"EnemySpawnPoint with index {spawnIndex} not found for {EnemyName}");
+            return;
+        }
+
+      
+        uiObject = Instantiate(uiPrefab, targetPoint.transform);
+        uiObject.transform.localPosition = Vector3.zero;
+        uiObject.transform.localRotation = Quaternion.identity;
+        uiObject.transform.localScale = Vector3.one;
+
+        Transform imageTransform = uiObject.transform.Find("DiceRoll");
         if (imageTransform != null)
         {
             rollText = imageTransform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
@@ -266,14 +285,19 @@ public class NetworkGameEnemy : NetworkBehaviour
 
     private void ApplyUIPositionBySpawnIndex()
     {
-        if (!uiCreated || uiObject == null || spawnIndex < 0)
+        if (!uiCreated || uiObject == null || spawnIndex < 0) return;
+
+        // Если UI уже дочерний SpawnPoint - просто проверяем позицию
+        if (uiObject.transform.parent != null &&
+            uiObject.transform.parent.GetComponent<EnemySpawnPoint>() != null)
         {
+            uiObject.transform.localPosition = new Vector3(uiOffset.x, uiOffset.y, 0f);
             return;
         }
 
+        // Старая логика
         EnemySpawnPoint[] spawnPoints = FindObjectsByType<EnemySpawnPoint>(FindObjectsSortMode.None);
         EnemySpawnPoint targetPoint = null;
-
         for (int i = 0; i < spawnPoints.Length; i++)
         {
             if (spawnPoints[i].SpawnIndex == spawnIndex)
@@ -283,16 +307,10 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        if (targetPoint == null)
-        {
-            return;
-        }
+        if (targetPoint == null) return;
 
         RectTransform anchorRect = targetPoint.GetComponent<RectTransform>();
-        if (anchorRect == null)
-        {
-            return;
-        }
+        if (anchorRect == null) return;
 
         uiObject.transform.position = anchorRect.position + new Vector3(uiOffset.x, uiOffset.y, 0f);
     }
@@ -329,7 +347,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcShowRollResult(int roll, string enemyName)
+    public void RpcShowRollResult(int roll, string enemyName)
     {
         if (rollText == null)
         {
@@ -406,7 +424,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         return dataGame.GetEnemyData(enemyDataIndex);
     }
 
-    private int GetRollValue()
+    public int GetRollValue()
     {
         DataGame.EnemyData enemyData = activeEnemyData ?? GetActiveEnemyData();
         if (enemyData == null)

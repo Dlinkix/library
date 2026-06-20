@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Mirror;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -27,6 +28,15 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     [SyncVar(hook = nameof(OnSlotIndexChanged))]
     private int slotIndex = -1;
+
+    [SyncVar(hook = nameof(OnDiceRollAmountChanged))]
+    private int DiceRollAmount;
+
+    [SyncVar(hook = nameof(OnHpChanged))]
+    public int currentLight;
+
+    [SyncVar(hook = nameof(OnHpChanged))]
+    public int maxLight;
 
     [Header("UI")]
     [SerializeField] private Vector2 uiOffset = Vector2.zero;
@@ -69,6 +79,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         ApplyPlayerStatsFromData();
         InitializeCardState();
     }
+
 
     public override void OnStartClient()
     {
@@ -226,7 +237,15 @@ public class NetworkGamePlayer : NetworkBehaviour
     {
         ApplyUIPositionBySlot();
     }
+    private void OnDiceRollAmountChanged(int oldValue, int newValue)
+    {
+        UpdateIconDiceRoll();
+    }
 
+    private void OnLightAmountChanged(int oldValue, int newValue)
+    {
+        UpdateIconLight();
+    }
     private void OnPlayerNameChanged(string oldName, string newName)
     {
         UpdateReadyText();
@@ -261,31 +280,48 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        Canvas canvas = FindStatusCanvas();
-        if (canvas == null)
+        if (slotIndex < 0)
         {
-            Debug.LogWarning("No canvas found for player status UI.");
+            Debug.LogWarning($"Slot index not set for {PlayerName}, waiting...");
             return;
         }
-        
-        uiObject = Instantiate(uiPrefab, canvas.transform, false);
+
+        // Находим Anchor по slotIndex
+        PlayerUIAnchor[] anchors = FindObjectsByType<PlayerUIAnchor>(FindObjectsSortMode.None);
+        PlayerUIAnchor targetAnchor = null;
+        for (int i = 0; i < anchors.Length; i++)
+        {
+            if (anchors[i].SlotIndex == slotIndex)
+            {
+                targetAnchor = anchors[i];
+                break;
+            }
+        }
+
+        if (targetAnchor == null)
+        {
+            Debug.LogWarning($"PlayerUIAnchor with slot {slotIndex} not found for {PlayerName}");
+            return;
+        }
+        uiObject = Instantiate(uiPrefab, targetAnchor.transform);
         uiRect = uiObject.GetComponent<RectTransform>();
         if (uiRect == null)
         {
             Destroy(uiObject);
             return;
-
         }
+
+        uiRect.localPosition = new Vector3(uiOffset.x, uiOffset.y, 0f);
+        uiRect.localRotation = Quaternion.identity;
+        uiRect.localScale = Vector3.one;
         if (isLocalPlayer)
         {
             UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
             if (aimLine == null)
             {
                 aimLine = uiObject.AddComponent<UIAimLine>();
-            }
-            // Вызываем SetOwner ДО того как Start() сработает
-            aimLine.SetOwner(this);
-            Debug.Log("UIAimLine added to local player UI");
+            }        
+            aimLine.SetOwner(this, targetAnchor.GetComponent<RectTransform>());
         }
         else
         {
@@ -296,7 +332,7 @@ public class NetworkGamePlayer : NetworkBehaviour
                 aimLine.SetOwner(this);
             }
         }
-        Transform imageTransform = uiObject.transform.Find("Image");
+        Transform imageTransform = uiObject.transform.Find("DiceRoll");
         if (imageTransform != null)
         {
             rollText = imageTransform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
@@ -350,6 +386,21 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void ApplyUIPositionBySlot()
     {
+        // Если UI создан как дочерний Anchor, позиция уже правильная
+        if (uiCreated && uiObject != null && uiObject.transform.parent != null)
+        {
+            // Проверяем, что родитель - PlayerUIAnchor
+            if (uiObject.transform.parent.GetComponent<PlayerUIAnchor>() != null)
+            {
+                // Убеждаемся что локальная позиция нулевая
+                uiObject.transform.localPosition = Vector3.zero;
+                uiObject.transform.localRotation = Quaternion.identity;
+                uiObject.transform.localScale = Vector3.one;
+                return;
+            }
+        }
+
+        // Старая логика на случай, если UI не привязан к Anchor
         if (!uiCreated || uiObject == null || slotIndex < 0)
         {
             return;
@@ -378,6 +429,7 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
+        // Если UI не дочерний - устанавливаем позицию
         uiObject.transform.position = anchorRect.position + new Vector3(uiOffset.x, uiOffset.y, 0f);
     }
 
@@ -398,6 +450,14 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
     }
 
+    private void UpdateIconDiceRoll()
+    {
+
+    }
+    private void UpdateIconLight()
+    {
+
+    }
     private void UpdateHpView()
     {
         if (hpText == null || staggerText == null)
@@ -443,9 +503,36 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Command]
     private void CmdSetPlayerReady()
     {
-        if (!isReady)
+        // Проверяем, не готов ли уже игрок
+        if (isReady)
         {
+            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is already ready!");
+            return;
+        }
+
+        // Проверяем, активен ли бой
+        if (FightManager.Instance != null && FightManager.Instance.IsFightActive)
+        {
+            // Проверяем, можно ли сейчас готовиться (только Waiting и Rolling)
+            if (!FightManager.Instance.CanPlayerReady())
+            {
+                Debug.LogWarning($"[CmdSetPlayerReady] Cannot ready in state: {FightManager.Instance.CurrentState}");
+                return;
+            }
+
+            // Устанавливаем готовность
+            isReady = true;
+
+            // Уведомляем FightManager о готовности игрока
+            FightManager.Instance.PlayerReady(this);
+
+            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in fight! ({FightManager.Instance.GetReadyPlayersCount()}/{FightManager.Instance.GetTotalPlayersCount()})");
+        }
+        else
+        {
+            // Старая логика для лобби (до начала боя)
             SetReady(true);
+            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in lobby!");
         }
     }
 
@@ -510,7 +597,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
 
     [ClientRpc]
-    private void RpcShowRollResult(int roll, string playerName)
+    public void RpcShowRollResult(int roll, string playerName)
     {
         if (rollText == null)
         {
@@ -772,6 +859,9 @@ public class NetworkGamePlayer : NetworkBehaviour
         Maxstagger = activePlayerData.maxStagger;
         hp = Maxhp;
         stagger = Maxstagger;
+        DiceRollAmount = activePlayerData.diceRollPlayer;
+        maxLight = activePlayerData.baseStartLight;
+        currentLight = maxLight;
     }
 
     private DataGame.PlayerData GetActivePlayerData()
@@ -785,7 +875,10 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         return dataGame.GetPlayerData();
     }
-
+    public int GetCardsToDrawAfterReadyCycle()
+    {
+        return cardsToDrawAfterReadyCycle;
+    }
     private int GetMaxCardsInHand()
     {
         DataGame.PlayerData playerData = activePlayerData ?? GetActivePlayerData();
@@ -797,7 +890,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         return Mathf.Max(0, playerData.maxCardOnHand);
     }
 
-    private int GetRollValue()
+    public int GetRollValue()
     {
         DataGame.PlayerData playerData = activePlayerData ?? GetActivePlayerData();
         if (playerData == null)

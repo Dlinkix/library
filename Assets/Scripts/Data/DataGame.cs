@@ -18,6 +18,7 @@ public class DataGame : ScriptableObject
         public int dekaPlayer = 10;
         public int baseStartLight = 3;
         public List<CardData> cardPlayer = new List<CardData>();
+        public int diceRollPlayer;
     }
 
 

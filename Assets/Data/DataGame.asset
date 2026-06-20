@@ -22,6 +22,7 @@ MonoBehaviour:
     dekaPlayer: 10
     baseStartLight: 3
     cardPlayer: []
+    diceRollPlayer: 0
   enemyData:
   - enemyName: 
     maxHealth: 10
@@ -59,7 +60,7 @@ MonoBehaviour:
       endOfTurnEffects: []
       onDiscardEffects: []
     color: {r: 0, g: 0, b: 0, a: 0}
-  enemyCount: 1
+  enemyCount: 5
   allCards:
   - cardId: 1
     cardName: Ember Cut

@@ -100,23 +100,133 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: KeterFloorBattleStage_0
+      name: KeterFloorBattleStage_2
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 700
+        width: 2048
+        height: 452
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: fb1615e4b1effae4d9f7f3e24345088d
+      internalID: -1678621403
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KeterFloorBattleStage_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 584
+        width: 2048
+        height: 114
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3f22af5f275b14543bc4d84d31891adc
+      internalID: -1037761223
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KeterFloorBattleStage_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 534
+        width: 2048
+        height: 49
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1ccf6b9caed15dc449fc3a98b629191f
+      internalID: 1600833864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KeterFloorBattleStage_5
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 490
+        width: 2048
+        height: 43
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 55a29b0801b8d5b4cbdfb0789ee1edfc
+      internalID: -2004623532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KeterFloorBattleStage_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 355
+        width: 2048
+        height: 136
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 604217b0eb4d99d47a5874f222740f3c
+      internalID: -206462711
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: KeterFloorBattleStage_7
       rect:
         serializedVersion: 2
         x: 0
         y: 0
         width: 2048
-        height: 1152
+        height: 355
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
-      tessellationDetail: -1
+      tessellationDetail: 0
       bones: []
-      spriteID: b663e41a0ff3ce770800000000000000
-      internalID: 8641352087748097643
+      spriteID: bfec526145ec51343898a44b05189009
+      internalID: 664173356
       vertices: []
       indices: 
       edges: []
@@ -125,7 +235,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 4a7896ee9cc181242a8ca486b7fc8bd3
     internalID: 0
     vertices: []
     indices: 
@@ -133,9 +243,22 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     spriteCustomMetadata:
-      entries: []
+      entries:
+      - key: SpriteEditor.SliceSettings
+        value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":12.0},"gridSpriteSize":{"x":2048.0,"y":96.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.5},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":0,"spriteAlignment":0,"pivotUnitMode":0,"slicingType":2,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
       KeterFloorBattleStage_0: 8641352087748097643
+      KeterFloorBattleStage_1: 187526807
+      KeterFloorBattleStage_10: 183531817
+      KeterFloorBattleStage_11: -1353316369
+      KeterFloorBattleStage_2: -1678621403
+      KeterFloorBattleStage_3: -1037761223
+      KeterFloorBattleStage_4: 1600833864
+      KeterFloorBattleStage_5: -2004623532
+      KeterFloorBattleStage_6: -206462711
+      KeterFloorBattleStage_7: 664173356
+      KeterFloorBattleStage_8: 128369457
+      KeterFloorBattleStage_9: -769526468
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

@@ -1773,7 +1773,7 @@ GameObject:
   - component: {fileID: 6553676339476425057}
   - component: {fileID: 9177373071259074867}
   m_Layer: 5
-  m_Name: Image
+  m_Name: DiceRoll
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

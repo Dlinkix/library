@@ -89,15 +89,15 @@ public class SceneMovement : MonoBehaviour
         backgroundImage.anchoredPosition = newPos;
 
         // --- оюпюккюйя дкъ днонкмхрекэмшу якнеб ---
+        // --- оюпюккюйя дкъ днонкмхрекэмшу якнеб ---
         if (parallaxLayers != null)
         {
             for (int i = 0; i < parallaxLayers.Length && i < parallaxSpeeds.Length; i++)
             {
                 if (parallaxLayers[i] != null)
                 {
-                    Vector2 layerPos = startPosition;
-                    layerPos.x += currentOffset * parallaxSpeeds[i];
-                    parallaxLayers[i].anchoredPosition = layerPos;
+                    float newX = startPosition.x + currentOffset * parallaxSpeeds[i];
+                    parallaxLayers[i].anchoredPosition = new Vector2(newX, 0f);
                 }
             }
         }

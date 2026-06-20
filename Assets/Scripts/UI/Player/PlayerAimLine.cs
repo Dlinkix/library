@@ -38,7 +38,7 @@ public class UIAimLine : MonoBehaviour
     private Vector2[] basePositions;
     private float[] dotAngles;
     private int currentDotCount;
-
+    private Vector2 uiOffset = Vector2.zero;
     private GameObject lineContainer;
     private GameObject endIconObject;
     private RectTransform endIconRect;
@@ -46,21 +46,28 @@ public class UIAimLine : MonoBehaviour
 
     private List<RaycastResult> raycastResults = new List<RaycastResult>();
     private PointerEventData pointerData;
-
+    private RectTransform anchorRect;
     private bool isCardSelected = false;
 
-    public void SetOwner(NetworkGamePlayer player)
+    public void SetOwner(NetworkGamePlayer player, RectTransform anchor = null)
     {
         ownerPlayer = player;
         if (ownerPlayer != null)
         {
             isLocalPlayer = ownerPlayer.isLocalPlayer;
-            Debug.Log($"UIAimLine: Owner set to {ownerPlayer.PlayerName}, isLocal: {isLocalPlayer}");
+
+            if (anchor != null)
+            {
+                playerRect = anchor; // Anchor, а не UI
+            }
+            else
+            {
+                playerRect = GetComponent<RectTransform>();
+            }
 
             if (!isLocalPlayer)
             {
-                
-                Destroy(this); 
+                Destroy(this);
                 Debug.Log("UIAimLine: Removed component from non-local player UI");
             }
             else
@@ -190,12 +197,13 @@ public class UIAimLine : MonoBehaviour
     void CreateLineContainer()
     {
         lineContainer = new GameObject("AimLineDots", typeof(RectTransform));
-        lineContainer.transform.SetParent(transform.parent, false);
+        lineContainer.transform.SetParent(canvas.transform, false);
 
         RectTransform containerRect = lineContainer.GetComponent<RectTransform>();
         containerRect.anchorMin = new Vector2(0.5f, 0.5f);
         containerRect.anchorMax = new Vector2(0.5f, 0.5f);
         containerRect.pivot = new Vector2(0.5f, 0.5f);
+        containerRect.anchoredPosition = Vector2.zero;
         containerRect.sizeDelta = new Vector2(0, 0);
 
         lineContainer.SetActive(false);
@@ -229,7 +237,7 @@ public class UIAimLine : MonoBehaviour
     void CreateEndIcon()
     {
         endIconObject = new GameObject("EndIcon", typeof(RectTransform));
-        endIconObject.transform.SetParent(transform.parent, false);
+        endIconObject.transform.SetParent(canvas.transform, false);
 
         endIconImage = endIconObject.AddComponent<Image>();
         endIconImage.sprite = endIconSprite;
@@ -302,6 +310,7 @@ public class UIAimLine : MonoBehaviour
     {
         if (lineContainer == null || playerRect == null) return;
 
+        // Ќј„јЋ№Ќјя - от игрока (как работало)
         Vector2 startPos = playerRect.anchoredPosition;
 
         Vector2 mousePos;
@@ -322,6 +331,7 @@ public class UIAimLine : MonoBehaviour
         }
 
         Vector2 endPos = startPos + direction;
+
 
         float minDistance = dotWidth * 2;
 
