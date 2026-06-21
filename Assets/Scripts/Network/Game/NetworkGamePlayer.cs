@@ -79,7 +79,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     public GameObject UIObject => uiObject;
     public List<int> PlayerHand => playerHand;
     public DataGame DataGame => dataGame;
-
+    public bool IsExecutingActions => isExecutingActions;
 
     #region other
     public override void OnStartServer()
@@ -170,10 +170,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void CreateUI()
     {
-        if (uiCreated)
-        {
-            return;
-        }
+        if (uiCreated) return;
 
         GameObject uiPrefab = Resources.Load<GameObject>("UI/PlayerUI");
         if (uiPrefab == null)
@@ -216,23 +213,24 @@ public class NetworkGamePlayer : NetworkBehaviour
         uiRect.localRotation = Quaternion.identity;
         uiRect.localScale = Vector3.one;
 
-        if (isLocalPlayer)
-        {
-            UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
-            if (aimLine == null)
-            {
-                aimLine = uiObject.AddComponent<UIAimLine>();
-            }
-            aimLine.SetOwner(this, targetAnchor.GetComponent<RectTransform>());
-        }
-        else
-        {
-            UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
-            if (aimLine != null)
-            {
-                aimLine.SetOwner(this);
-            }
-        }
+        // ===== УБИРАЕМ СОЗДАНИЕ ЛИНИИ НА UI =====
+        // if (isLocalPlayer)
+        // {
+        //     UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
+        //     if (aimLine == null)
+        //     {
+        //         aimLine = uiObject.AddComponent<UIAimLine>();
+        //     }
+        //     aimLine.SetOwner(this, targetAnchor.GetComponent<RectTransform>());
+        // }
+        // else
+        // {
+        //     UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
+        //     if (aimLine != null)
+        //     {
+        //         aimLine.SetOwner(this);
+        //     }
+        // }
 
         Transform gridTransform = uiObject.transform.Find("GridDice");
         Transform imageDice = gridTransform?.Find("DiceRoll");
@@ -543,7 +541,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void CreateHandCardView(DataGame.CardData cardData, int cardId, int cardIndex, int totalCards)
     {
-        GameObject cardRootObject = new GameObject($"Card_{cardId}", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(LayoutElement));
+        GameObject cardRootObject = new GameObject($"Card_{cardId}_{cardIndex}", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(LayoutElement));
         RectTransform cardRect = cardRootObject.GetComponent<RectTransform>();
         cardRect.SetParent(localHandContentRoot, false);
         cardRect.anchorMin = new Vector2(0f, 0f);
@@ -582,7 +580,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         descText.overflowMode = TextOverflowModes.Ellipsis;
 
         LocalHandCardView hoverView = cardRootObject.AddComponent<LocalHandCardView>();
-        hoverView.Setup(cardRect, layoutElement, descText, cardBackground, cardId, this);
+        hoverView.Setup(cardRect, layoutElement, descText, cardBackground, cardId, cardIndex, this);
     }
 
     private Vector2 GetHandCardPosition(int cardIndex, int totalCards)
@@ -820,9 +818,31 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     [Server]
-    private void ApplyCardFromDice(DiceRoll dice)
+    private void ApplyCardFromDice(NetworkGamePlayer player, DiceRoll dice)
     {
-        if (dice == null || !dice.hasSelection) return;
+        if (player == null || dice == null || !dice.hasSelection)
+        {
+            Debug.Log($"[ApplyCardFromDice] Skip: player={player != null}, dice={dice != null}, hasSelection={dice?.hasSelection}");
+            return;
+        }
+
+        Debug.Log($"[ApplyCardFromDice] Processing dice {dice.ownerSlotIndex}: cardId={dice.selectedCardId}, cardIndex={dice.selectedCardIndex}, target={dice.selectedTargetEnemyNetId}");
+
+        // ===== ПРОВЕРЯЕМ, ЧТО ИНДЕКС КАРТЫ ВАЛИДНЫЙ =====
+        if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
+        {
+            Debug.Log($"[ApplyCardFromDice] Invalid card index {dice.selectedCardIndex}! Hand size: {player.PlayerHand.Count}");
+            dice.ClearSelection();
+            return;
+        }
+
+        // ===== ПРОВЕРЯЕМ, ЧТО ПО ИНДЕКСУ ЛЕЖИТ ТА ЖЕ КАРТА =====
+        if (player.PlayerHand[dice.selectedCardIndex] != dice.selectedCardId)
+        {
+            Debug.Log($"[ApplyCardFromDice] Card at index {dice.selectedCardIndex} is {player.PlayerHand[dice.selectedCardIndex]}, expected {dice.selectedCardId}!");
+            dice.ClearSelection();
+            return;
+        }
 
         // Находим врага по цели
         NetworkGameEnemy targetEnemy = null;
@@ -835,24 +855,60 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
         }
 
-        if (targetEnemy == null) return;
-
-        // Получаем карту
-        if (!dataGame.TryGetCardById(dice.selectedCardId, out CardData card)) return;
-
-        // Применяем карту
-        if (playerHand.Contains(dice.selectedCardId))
+        if (targetEnemy == null)
         {
-            playerHand.Remove(dice.selectedCardId);
-            SyncHandToOwner();
+            Debug.LogWarning($"[ApplyCardFromDice] Target enemy not found for dice {dice.ownerSlotIndex}");
+            dice.ClearSelection();
+            return;
         }
 
-        QueueCardEffects(card, targetEnemy);
+        // Получаем карту
+        if (!dataGame.TryGetCardById(dice.selectedCardId, out CardData card))
+        {
+            Debug.LogWarning($"[ApplyCardFromDice] Card {dice.selectedCardId} not found");
+            dice.ClearSelection();
+            return;
+        }
+
+        // Проверяем Light
+        if (player.currentLight < card.lightCost)
+        {
+            Debug.Log($"[ApplyCardFromDice] Not enough Light! Need {card.lightCost}, have {player.currentLight}");
+            dice.ClearSelection();
+            return;
+        }
+
+        // ===== ЕЩЕ РАЗ ПРОВЕРЯЕМ ПЕРЕД УДАЛЕНИЕМ =====
+        if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
+        {
+            Debug.Log($"[ApplyCardFromDice] Card index {dice.selectedCardIndex} became invalid before removal!");
+            dice.ClearSelection();
+            return;
+        }
+
+        if (player.PlayerHand[dice.selectedCardIndex] != dice.selectedCardId)
+        {
+            Debug.Log($"[ApplyCardFromDice] Card at index {dice.selectedCardIndex} changed before removal!");
+            dice.ClearSelection();
+            return;
+        }
+
+        // Тратим Light
+        player.currentLight -= card.lightCost;
+
+        // ===== УДАЛЯЕМ КАРТУ ПО ИНДЕКСУ =====
+        player.PlayerHand.RemoveAt(dice.selectedCardIndex);
+        player.SyncHandToOwner();
+
+        // Применяем эффекты
+        player.QueueCardEffects(card, targetEnemy);
+
+        Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
     }
 
     [Server]
     public void ServerCreateDiceUI()
-        {
+    {
         if (uiObject == null) return;
 
         Transform gridTransform = uiObject.transform.Find("GridDice");
@@ -877,6 +933,20 @@ public class NetworkGamePlayer : NetworkBehaviour
             GameObject diceObj = Instantiate(dicePrefab, gridTransform);
             DiceRoll dice = diceObj.GetComponent<DiceRoll>();
             dice.SetOwner(this, i);
+
+            // ===== НАХОДИМ UIAimLine НА ПРЕФАБЕ =====
+            UIAimLine aimLine = diceObj.GetComponent<UIAimLine>();
+            if (aimLine != null)
+            {
+                aimLine.SetOwnerDice(dice);
+                dice.SetAimLine(aimLine);
+                // Линия будет скрыта по умолчанию
+            }
+            else
+            {
+                Debug.LogWarning($"[ServerCreateDiceUI] UIAimLine not found on dice {i}!");
+            }
+
             NetworkServer.Spawn(diceObj);
         }
     }

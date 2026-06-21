@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem.LowLevel;
 using static DataGame;
 
 public enum FightState
@@ -94,60 +95,157 @@ public class FightManager : NetworkBehaviour
             StartFight();
         }
     }
+    public class TurnOrderEntry
+    {
+        public DiceRoll dice;
+        public NetworkGamePlayer player;
+        public int speedValue;
+        public int diceIndex;
+    }
 
     #endregion
 
     #region Server Methods
+
+
+    [Server]
+    private List<TurnOrderEntry> GetTurnOrder()
+    {
+        List<TurnOrderEntry> turnOrder = new List<TurnOrderEntry>();
+
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player == null) continue;
+
+            DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+            foreach (var dice in dices)
+            {
+                if (dice != null && dice.hasSelection)
+                {
+                    turnOrder.Add(new TurnOrderEntry
+                    {
+                        dice = dice,
+                        player = player,
+                        speedValue = dice.diceValue, // значение кубика = скорость
+                        diceIndex = dice.ownerSlotIndex
+                    });
+                }
+            }
+        }
+
+        // Сортируем по скорости (по убыванию - кто быстрее, тот ходит первым)
+        turnOrder.Sort((a, b) => {
+            // Сначала сравниваем скорость
+            int speedCompare = b.speedValue.CompareTo(a.speedValue);
+            if (speedCompare != 0) return speedCompare;
+
+            // Если скорости равны - случайный порядок
+            return Random.Range(-1, 2);
+        });
+
+        return turnOrder;
+    }
+
+
+    [Server]
+    private void ClearAllDiceSelections()
+    {
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null)
+            {
+                DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+                foreach (var dice in dices)
+                {
+                    if (dice != null)
+                    {
+                        dice.ClearSelection(); // Очищает ВСЕ данные выбора
+                        Debug.Log($"[ClearAllDiceSelections] Cleared dice {dice.ownerSlotIndex}");
+                    }
+                }
+            }
+        }
+    }
 
     [Server]
     private System.Collections.IEnumerator ExecuteActionPhase()
     {
         Debug.Log("[FightManager] Executing Action phase...");
 
-        foreach (var player in NetworkGamePlayer.AllPlayers)
-        {
-            if (player != null)
-            {
-                // Получаем все кубики игрока
-                DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+        // ===== ПОЛУЧАЕМ ПОРЯДОК ХОДА =====
+        List<TurnOrderEntry> turnOrder = GetTurnOrder();
 
-                foreach (var dice in dices)
-                {
-                    if (dice != null && dice.hasSelection)
-                    {
-                        // Применяем карту с этого кубика
-                        ApplyCardFromDice(player, dice);
-                        // Сбрасываем выбор кубика
-                        dice.ClearSelection();
-                    }
-                }
+        Debug.Log($"[ExecuteActionPhase] Turn order: {turnOrder.Count} entries");
+        foreach (var entry in turnOrder)
+        {
+            Debug.Log($"[ExecuteActionPhase] Dice {entry.diceIndex} (Player {entry.player.PlayerName}) speed: {entry.speedValue}");
+        }
+
+        // ===== ВЫПОЛНЯЕМ ХОДЫ ПО ПОРЯДКУ =====
+        foreach (var entry in turnOrder)
+        {
+            if (entry.dice != null && entry.dice.hasSelection)
+            {
+                ApplyCardFromDice(entry.player, entry.dice);
+                entry.dice.ClearSelection();
             }
             yield return new WaitForSeconds(0.2f);
         }
 
+        // ===== ЖДЕМ ЗАВЕРШЕНИЯ ВСЕХ АТАК =====
+        bool allActionsCompleted = false;
+        while (!allActionsCompleted)
+        {
+            allActionsCompleted = true;
+            foreach (var player in NetworkGamePlayer.AllPlayers)
+            {
+                if (player != null && player.IsExecutingActions)
+                {
+                    allActionsCompleted = false;
+                    break;
+                }
+            }
+            yield return new WaitForSeconds(0.1f);
+        }
 
-        //// ===== ПРИМЕНЯЕМ ДЕЙСТВИЯ ВРАГОВ (AI) =====
-        //foreach (var enemy in NetworkGameEnemy.AllEnemies)
-        //{
-        //    if (enemy != null)
-        //    {
-        //        // ВЫЗЫВАЕМ AI ВРАГА
-        //        enemy.ExecuteAIAction();
-        //        Debug.Log($"[FightManager] Enemy {enemy.EnemyName} AI action executed");
-        //    }
-        //    yield return new WaitForSeconds(0.2f);
-        //}
+        // ===== ОЧИЩАЕМ ТОЛЬКО ПОСЛЕ ВСЕХ АТАК =====
+        ClearAllDiceSelections();
+        RpcClearAllAimLines();
 
         yield return new WaitForSeconds(actionDuration);
         ChangeState(FightState.EndTurn);
         StartCoroutine(ExecuteEndTurnPhase());
     }
+
+
     [Server]
     private void ApplyCardFromDice(NetworkGamePlayer player, DiceRoll dice)
     {
-        if (player == null || dice == null || !dice.hasSelection) return;
+        if (player == null || dice == null || !dice.hasSelection)
+        {
+            Debug.Log($"[ApplyCardFromDice] Skip: player={player != null}, dice={dice != null}, hasSelection={dice?.hasSelection}");
+            return;
+        }
 
-        // Находим врага
+        Debug.Log($"[ApplyCardFromDice] Processing dice {dice.ownerSlotIndex}: cardId={dice.selectedCardId}, cardIndex={dice.selectedCardIndex}, target={dice.selectedTargetEnemyNetId}");
+
+        // ===== ПРОВЕРЯЕМ, ЧТО ИНДЕКС КАРТЫ ВАЛИДНЫЙ =====
+        if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
+        {
+            Debug.Log($"[ApplyCardFromDice] Invalid card index {dice.selectedCardIndex}! Hand size: {player.PlayerHand.Count}");
+            dice.ClearSelection();
+            return;
+        }
+
+        // ===== ПРОВЕРЯЕМ, ЧТО ПО ИНДЕКСУ ЛЕЖИТ ТА ЖЕ КАРТА =====
+        if (player.PlayerHand[dice.selectedCardIndex] != dice.selectedCardId)
+        {
+            Debug.Log($"[ApplyCardFromDice] Card at index {dice.selectedCardIndex} is {player.PlayerHand[dice.selectedCardIndex]}, expected {dice.selectedCardId}!");
+            dice.ClearSelection();
+            return;
+        }
+
+        // Находим врага по цели
         NetworkGameEnemy targetEnemy = null;
         foreach (var enemy in NetworkGameEnemy.AllEnemies)
         {
@@ -161,6 +259,7 @@ public class FightManager : NetworkBehaviour
         if (targetEnemy == null)
         {
             Debug.LogWarning($"[ApplyCardFromDice] Target enemy not found for dice {dice.ownerSlotIndex}");
+            dice.ClearSelection();
             return;
         }
 
@@ -168,32 +267,67 @@ public class FightManager : NetworkBehaviour
         if (!player.DataGame.TryGetCardById(dice.selectedCardId, out CardData card))
         {
             Debug.LogWarning($"[ApplyCardFromDice] Card {dice.selectedCardId} not found");
+            dice.ClearSelection();
             return;
         }
 
         // Проверяем Light
         if (player.currentLight < card.lightCost)
         {
-            Debug.Log($"[ApplyCardFromDice] Not enough Light for card {card.cardName}");
+            Debug.Log($"[ApplyCardFromDice] Not enough Light! Need {card.lightCost}, have {player.currentLight}");
+            dice.ClearSelection();
+            return;
+        }
+
+        // ===== ЕЩЕ РАЗ ПРОВЕРЯЕМ ПЕРЕД УДАЛЕНИЕМ =====
+        if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
+        {
+            Debug.Log($"[ApplyCardFromDice] Card index {dice.selectedCardIndex} became invalid before removal!");
+            dice.ClearSelection();
+            return;
+        }
+
+        if (player.PlayerHand[dice.selectedCardIndex] != dice.selectedCardId)
+        {
+            Debug.Log($"[ApplyCardFromDice] Card at index {dice.selectedCardIndex} changed before removal!");
+            dice.ClearSelection();
             return;
         }
 
         // Тратим Light
         player.currentLight -= card.lightCost;
 
-        // Удаляем карту из руки
-        if (player.PlayerHand.Contains(dice.selectedCardId))
-        {
-            player.PlayerHand.Remove(dice.selectedCardId);
-            player.SyncHandToOwner();
-        }
+        // ===== УДАЛЯЕМ КАРТУ ПО ИНДЕКСУ =====
+        int indexToRemove = dice.selectedCardIndex;
+        player.PlayerHand.RemoveAt(indexToRemove);
+        player.SyncHandToOwner();
+
+        // ===== ОБНОВЛЯЕМ ИНДЕКСЫ У ВСЕХ КУБИКОВ ЭТОГО ИГРОКА =====
+        UpdateDiceCardIndices(player, indexToRemove);
 
         // Применяем эффекты
         player.QueueCardEffects(card, targetEnemy);
 
+        // Сбрасываем выбор кубика после применения
+        dice.ClearSelection();
+
         Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
     }
-
+    [Server]
+    private void UpdateDiceCardIndices(NetworkGamePlayer player, int removedIndex)
+    {
+        // Проходим по всем кубикам игрока
+        DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+        foreach (var d in dices)
+        {
+            if (d != null && d.selectedCardIndex > removedIndex)
+            {
+                // Уменьшаем индекс на 1, так как карта была удалена
+                d.selectedCardIndex--;
+                Debug.Log($"[UpdateDiceCardIndices] Updated dice {d.ownerSlotIndex} index from {d.selectedCardIndex + 1} to {d.selectedCardIndex}");
+            }
+        }
+    }
     [Server]
     public void StartFight()
     {
@@ -234,11 +368,12 @@ public class FightManager : NetworkBehaviour
         {
             RpcPlayRollingSound();
         }
-        if (newState == FightState.Action) {
-            DiceSelectionManager.Instance.ClearSelection();
-        }
+        // ===== УБИРАЕМ ОЧИСТКУ ЗДЕСЬ =====
+        // if (newState == FightState.Action) 
+        // {
+        //     RpcClearAllSelections();
+        // }
         RpcUpdateDiceUI(newState);
-
     }
 
     // ===== Ролл кубиков =====
@@ -463,6 +598,66 @@ public class FightManager : NetworkBehaviour
     #endregion
 
     #region Client Methods
+
+
+    [ClientRpc]
+    private void RpcClearAllSelections()
+    {
+        // Очищаем выборы кубиков
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.isLocalPlayer)
+            {
+                DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+                foreach (var dice in dices)
+                {
+                    if (dice != null)
+                    {
+                        dice.ClearSelection();
+                        UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
+                        if (aimLine != null)
+                        {
+                            aimLine.SetCardSelected(false);
+                            // НЕ ВЫКЛЮЧАЕМ aimLine.gameObject.SetActive(false)! <-- УБЕРИ ЭТО
+                            // aimLine.gameObject.SetActive(false);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Обновляем все карты
+        LocalHandCardView[] cards = FindObjectsByType<LocalHandCardView>(FindObjectsSortMode.None);
+        foreach (var card in cards)
+        {
+            card.UpdateCardState();
+        }
+    }
+
+    [ClientRpc]
+    private void RpcClearAllAimLines()
+    {
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.isLocalPlayer)
+            {
+                DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+                foreach (var dice in dices)
+                {
+                    if (dice != null)
+                    {
+                        UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
+                        if (aimLine != null)
+                        {
+                            aimLine.ClearAimData();
+                            // НЕ ВЫКЛЮЧАЙТЕ aimLine.gameObject.SetActive(false)!
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 
     [ClientRpc]
     private void RpcPlayRollingSound()

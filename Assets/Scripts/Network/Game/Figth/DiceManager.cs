@@ -30,24 +30,21 @@ public class DiceSelectionManager : MonoBehaviour
     {
         if (selectedPlayerDice != null)
         {
+            Debug.Log($"[SelectPlayerDice] Old dice {selectedPlayerDice.ownerSlotIndex}: cardId={selectedPlayerDice.selectedCardId}, target={selectedPlayerDice.selectedTargetEnemyNetId}");
             selectedPlayerDice.SetSelected(false);
         }
 
         selectedPlayerDice = dice;
+        Debug.Log($"[SelectPlayerDice] New dice {dice.ownerSlotIndex}: cardId={dice.selectedCardId}, target={dice.selectedTargetEnemyNetId}");
         selectedPlayerDice.SetSelected(true);
         OnPlayerDiceSelected?.Invoke(dice);
 
-        // ===== НАХОДИМ ЛИНИЮ И УСТАНАВЛИВАЕМ selectedPlayerDice =====
+        // Показываем линию у выбранного кубика
         UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
-        if (aimLine != null)
+        if (aimLine != null && dice.selectedCardId != -1)
         {
-            aimLine.SetPlayerDice(dice);
-            // Если уже есть выбранная карта - показываем линию
-            if (dice.selectedCardId != -1)
-            {
-                aimLine.SetCardSelected(true);
-                aimLine.gameObject.SetActive(true);
-            }
+            aimLine.SetCardSelected(true);
+            // НЕ ВЫКЛЮЧАЕМ aimLine.gameObject.SetActive(true);
         }
 
         UpdateHandVisibilityForAllPlayers();
@@ -75,12 +72,13 @@ public class DiceSelectionManager : MonoBehaviour
         {
             selectedPlayerDice.SetSelected(false);
 
-            // Скрываем линию
             UIAimLine aimLine = selectedPlayerDice.GetComponentInChildren<UIAimLine>();
             if (aimLine != null)
             {
                 aimLine.SetCardSelected(false);
-                aimLine.gameObject.SetActive(false);
+                aimLine.ClearAimData();
+                // НЕ ВЫКЛЮЧАЙ aimLine.gameObject!
+                // aimLine.gameObject.SetActive(false);
             }
 
             selectedPlayerDice = null;

@@ -90,14 +90,17 @@ public class UIAimLine : MonoBehaviour
     public void SetOwnerDice(DiceRoll dice)
     {
         ownerDice = dice;
-        // Находим владельца через кубик
-        NetworkGamePlayer player = dice.GetComponentInParent<NetworkGamePlayer>();
-        if (player != null)
+        isLocalPlayer = true;
+
+        // Если еще не инициализирована - инициализируем
+        if (!isInitialized)
         {
-            SetOwner(player, dice.GetComponent<RectTransform>());
+            InitializeComponents();
         }
+
         Debug.Log($"[UIAimLine] SetOwnerDice for dice {dice.ownerSlotIndex}");
     }
+
 
     public void SetOwner(NetworkGameEnemy enemy)
     {
@@ -135,51 +138,24 @@ public class UIAimLine : MonoBehaviour
 
     void Start()
     {
-        if (ownerPlayer == null && ownerEnemy == null)
+        // Если уже инициализирована через SetOwnerDice - пропускаем
+        if (isInitialized) return;
+
+        // Если есть ownerDice - инициализируем
+        if (ownerDice != null)
         {
-            NetworkGamePlayer player = GetComponentInParent<NetworkGamePlayer>();
-            if (player != null)
+            if (!isLocalPlayer)
             {
-                ownerPlayer = player;
-                isLocalPlayer = player.isLocalPlayer;
-
-                if (!isLocalPlayer)
-                {
-                    Destroy(this);
-                    return;
-                }
-                else
-                {
-                    InitializeComponents();
-                    return;
-                }
-            }
-
-            NetworkGameEnemy enemy = GetComponentInParent<NetworkGameEnemy>();
-            if (enemy != null)
-            {
-                ownerEnemy = enemy;
-                Debug.Log("UIAimLine: Found enemy via GetComponentInParent, destroying");
                 Destroy(gameObject);
                 return;
             }
-
-            Debug.Log("UIAimLine: No owner set and not found in parent, destroying");
-            Destroy(gameObject);
-            return;
-        }
-
-        if (!isLocalPlayer)
-        {
-            Debug.Log("UIAimLine: Not local player, destroying");
-            Destroy(gameObject);
-            return;
-        }
-
-        if (!isInitialized)
-        {
             InitializeComponents();
+            return;
         }
+
+        // Если линия создана как часть префаба, но еще не настроена - ждем
+        // Не уничтожаем, а просто ждем вызова SetOwnerDice
+        Debug.Log("[UIAimLine] Waiting for SetOwnerDice...");
     }
 
     private void InitializeComponents()
@@ -223,9 +199,21 @@ public class UIAimLine : MonoBehaviour
             isTargetSelected = false;
             if (lineContainer != null) lineContainer.SetActive(false);
             if (endIconObject != null) endIconObject.SetActive(false);
+            // НЕ ВЫКЛЮЧАЙ gameObject.SetActive(false)!
         }
     }
-
+    public void ClearAimData()
+    {
+        hasTarget = false;
+        isCardSelected = false;
+        isTargetSelected = false;
+        selectedEnemyDice = null;
+        if (lineContainer != null) lineContainer.SetActive(false);
+        if (endIconObject != null) endIconObject.SetActive(false);
+        animationOffset = 0f;
+        // НЕ ВЫКЛЮЧАЙТЕ gameObject.SetActive(false)!
+        Debug.Log($"[UIAimLine] ClearAimData for dice {ownerDice?.ownerSlotIndex}");
+    }
     void CreateSquareSprite()
     {
         Texture2D texture = new Texture2D(4, 4);
@@ -318,11 +306,34 @@ public class UIAimLine : MonoBehaviour
         {
             isCardSelected = false;
             isTargetSelected = false;
-            if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
-            if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
+            if (lineContainer != null) lineContainer.SetActive(false);
+            if (endIconObject != null) endIconObject.SetActive(false);
             return;
         }
 
+        // Если есть ownerDice - используем его для определения активной линии
+        if (ownerDice != null)
+        {
+            // Показываем линию только если этот кубик выбран
+            DiceRoll selectedDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
+            bool isThisDiceSelected = (selectedDice == ownerDice);
+
+            if (isCardSelected && isThisDiceSelected)
+            {
+                animationOffset += Time.deltaTime * animationSpeed;
+                UpdateLine();
+                if (lineContainer != null) lineContainer.SetActive(true);
+                if (endIconObject != null) endIconObject.SetActive(true);
+            }
+            else
+            {
+                if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
+                if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
+            }
+            return;
+        }
+
+        // Старая логика для одной линии на UI
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -337,7 +348,6 @@ public class UIAimLine : MonoBehaviour
                         raycastResults[i].gameObject.GetComponentInParent<LocalHandCardView>() != null)
                     {
                         isCardSelected = true;
-                        // Сбрасываем цель только если она еще не выбрана
                         if (!isTargetSelected)
                         {
                             hasTarget = false;
@@ -380,7 +390,11 @@ public class UIAimLine : MonoBehaviour
         if (lineContainer == null) return;
 
         Vector2 startPos;
-        if (selectedPlayerDice != null)
+        if (ownerDice != null)
+        {
+            startPos = GetRectTransformPosition(ownerDice.GetComponent<RectTransform>());
+        }
+        else if (selectedPlayerDice != null)
         {
             startPos = GetRectTransformPosition(selectedPlayerDice.GetComponent<RectTransform>());
         }
@@ -393,12 +407,10 @@ public class UIAimLine : MonoBehaviour
         Vector2 endPos;
         if (hasTarget && selectedEnemyDice != null)
         {
-            // Если есть цель - рисуем к ней
             endPos = GetRectTransformPosition(selectedEnemyDice.GetComponent<RectTransform>());
         }
         else
         {
-            // Если цели нет - рисуем к курсору
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRect,
@@ -406,21 +418,19 @@ public class UIAimLine : MonoBehaviour
                 null,
                 out mousePos
             );
-
             Vector2 direction = mousePos - startPos;
             float distance = direction.magnitude;
-
             if (distance > maxDistance)
             {
                 direction = direction.normalized * maxDistance;
                 distance = maxDistance;
             }
-
             endPos = startPos + direction;
         }
 
         DrawLine(startPos, endPos);
     }
+
 
     private Vector2 GetRectTransformPosition(RectTransform rect)
     {

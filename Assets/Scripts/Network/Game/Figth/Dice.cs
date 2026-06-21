@@ -15,6 +15,7 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
 
     // ===== ВЫБОР КАЖДОГО КУБИКА =====
     public int selectedCardId = -1;
+    public int selectedCardIndex = -1;
     public uint selectedTargetEnemyNetId = 0;
     public int selectedTargetDiceIndex = -1;
     public bool hasSelection => selectedCardId != -1 && selectedTargetEnemyNetId != 0;
@@ -65,7 +66,10 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             diceImage.color = waitingColor;
         }
     }
-    
+    public void SetAimLine(UIAimLine line)
+    {
+        aimLine = line;
+    }
 
     public void UpdateAimLine(bool visible)
     {
@@ -120,21 +124,87 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
     }
 
     // ===== МЕТОДЫ ДЛЯ ВЫБОРА =====
-    public void SelectCard(int cardId)
+
+    private void UpdateAllHandCards()
     {
+        if (ownerPlayer != null && ownerPlayer.isLocalPlayer)
+        {
+            LocalHandCardView[] cards = FindObjectsByType<LocalHandCardView>(FindObjectsSortMode.None);
+            foreach (var card in cards)
+            {
+                if (card != null)
+                {
+                    card.UpdateCardState();
+                }
+            }
+        }
+    }
+    public void SelectCard(int cardId, int cardIndex)
+    {
+        // Проверяем, что карта в руке по индексу
+        if (ownerPlayer != null && (cardIndex >= ownerPlayer.PlayerHand.Count || ownerPlayer.PlayerHand[cardIndex] != cardId))
+        {
+            Debug.Log($"[DiceRoll] Card at index {cardIndex} is no longer in hand!");
+            return;
+        }
+
+        // ===== ЕСЛИ УЖЕ ВЫБРАНА ДРУГАЯ КАРТА - СБРАСЫВАЕМ СТАРУЮ =====
+        if (selectedCardIndex != -1 && selectedCardIndex != cardIndex)
+        {
+            Debug.Log($"[DiceRoll] Changing card from index {selectedCardIndex} to {cardIndex}");
+            // Освобождаем старую карту
+            selectedCardId = -1;
+            selectedCardIndex = -1;
+            // Сбрасываем линию
+            UIAimLine oldLine = GetComponentInChildren<UIAimLine>();
+            if (oldLine != null)
+            {
+                oldLine.SetCardSelected(false);
+            }
+        }
+
+        // Проверяем, не занята ли ЭТА КОНКРЕТНАЯ карта (по индексу) другим кубиком
+        if (ownerPlayer != null)
+        {
+            foreach (var player in NetworkGamePlayer.AllPlayers)
+            {
+                if (player != null && player.isLocalPlayer)
+                {
+                    DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+                    foreach (var dice in dices)
+                    {
+                        if (dice != null && dice != this && dice.selectedCardIndex == cardIndex)
+                        {
+                            Debug.Log($"[DiceRoll] Card at index {cardIndex} is already selected by another dice! Reassigning.");
+                            // Сбрасываем у другого кубика
+                            dice.ClearSelection();
+                            UIAimLine otherLine = dice.GetComponentInChildren<UIAimLine>();
+                            if (otherLine != null)
+                            {
+                                otherLine.SetCardSelected(false);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
         selectedCardId = cardId;
+        selectedCardIndex = cardIndex;
         UpdateUI();
 
-        // ===== ПРИВЯЗЫВАЕМ ЛИНИЮ =====
+        // Обновляем все карты в руке
+        UpdateAllHandCards();
+
         UIAimLine aimLine = GetComponentInChildren<UIAimLine>();
         if (aimLine != null)
         {
             aimLine.SetPlayerDice(this);
             aimLine.SetCardSelected(true);
-            aimLine.gameObject.SetActive(true);
         }
 
-        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} selected card: {cardId}");
+        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} selected card: {cardId} at index {cardIndex}");
     }
 
     public void SelectTarget(uint enemyNetId, int diceIndex)
@@ -143,13 +213,10 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
         selectedTargetDiceIndex = diceIndex;
         UpdateUI();
 
-        // ===== ПРИВЯЗЫВАЕМ ЛИНИЮ И УСТАНАВЛИВАЕМ ЦЕЛЬ =====
         UIAimLine aimLine = GetComponentInChildren<UIAimLine>();
         if (aimLine != null)
         {
             aimLine.SetPlayerDice(this);
-
-            // Находим вражеский кубик
             foreach (var enemy in NetworkGameEnemy.AllEnemies)
             {
                 if (enemy != null && enemy.netId == enemyNetId)
@@ -159,22 +226,36 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
                     {
                         aimLine.SetTarget(enemyDices[diceIndex]);
                         aimLine.SetCardSelected(true);
-                        aimLine.gameObject.SetActive(true);
+                        // НЕ ВЫКЛЮЧАЙ aimLine.gameObject.SetActive(true);
                         break;
                     }
                 }
             }
         }
-
-        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} selected target: {enemyNetId}, dice: {diceIndex}");
     }
 
     public void ClearSelection()
     {
+        Debug.Log($"[DiceRoll] ClearSelection called for dice {ownerSlotIndex}, before: cardId={selectedCardId}, index={selectedCardIndex}, target={selectedTargetEnemyNetId}");
         selectedCardId = -1;
+        selectedCardIndex = -1;
         selectedTargetEnemyNetId = 0;
         selectedTargetDiceIndex = -1;
         UpdateUI();
+
+        // Обновляем все карты в руке
+        UpdateAllHandCards();
+
+        Debug.Log($"[DiceRoll] ClearSelection after: cardId={selectedCardId}, index={selectedCardIndex}, target={selectedTargetEnemyNetId}");
+    }
+    void OnEnable()
+    {
+        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} enabled");
+    }
+
+    void OnDisable()
+    {
+        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} disabled");
     }
 
     private void UpdateUI()
@@ -246,6 +327,8 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             // Сохраняем цель в активном кубике
             activeDice.SelectTarget(ownerNetId, ownerSlotIndex);
 
+            // ===== ДОБАВЬ ЭТО =====
+            Debug.Log($"[DiceRoll] After SelectTarget: dice {activeDice.ownerSlotIndex} hasSelection={activeDice.hasSelection}, cardId={activeDice.selectedCardId}, target={activeDice.selectedTargetEnemyNetId}");
             // Находим линию у активного кубика
             UIAimLine aimLine = activeDice.GetComponentInChildren<UIAimLine>();
             if (aimLine != null)
