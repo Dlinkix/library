@@ -99,6 +99,69 @@ public class FightManager : NetworkBehaviour
     #region Server Methods
 
     [Server]
+    private System.Collections.IEnumerator ExecuteActionPhase()
+    {
+        Debug.Log("[FightManager] Executing Action phase...");
+
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.HasSelection())
+            {
+                int cardId = player.GetSelectedCardId();
+                uint enemyNetId = player.GetSelectedTargetEnemyNetId();
+
+                // Õ‡ıÓ‰ËÏ ‚‡„‡
+                NetworkGameEnemy targetEnemy = null;
+                foreach (var enemy in NetworkGameEnemy.AllEnemies)
+                {
+                    if (enemy != null && enemy.netId == enemyNetId)
+                    {
+                        targetEnemy = enemy;
+                        break;
+                    }
+                }
+
+                if (targetEnemy != null)
+                {
+                    // ===== ¬Ã≈—“Œ ApplyCadToEnemy »—œŒÀ‹«”≈Ã QueueCardForTarget =====
+                    player.QueueCardForTarget(cardId, targetEnemy);
+                    Debug.Log($"[FightManager] Player {player.PlayerName} queued card for {targetEnemy.EnemyName}");
+                }
+                else
+                {
+                    Debug.LogWarning($"[FightManager] Target enemy not found for player {player.PlayerName}");
+                }
+
+                // Œ˜Ë˘‡ÂÏ ‚˚·Ó
+                player.ClearSelection();
+            }
+            else
+            {
+                Debug.Log($"[FightManager] Player {player?.PlayerName} has no selection");
+            }
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        //// ===== œ–»Ã≈Õﬂ≈Ã ƒ≈…—“¬»ﬂ ¬–¿√Œ¬ (AI) =====
+        //foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        //{
+        //    if (enemy != null)
+        //    {
+        //        // ¬€«€¬¿≈Ã AI ¬–¿√¿
+        //        enemy.ExecuteAIAction();
+        //        Debug.Log($"[FightManager] Enemy {enemy.EnemyName} AI action executed");
+        //    }
+        //    yield return new WaitForSeconds(0.2f);
+        //}
+
+        yield return new WaitForSeconds(actionDuration);
+
+        ChangeState(FightState.EndTurn);
+        StartCoroutine(ExecuteEndTurnPhase());
+    }
+
+
+        [Server]
     public void StartFight()
     {
         if (isFightActive) return;
@@ -270,30 +333,7 @@ public class FightManager : NetworkBehaviour
 
     // ===== ‘‡Á˚ ·Óˇ =====
 
-    [Server]
-    private System.Collections.IEnumerator ExecuteActionPhase()
-    {
-        Debug.Log("[FightManager] Executing Action phase...");
-
-        foreach (var player in NetworkGamePlayer.AllPlayers)
-        {
-            Debug.Log($"[FightManager] Executing action for player: {player.PlayerName}");
-            // player.ExecuteAction();
-            yield return new WaitForSeconds(0.2f);
-        }
-
-        foreach (var enemy in NetworkGameEnemy.AllEnemies)
-        {
-            Debug.Log($"[FightManager] Executing action for enemy: {enemy.EnemyName}");
-            // enemy.ExecuteAction();
-            yield return new WaitForSeconds(0.2f);
-        }
-
-        yield return new WaitForSeconds(actionDuration);
-
-        ChangeState(FightState.EndTurn);
-        StartCoroutine(ExecuteEndTurnPhase());
-    }
+    
 
     [Server]
     private System.Collections.IEnumerator ExecuteEndTurnPhase()

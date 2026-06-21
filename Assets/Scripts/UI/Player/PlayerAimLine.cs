@@ -22,6 +22,9 @@ public class UIAimLine : MonoBehaviour
     [SerializeField] private float animationSpeed = 200f;
     [SerializeField] private int blocksForMaxHeight = 5;
 
+    [Header("Offset")]
+    [SerializeField] private Vector2 positionOffset = Vector2.zero;
+
     private Canvas canvas;
     private RectTransform canvasRect;
     private bool isLocalPlayer = false;
@@ -34,7 +37,8 @@ public class UIAimLine : MonoBehaviour
     private List<RectTransform> dotRects = new List<RectTransform>();
     private List<Image> dotImages = new List<Image>();
     private const int POOL_SIZE = 50;
-
+    private bool hasTarget = false;
+    private Vector2 targetPosition;
     private Vector2[] basePositions;
     private float[] dotAngles;
     private int currentDotCount;
@@ -43,7 +47,8 @@ public class UIAimLine : MonoBehaviour
     private GameObject endIconObject;
     private RectTransform endIconRect;
     private Image endIconImage;
-
+    private DiceRoll selectedPlayerDice;
+    private DiceRoll selectedEnemyDice;
     private List<RaycastResult> raycastResults = new List<RaycastResult>();
     private PointerEventData pointerData;
     private RectTransform anchorRect;
@@ -58,7 +63,7 @@ public class UIAimLine : MonoBehaviour
 
             if (anchor != null)
             {
-                playerRect = anchor; // Anchor, а не UI
+                playerRect = anchor;
             }
             else
             {
@@ -73,36 +78,57 @@ public class UIAimLine : MonoBehaviour
             else
             {
                 InitializeComponents();
+                // ===== ПОДПИСЫВАЕМСЯ НА СОБЫТИЯ =====
+                DiceSelectionManager.OnEnemyDiceSelected += SetTarget;
             }
         }
+        DiceSelectionManager.OnPlayerDiceSelected += SetPlayerDice;
     }
+
     public void SetOwner(NetworkGameEnemy enemy)
     {
         ownerEnemy = enemy;
         Debug.Log("UIAimLine: Destroyed on enemy UI");
-        Destroy(this); 
+        Destroy(this);
     }
 
-    void Awake()
+    public void SetPlayerDice(DiceRoll dice)
     {
-        // Ничего не делаем в Awake - ждем SetOwner
+        selectedPlayerDice = dice;
     }
+
+    public void SetTarget(DiceRoll enemyDice)
+    {
+        selectedEnemyDice = enemyDice;
+
+        if (enemyDice != null)
+        {
+            targetPosition = GetRectTransformPosition(enemyDice.GetComponent<RectTransform>());
+            hasTarget = true;
+            Debug.Log("UIAimLine: Target set to enemy dice!");
+        }
+        else
+        {
+            hasTarget = false;
+            selectedEnemyDice = null;
+            Debug.Log("UIAimLine: Target cleared");
+        }
+    }
+
+    void Awake() { }
 
     void Start()
     {
-        // Если владелец не установлен, пробуем найти через GetComponentInParent
         if (ownerPlayer == null && ownerEnemy == null)
         {
-            // Пробуем найти NetworkGamePlayer на родительских объектах
             NetworkGamePlayer player = GetComponentInParent<NetworkGamePlayer>();
             if (player != null)
             {
                 ownerPlayer = player;
                 isLocalPlayer = player.isLocalPlayer;
-                Debug.Log($"UIAimLine: Found owner via GetComponentInParent: {player.PlayerName}, isLocal: {isLocalPlayer}");
 
                 if (!isLocalPlayer)
-                {     
+                {
                     Destroy(this);
                     return;
                 }
@@ -113,7 +139,6 @@ public class UIAimLine : MonoBehaviour
                 }
             }
 
-            // Пробуем найти NetworkGameEnemy на родительских объектах
             NetworkGameEnemy enemy = GetComponentInParent<NetworkGameEnemy>();
             if (enemy != null)
             {
@@ -123,13 +148,11 @@ public class UIAimLine : MonoBehaviour
                 return;
             }
 
-            // Если ничего не нашли - удаляем
             Debug.Log("UIAimLine: No owner set and not found in parent, destroying");
             Destroy(gameObject);
             return;
         }
 
-        // Если владелец установлен, но это не локальный игрок - удаляем
         if (!isLocalPlayer)
         {
             Debug.Log("UIAimLine: Not local player, destroying");
@@ -137,7 +160,6 @@ public class UIAimLine : MonoBehaviour
             return;
         }
 
-        // Если все ок и еще не инициализированы - инициализируем
         if (!isInitialized)
         {
             InitializeComponents();
@@ -175,7 +197,16 @@ public class UIAimLine : MonoBehaviour
         isInitialized = true;
         Debug.Log("UIAimLine: Initialized successfully");
     }
-
+    public void SetCardSelected(bool selected)
+    {
+        isCardSelected = selected;
+        if (!selected)
+        {
+            hasTarget = false;
+            if (lineContainer != null) lineContainer.SetActive(false);
+            if (endIconObject != null) endIconObject.SetActive(false);
+        }
+    }
     void CreateSquareSprite()
     {
         Texture2D texture = new Texture2D(4, 4);
@@ -256,14 +287,23 @@ public class UIAimLine : MonoBehaviour
     void Update()
     {
         if (isDestroyed || !isInitialized) return;
+        if (!isLocalPlayer) return;
 
-        if (!isLocalPlayer)
+        bool canDraw = false;
+        if (FightManager.Instance != null && FightManager.Instance.IsFightActive)
         {
-            if (lineContainer != null) lineContainer.SetActive(false);
-            if (endIconObject != null) endIconObject.SetActive(false);
+            canDraw = (FightManager.Instance.CurrentState == FightState.Rolling);
+        }
+
+        if (!canDraw)
+        {
+            isCardSelected = false;
+            if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
+            if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
             return;
         }
 
+        // ===== ВЫБОР КАРТЫ (ЛКМ) - ВКЛЮЧАЕТ ЛИНИЮ =====
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -278,21 +318,28 @@ public class UIAimLine : MonoBehaviour
                         raycastResults[i].gameObject.GetComponentInParent<LocalHandCardView>() != null)
                     {
                         isCardSelected = true;
+                        // Сбрасываем цель при выборе новой карты
+                        hasTarget = false;
                         break;
                     }
                 }
             }
         }
 
-        if (Input.GetMouseButtonUp(0))
+        // ===== ОТМЕНА (ПКМ) =====
+        if (Input.GetMouseButtonDown(1))
         {
             isCardSelected = false;
+            hasTarget = false;
+            selectedPlayerDice = null;
+            selectedEnemyDice = null;
             if (lineContainer != null) lineContainer.SetActive(false);
             if (endIconObject != null) endIconObject.SetActive(false);
             animationOffset = 0f;
         }
 
-        if (isCardSelected && Input.GetMouseButton(0))
+        // ===== АНИМАЦИЯ =====
+        if (isCardSelected && selectedPlayerDice != null)
         {
             animationOffset += Time.deltaTime * animationSpeed;
             UpdateLine();
@@ -304,35 +351,82 @@ public class UIAimLine : MonoBehaviour
             if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
             if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
         }
+
+        // ===== ОБНОВЛЕНИЕ ПОЗИЦИИ ЦЕЛИ =====
+        if (hasTarget && selectedEnemyDice != null)
+        {
+            targetPosition = GetRectTransformPosition(selectedEnemyDice.GetComponent<RectTransform>());
+        }
     }
 
     void UpdateLine()
     {
-        if (lineContainer == null || playerRect == null) return;
+        if (lineContainer == null) return;
 
-        // НАЧАЛЬНАЯ - от игрока (как работало)
-        Vector2 startPos = playerRect.anchoredPosition;
-
-        Vector2 mousePos;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(
-            canvasRect,
-            Input.mousePosition,
-            null,
-            out mousePos
-        );
-
-        Vector2 direction = mousePos - startPos;
-        float distance = direction.magnitude;
-
-        if (distance > maxDistance)
+        Vector2 startPos;
+        if (selectedPlayerDice != null)
         {
-            direction = direction.normalized * maxDistance;
-            distance = maxDistance;
+            startPos = GetRectTransformPosition(selectedPlayerDice.GetComponent<RectTransform>());
+        }
+        else
+        {
+            if (playerRect == null) return;
+            startPos = playerRect.anchoredPosition;
         }
 
-        Vector2 endPos = startPos + direction;
+        Vector2 endPos;
+        if (hasTarget)
+        {
+            endPos = targetPosition;
+        }
+        else
+        {
+            Vector2 mousePos;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                canvasRect,
+                Input.mousePosition,
+                null,
+                out mousePos
+            );
 
+            Vector2 direction = mousePos - startPos;
+            float distance = direction.magnitude;
 
+            if (distance > maxDistance)
+            {
+                direction = direction.normalized * maxDistance;
+                distance = maxDistance;
+            }
+
+            endPos = startPos + direction;
+        }
+
+        DrawLine(startPos, endPos);
+    }
+
+    private Vector2 GetRectTransformPosition(RectTransform rect)
+    {
+        Vector2 position = rect.anchoredPosition;
+        Transform parent = rect.parent;
+
+        while (parent != null && parent != canvasRect)
+        {
+            RectTransform parentRect = parent as RectTransform;
+            if (parentRect != null)
+            {
+                position += parentRect.anchoredPosition;
+            }
+            parent = parent.parent;
+        }
+
+        position += positionOffset;
+        return position;
+    }
+
+    private void DrawLine(Vector2 startPos, Vector2 endPos)
+    {
+        Vector2 direction = endPos - startPos;
+        float distance = direction.magnitude;
         float minDistance = dotWidth * 2;
 
         HideAllDots();
@@ -473,7 +567,7 @@ public class UIAimLine : MonoBehaviour
         endIconRect.anchoredPosition = position;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        endIconRect.rotation = Quaternion.Euler(0, 0, angle);
+        endIconRect.rotation = Quaternion.Euler(0, 0, angle - 90);
     }
 
     void OnDestroy()
@@ -481,5 +575,8 @@ public class UIAimLine : MonoBehaviour
         isDestroyed = true;
         if (lineContainer != null) Destroy(lineContainer);
         if (endIconObject != null) Destroy(endIconObject);
+
+        if (DiceSelectionManager.Instance != null)
+            DiceSelectionManager.OnEnemyDiceSelected -= SetTarget;
     }
 }

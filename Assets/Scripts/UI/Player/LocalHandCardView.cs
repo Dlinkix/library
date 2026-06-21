@@ -2,8 +2,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static DataGame;
 
-public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+
+public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private RectTransform cardRect;
 
@@ -11,9 +13,16 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
     private readonly Vector2 hoverOffset = new Vector2(0f, 70f);
     private bool initialized;
 
-    public void Setup(RectTransform targetRect, LayoutElement targetLayout, TMP_Text targetDescription, Image targetBackground)
+
+
+    private int cardId;
+    private NetworkGamePlayer player;
+
+    public void Setup(RectTransform targetRect, LayoutElement targetLayout, TMP_Text targetDescription, Image targetBackground, int cardId, NetworkGamePlayer player)
     {
         cardRect = targetRect;
+        this.cardId = cardId;
+        this.player = player;
         CacheDefaults();
     }
 
@@ -36,13 +45,48 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         }
     }
 
-    private void CacheDefaults()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (initialized || cardRect == null)
+        if (player == null) return;
+        if (FightManager.Instance == null) return;
+        if (!player.isLocalPlayer) return;
+        if (FightManager.Instance.CurrentState != FightState.Rolling) return;
+
+        DiceRoll playerDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
+        if (playerDice == null)
         {
+            Debug.Log("[LocalHandCardView] Select your dice first!");
             return;
         }
 
+        DataGame.CardData card = player.GetCardData(cardId);
+        if (card == null) return;
+
+        if (player.currentLight < card.lightCost)
+        {
+            Debug.Log($"[LocalHandCardView] Not enough Light! Need {card.lightCost}, have {player.currentLight}");
+            return;
+        }
+
+        // ===== ÂÛÁÈÐÀÅÌ ÊÀÐÒÓ =====
+        player.SelectCard(cardId);
+
+        // ===== ÅÑËÈ ÓÆÅ ÂÛÁÐÀÍÀ ÖÅËÜ — ÏÎÊÀÇÛÂÀÅÌ ËÈÍÈÞ =====
+        if (player.GetSelectedTargetEnemyNetId() != 0)
+        {
+            UIAimLine aimLine = Object.FindFirstObjectByType<UIAimLine>();
+            if (aimLine != null)
+            {
+                aimLine.SetCardSelected(true);
+            }
+        }
+
+        Debug.Log($"[LocalHandCardView] Card selected: {card.cardName}");
+    }
+
+    private void CacheDefaults()
+    {
+        if (initialized || cardRect == null) return;
         defaultAnchoredPosition = cardRect.anchoredPosition;
         initialized = true;
     }

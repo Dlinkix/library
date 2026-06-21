@@ -1,11 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class Road25D : MonoBehaviour
 {
     [Header("Road Layers")]
-    [SerializeField] private RectTransform[] roadLayers; // Слои дороги от дальнего к ближнему
-    [SerializeField] private float[] layerSpeeds; // Скорости для каждого слоя
+    [SerializeField] private RectTransform[] roadLayers;
+    [SerializeField] private float[] layerSpeeds;
 
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 2f;
@@ -18,7 +19,13 @@ public class Road25D : MonoBehaviour
     [SerializeField] private float verticalOffsetIntensity = 0.5f;
     [SerializeField] private bool enableScaleEffect = true;
     [SerializeField] private float scaleIntensity = 0.15f;
-    [SerializeField] private bool enableAlphaEffect = true;
+
+    [Header("Splash Screen")]
+    [SerializeField] private RectTransform splashImage;
+    [SerializeField] private float splashDuration = 2f;
+    [SerializeField] private float flyOutDuration = 0.8f;
+    [SerializeField] private Vector2 flyOutOffset = new Vector2(-500f, 800f);
+    [SerializeField] private AnimationCurve flyOutCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
     private float currentOffset;
     private float targetOffset;
@@ -26,23 +33,28 @@ public class Road25D : MonoBehaviour
     private bool isDragging;
     private Vector2[] layerStartPositions;
     private Vector3[] layerStartScales;
-    private CanvasGroup[] layerCanvasGroups;
+
+    private enum SplashState { Showing, FlyingOut, Hidden, GameReady }
+    private SplashState splashState = SplashState.Showing;
+    private float splashTimer;
+    private Vector2 splashStartPos;
+
+    private float gameStartTime;
+    private bool isGameStarted;
 
     void Start()
     {
         if (roadLayers == null || roadLayers.Length == 0) return;
 
+        // Инициализация слоев
         layerStartPositions = new Vector2[roadLayers.Length];
         layerStartScales = new Vector3[roadLayers.Length];
-        layerCanvasGroups = new CanvasGroup[roadLayers.Length];
 
-        // Автоматические скорости если не заданы
         if (layerSpeeds == null || layerSpeeds.Length == 0)
         {
             layerSpeeds = new float[roadLayers.Length];
             for (int i = 0; i < roadLayers.Length; i++)
             {
-                // От 0.1 до 0.9 с шагом ~0.2
                 layerSpeeds[i] = 0.1f + i * 0.2f;
             }
         }
@@ -53,18 +65,51 @@ public class Road25D : MonoBehaviour
             {
                 layerStartPositions[i] = roadLayers[i].anchoredPosition;
                 layerStartScales[i] = roadLayers[i].localScale;
-                layerCanvasGroups[i] = roadLayers[i].GetComponent<CanvasGroup>();
-                if (layerCanvasGroups[i] == null)
-                {
-                    layerCanvasGroups[i] = roadLayers[i].gameObject.AddComponent<CanvasGroup>();
-                }
             }
         }
+
+        // Настройка заставки
+        if (splashImage != null)
+        {
+            splashStartPos = splashImage.anchoredPosition;
+            splashImage.SetAsLastSibling();
+        }
+
+        splashState = SplashState.Showing;
+        splashTimer = 0f;
+        isGameStarted = false;
+        gameStartTime = 0f;
+
+        currentOffset = 0f;
+        targetOffset = 0f;
     }
 
     void Update()
     {
-        // --- УПРАВЛЕНИЕ (как в SceneMovement) ---
+        // Обработка заставки
+        if (splashState != SplashState.GameReady && splashState != SplashState.Hidden)
+        {
+            UpdateSplash();
+            return;
+        }
+
+        if (splashState == SplashState.Hidden)
+        {
+            return;
+        }
+
+        // Запоминаем время старта игры
+        if (!isGameStarted)
+        {
+            isGameStarted = true;
+            gameStartTime = Time.time;
+        }
+
+        // Плавный старт
+        float timeSinceStart = Time.time - gameStartTime;
+        float startFadeIn = Mathf.Clamp01(timeSinceStart / 1.5f);
+
+        // --- УПРАВЛЕНИЕ ---
         if (useMouseInput)
         {
             if (Input.GetMouseButtonDown(0))
@@ -88,15 +133,13 @@ public class Road25D : MonoBehaviour
 
         if (autoMove && !isDragging)
         {
-            // ТОЧНО КАК В SceneMovement
-            float autoOffset = Mathf.Sin(Time.time * moveSpeed) * maxOffset;
-            targetOffset = autoOffset;
+            float autoOffset = Mathf.Sin(timeSinceStart * moveSpeed) * maxOffset;
+            targetOffset = autoOffset * startFadeIn;
         }
 
-        // --- ПЛАВНОЕ ПЕРЕМЕЩЕНИЕ (как в SceneMovement) ---
         currentOffset = Mathf.Lerp(currentOffset, targetOffset, Time.deltaTime * 3f);
 
-        // --- ОБНОВЛЯЕМ СЛОИ (уникальная часть Road25D) ---
+        // --- ОБНОВЛЯЕМ СЛОИ ---
         for (int i = 0; i < roadLayers.Length; i++)
         {
             if (roadLayers[i] == null) continue;
@@ -122,6 +165,52 @@ public class Road25D : MonoBehaviour
                 float scaleFactor = 1f + progress * scaleIntensity * speed;
                 layer.localScale = layerStartScales[i] * scaleFactor;
             }
+        }
+    }
+
+    void UpdateSplash()
+    {
+        splashTimer += Time.deltaTime;
+
+        switch (splashState)
+        {
+            case SplashState.Showing:
+                if (splashTimer >= splashDuration)
+                {
+                    splashState = SplashState.FlyingOut;
+                    splashTimer = 0f;
+                }
+                break;
+
+            case SplashState.FlyingOut:
+                if (splashImage != null)
+                {
+                    float progress = Mathf.Clamp01(splashTimer / flyOutDuration);
+                    float easedProgress = flyOutCurve.Evaluate(progress);
+
+                    Vector2 currentPos = splashStartPos + flyOutOffset * easedProgress;
+                    splashImage.anchoredPosition = currentPos;
+
+                    if (progress >= 1f)
+                    {
+                        splashImage.gameObject.SetActive(false);
+                        splashState = SplashState.Hidden;
+                        splashState = SplashState.GameReady;
+                    }
+                }
+                break;
+        }
+    }
+
+    void SkipSplash()
+    {
+        if (splashState == SplashState.Showing || splashState == SplashState.FlyingOut)
+        {
+            if (splashImage != null)
+            {
+                splashImage.gameObject.SetActive(false);
+            }
+            splashState = SplashState.GameReady;
         }
     }
 }

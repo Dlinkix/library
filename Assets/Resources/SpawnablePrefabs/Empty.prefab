@@ -80,6 +80,14 @@ MonoBehaviour:
   syncInterval: 0
   PlayerName: Unknown
   isReady: 0
+  hp: 0
+  Maxhp: 40
+  stagger: 0
+  Maxstagger: 16
+  currentLight: 0
+  maxLight: 0
   uiOffset: {x: 0, y: 0}
   dataGame: {fileID: 11400000, guid: b6cf575015377b540a2471c5f6b256f4, type: 2}
+  startingHandSize: 4
   cardsToDrawAfterReadyCycle: 1
+  attackDelay: 0.5

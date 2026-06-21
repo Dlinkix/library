@@ -1,0 +1,1027 @@
+fileFormatVersion: 2
+guid: 578005186d019104ea7d6ad43e1484ec
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3568335995452344517
+    second: Icon_Exit_0
+  - first:
+      213: -5964211987176825118
+    second: Icon_Exit_1
+  - first:
+      213: -5020987953202038796
+    second: Icon_Exit_2
+  - first:
+      213: 227399727469051201
+    second: Icon_Exit_3
+  - first:
+      213: 4484577278017395382
+    second: Icon_Exit_4
+  - first:
+      213: 4654195960901133766
+    second: Icon_Exit_5
+  - first:
+      213: -2579099840373001670
+    second: Icon_Exit_6
+  - first:
+      213: -4387402667276476433
+    second: Icon_Exit_7
+  - first:
+      213: -696446142260159278
+    second: Icon_Exit_8
+  - first:
+      213: 2731400290519566280
+    second: Icon_Exit_9
+  - first:
+      213: -312260008424144325
+    second: Icon_Exit_10
+  - first:
+      213: 3296408577849411020
+    second: Icon_Exit_11
+  - first:
+      213: 6910825483478510274
+    second: Icon_Exit_12
+  - first:
+      213: 7143394968079515883
+    second: Icon_Exit_13
+  - first:
+      213: -5020048793564510247
+    second: Icon_Exit_14
+  - first:
+      213: 9182242608793477741
+    second: Icon_Exit_15
+  - first:
+      213: 6236296171449812854
+    second: Icon_Exit_16
+  - first:
+      213: -7688950400025413519
+    second: Icon_Exit_17
+  - first:
+      213: -1744195410118590513
+    second: Icon_Exit_18
+  - first:
+      213: 6870150770860627181
+    second: Icon_Exit_19
+  - first:
+      213: 9196976988646403624
+    second: Icon_Exit_20
+  - first:
+      213: -4000729430117193420
+    second: Icon_Exit_21
+  - first:
+      213: -5626045663975522819
+    second: Icon_Exit_22
+  - first:
+      213: 7329317623938176200
+    second: Icon_Exit_23
+  - first:
+      213: 7469867212582812310
+    second: Icon_Exit_24
+  - first:
+      213: -4026833818400913138
+    second: Icon_Exit_25
+  - first:
+      213: 1829398885245843115
+    second: Icon_Exit_26
+  - first:
+      213: 3100718806312708977
+    second: Icon_Exit_27
+  - first:
+      213: 3389310870838823773
+    second: Icon_Exit_28
+  - first:
+      213: 5136340071242000587
+    second: Icon_Exit_29
+  - first:
+      213: 4461175732738015039
+    second: Icon_Exit_30
+  - first:
+      213: -8560862212278769859
+    second: Icon_Exit_31
+  - first:
+      213: 3561013281774577421
+    second: Icon_Exit_32
+  - first:
+      213: 6490526878157760904
+    second: Icon_Exit_33
+  - first:
+      213: -7785536689538452289
+    second: Icon_Exit_34
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Icon_Exit_0
+      rect:
+        serializedVersion: 2
+        x: 46
+        y: 45
+        width: 417
+        height: 437
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5c84d289ea6458130800000000000000
+      internalID: 3568335995452344517
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_1
+      rect:
+        serializedVersion: 2
+        x: 233
+        y: 477
+        width: 11
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2eed2332cccda3da0800000000000000
+      internalID: -5964211987176825118
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_2
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 349
+        width: 15
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f770e31f0ed15ab0800000000000000
+      internalID: -5020987953202038796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_3
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 351
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14d30d9e8d2e72300800000000000000
+      internalID: 227399727469051201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_4
+      rect:
+        serializedVersion: 2
+        x: 500
+        y: 356
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6bad308264b6c3e30800000000000000
+      internalID: 4484577278017395382
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_5
+      rect:
+        serializedVersion: 2
+        x: 462
+        y: 338
+        width: 13
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c5e1944196079040800000000000000
+      internalID: 4654195960901133766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_6
+      rect:
+        serializedVersion: 2
+        x: 499
+        y: 341
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a32fc4e1c52353cd0800000000000000
+      internalID: -2579099840373001670
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_7
+      rect:
+        serializedVersion: 2
+        x: 33
+        y: 306
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fef52620580dc13c0800000000000000
+      internalID: -4387402667276476433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_8
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 312
+        width: 19
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2dc546d6ce9b556f0800000000000000
+      internalID: -696446142260159278
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_9
+      rect:
+        serializedVersion: 2
+        x: 496
+        y: 302
+        width: 13
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c741d7b712e7e520800000000000000
+      internalID: 2731400290519566280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_10
+      rect:
+        serializedVersion: 2
+        x: 36
+        y: 287
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b3281504d21aaabf0800000000000000
+      internalID: -312260008424144325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_11
+      rect:
+        serializedVersion: 2
+        x: 456
+        y: 281
+        width: 27
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc5c34de2223fbd20800000000000000
+      internalID: 3296408577849411020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_12
+      rect:
+        serializedVersion: 2
+        x: 479
+        y: 292
+        width: 13
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ca247f792f28ef50800000000000000
+      internalID: 6910825483478510274
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_13
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 285
+        width: 6
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be041ba40ef622360800000000000000
+      internalID: 7143394968079515883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_14
+      rect:
+        serializedVersion: 2
+        x: 5
+        y: 274
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d785783834355ab0800000000000000
+      internalID: -5020048793564510247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_15
+      rect:
+        serializedVersion: 2
+        x: 486
+        y: 273
+        width: 13
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d62679ac001ed6f70800000000000000
+      internalID: 9182242608793477741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_16
+      rect:
+        serializedVersion: 2
+        x: 9
+        y: 260
+        width: 17
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 677056d9356cb8650800000000000000
+      internalID: 6236296171449812854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_17
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 237
+        width: 27
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17833e6595c5b4590800000000000000
+      internalID: -7688950400025413519
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_18
+      rect:
+        serializedVersion: 2
+        x: 472
+        y: 249
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcfb301048f5bc7e0800000000000000
+      internalID: -1744195410118590513
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_19
+      rect:
+        serializedVersion: 2
+        x: 493
+        y: 247
+        width: 15
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de4168af9bda75f50800000000000000
+      internalID: 6870150770860627181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 238
+        width: 10
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 82ee5bfe7d932af70800000000000000
+      internalID: 9196976988646403624
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_21
+      rect:
+        serializedVersion: 2
+        x: 465
+        y: 232
+        width: 16
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 439e963b7cd8a78c0800000000000000
+      internalID: -4000729430117193420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_22
+      rect:
+        serializedVersion: 2
+        x: 478
+        y: 228
+        width: 12
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dfdbc94d6454ce1b0800000000000000
+      internalID: -5626045663975522819
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_23
+      rect:
+        serializedVersion: 2
+        x: 24
+        y: 206
+        width: 20
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c458dceb87f6b560800000000000000
+      internalID: 7329317623938176200
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_24
+      rect:
+        serializedVersion: 2
+        x: 38
+        y: 223
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 69af55d17ac4aa760800000000000000
+      internalID: 7469867212582812310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_25
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 202
+        width: 14
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e090fac2affcd18c0800000000000000
+      internalID: -4026833818400913138
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_26
+      rect:
+        serializedVersion: 2
+        x: 4
+        y: 185
+        width: 51
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ba6f293f794536910800000000000000
+      internalID: 1829398885245843115
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_27
+      rect:
+        serializedVersion: 2
+        x: 460
+        y: 202
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 17b64a67357f70b20800000000000000
+      internalID: 3100718806312708977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_28
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 184
+        width: 5
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5bc7b99740490f20800000000000000
+      internalID: 3389310870838823773
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_29
+      rect:
+        serializedVersion: 2
+        x: 37
+        y: 138
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bc8ebffc412f74740800000000000000
+      internalID: 5136340071242000587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_30
+      rect:
+        serializedVersion: 2
+        x: 62
+        y: 44
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3f317e41b749ed30800000000000000
+      internalID: 4461175732738015039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_31
+      rect:
+        serializedVersion: 2
+        x: 78
+        y: 45
+        width: 33
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d372f02ec25b13980800000000000000
+      internalID: -8560862212278769859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_32
+      rect:
+        serializedVersion: 2
+        x: 130
+        y: 24
+        width: 14
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d072f9476b24b6130800000000000000
+      internalID: 3561013281774577421
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_33
+      rect:
+        serializedVersion: 2
+        x: 158
+        y: 31
+        width: 14
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 889e7b1becbf21a50800000000000000
+      internalID: 6490526878157760904
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Icon_Exit_34
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 42
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb43a4261a734f390800000000000000
+      internalID: -7785536689538452289
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Icon_Exit_0: 3568335995452344517
+      Icon_Exit_1: -5964211987176825118
+      Icon_Exit_10: -312260008424144325
+      Icon_Exit_11: 3296408577849411020
+      Icon_Exit_12: 6910825483478510274
+      Icon_Exit_13: 7143394968079515883
+      Icon_Exit_14: -5020048793564510247
+      Icon_Exit_15: 9182242608793477741
+      Icon_Exit_16: 6236296171449812854
+      Icon_Exit_17: -7688950400025413519
+      Icon_Exit_18: -1744195410118590513
+      Icon_Exit_19: 6870150770860627181
+      Icon_Exit_2: -5020987953202038796
+      Icon_Exit_20: 9196976988646403624
+      Icon_Exit_21: -4000729430117193420
+      Icon_Exit_22: -5626045663975522819
+      Icon_Exit_23: 7329317623938176200
+      Icon_Exit_24: 7469867212582812310
+      Icon_Exit_25: -4026833818400913138
+      Icon_Exit_26: 1829398885245843115
+      Icon_Exit_27: 3100718806312708977
+      Icon_Exit_28: 3389310870838823773
+      Icon_Exit_29: 5136340071242000587
+      Icon_Exit_3: 227399727469051201
+      Icon_Exit_30: 4461175732738015039
+      Icon_Exit_31: -8560862212278769859
+      Icon_Exit_32: 3561013281774577421
+      Icon_Exit_33: 6490526878157760904
+      Icon_Exit_34: -7785536689538452289
+      Icon_Exit_4: 4484577278017395382
+      Icon_Exit_5: 4654195960901133766
+      Icon_Exit_6: -2579099840373001670
+      Icon_Exit_7: -4387402667276476433
+      Icon_Exit_8: -696446142260159278
+      Icon_Exit_9: 2731400290519566280
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

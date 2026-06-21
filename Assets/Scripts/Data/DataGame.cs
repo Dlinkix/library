@@ -17,7 +17,7 @@ public class DataGame : ScriptableObject
         public int maxCardOnHand = 16;
         public int dekaPlayer = 10;
         public int baseStartLight = 3;
-        public List<CardData> cardPlayer = new List<CardData>();
+        public List<int> cardPlayerIds = new List<int>();
         public int diceRollPlayer;
     }
 
@@ -33,8 +33,9 @@ public class DataGame : ScriptableObject
         public int baseSpeedMaxn = 3;
         public int dekaPlayer = 10;
         public int baseStartLight = 3;
-        public List<CardData> cardPlayer = new List<CardData>();
+        public List<int> cardEnemyIds = new List<int>();
         public Color color = Color.red;
+        public int diceRollEnemy;
     }
 
 
@@ -90,6 +91,12 @@ public class DataGame : ScriptableObject
         public float attackDuration = 1f;
         public StatusEffect[] onHitEffects;
         public AudioClip attackSound;
+        public Type type; 
+        public enum Type
+            {Damage,
+            Block,
+            Escape,      
+            }
     }
 
     [System.Serializable]
@@ -284,25 +291,13 @@ public class DataGame : ScriptableObject
 
     public List<int> GetPlayerCardIds(int index = 0)
     {
-        List<int> cardIds = new List<int>();
         PlayerData selectedPlayerData = GetPlayerData(index);
-        if (selectedPlayerData == null || selectedPlayerData.cardPlayer == null)
+        if (selectedPlayerData == null || selectedPlayerData.cardPlayerIds == null)
         {
-            return cardIds;
+            return new List<int>();
         }
 
-        for (int i = 0; i < selectedPlayerData.cardPlayer.Count; i++)
-        {
-            CardData card = selectedPlayerData.cardPlayer[i];
-            if (card == null || card.cardId <= 0)
-            {
-                continue;
-            }
-
-            cardIds.Add(card.cardId);
-        }
-
-        return cardIds;
+        return new List<int>(selectedPlayerData.cardPlayerIds);
     }
 
     public EnemyData GetEnemyData(int index = 0)
@@ -317,25 +312,13 @@ public class DataGame : ScriptableObject
 
     public List<int> GetEnemyCardIds(int index = 0)
     {
-        List<int> cardIds = new List<int>();
         EnemyData selectedEnemyData = GetEnemyData(index);
-        if (selectedEnemyData == null || selectedEnemyData.cardPlayer == null)
+        if (selectedEnemyData == null || selectedEnemyData.cardEnemyIds == null)
         {
-            return cardIds;
+            return new List<int>();
         }
 
-        for (int i = 0; i < selectedEnemyData.cardPlayer.Count; i++)
-        {
-            CardData card = selectedEnemyData.cardPlayer[i];
-            if (card == null || card.cardId <= 0)
-            {
-                continue;
-            }
-
-            cardIds.Add(card.cardId);
-        }
-
-        return cardIds;
+        return new List<int>(selectedEnemyData.cardEnemyIds);
     }
 
     public int GetEnemyBaseSpeedMax(int index = 0)

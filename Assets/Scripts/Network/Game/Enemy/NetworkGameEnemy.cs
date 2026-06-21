@@ -24,6 +24,9 @@ public class NetworkGameEnemy : NetworkBehaviour
     [SyncVar(hook = nameof(OnSpawnIndexChanged))]
     private int spawnIndex = -1;
 
+    [SyncVar(hook = nameof(OnDiceRollAmountChanged))]
+    private int DiceRollAmount;
+
     [Header("UI")]
     [SerializeField] private Vector2 uiOffset = Vector2.zero;
     [SerializeField] private DataGame dataGame;
@@ -182,7 +185,10 @@ public class NetworkGameEnemy : NetworkBehaviour
     {
         ApplyUIPositionBySpawnIndex();
     }
-
+    private void OnDiceRollAmountChanged(int oldValue, int newValue)
+    {
+        UpdateIconDiceRoll();
+    }
     private void OnEnemyNameChanged(string oldValue, string newValue)
     {
         UpdateStatusText();
@@ -195,10 +201,7 @@ public class NetworkGameEnemy : NetworkBehaviour
 
     private void CreateUI()
     {
-        if (uiCreated)
-        {
-            return;
-        }
+        if (uiCreated) return;
 
         GameObject uiPrefab = Resources.Load<GameObject>("UI/PlayerUI");
         if (uiPrefab == null)
@@ -230,12 +233,13 @@ public class NetworkGameEnemy : NetworkBehaviour
             return;
         }
 
-      
         uiObject = Instantiate(uiPrefab, targetPoint.transform);
         uiObject.transform.localPosition = Vector3.zero;
         uiObject.transform.localRotation = Quaternion.identity;
         uiObject.transform.localScale = Vector3.one;
 
+        // ===== —Œ«ƒ¿≈Ã  ”¡» » ¬–¿√¿ =====
+        CreateDiceUI();
         Transform imageTransform = uiObject.transform.Find("DiceRoll");
         if (imageTransform != null)
         {
@@ -282,7 +286,42 @@ public class NetworkGameEnemy : NetworkBehaviour
         UpdateStatusText();
         ApplyUIPositionBySpawnIndex();
     }
+    private void CreateDiceUI()
+    {
+        Transform gridTransform = uiObject.transform.Find("GridDice");
+        if (gridTransform == null)
+        {
+            Debug.LogWarning("GridDice not found in enemy UI!");
+            return;
+        }
 
+        // ”‰‡ÎˇÂÏ ÒÚ‡˚Â ÍÛ·ËÍË
+        foreach (Transform child in gridTransform)
+            Destroy(child.gameObject);
+
+        GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
+        if (dicePrefab == null)
+        {
+            Debug.LogError("DiceRoll prefab not found in Resources/UI/!");
+            return;
+        }
+
+        int enemyDiceCount = DiceRollAmount;
+
+        for (int i = 0; i < enemyDiceCount; i++)
+        {
+            GameObject diceObj = Instantiate(dicePrefab, gridTransform);
+            DiceRoll dice = diceObj.GetComponent<DiceRoll>();
+            if (dice != null)
+            {
+                dice.SetOwner(this, i);
+            }
+            else
+            {
+                Debug.LogError($"DiceRoll component not found on enemy prefab! Index: {i}");
+            }
+        }
+    }
     private void ApplyUIPositionBySpawnIndex()
     {
         if (!uiCreated || uiObject == null || spawnIndex < 0) return;
@@ -314,7 +353,10 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         uiObject.transform.position = anchorRect.position + new Vector3(uiOffset.x, uiOffset.y, 0f);
     }
+    private void UpdateIconDiceRoll()
+    {
 
+    }
     private void UpdateHpView()
     {
         if (hpText == null || staggerText == null)
@@ -410,6 +452,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         Maxstagger = activeEnemyData.maxStagger;
         hp = Maxhp;
         stagger = Maxstagger;
+        DiceRollAmount = activeEnemyData.diceRollEnemy;
     }
 
     private DataGame.EnemyData GetActiveEnemyData()

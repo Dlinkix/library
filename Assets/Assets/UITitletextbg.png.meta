@@ -1,0 +1,6279 @@
+fileFormatVersion: 2
+guid: 4d1939b54f879c749829e3abb45cbf8c
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 7625986714127334221
+    second: UITitletextbg_0
+  - first:
+      213: 7226763303711062586
+    second: UITitletextbg_1
+  - first:
+      213: -1492745495807807942
+    second: UITitletextbg_2
+  - first:
+      213: 2118734934083939058
+    second: UITitletextbg_3
+  - first:
+      213: 6108967796744965088
+    second: UITitletextbg_4
+  - first:
+      213: -1622463344965632991
+    second: UITitletextbg_5
+  - first:
+      213: 3808623349687713705
+    second: UITitletextbg_6
+  - first:
+      213: 9022760091031910604
+    second: UITitletextbg_7
+  - first:
+      213: -8084867635854423415
+    second: UITitletextbg_8
+  - first:
+      213: -975858637503259546
+    second: UITitletextbg_9
+  - first:
+      213: -3535410201101565802
+    second: UITitletextbg_10
+  - first:
+      213: -6760915174512002895
+    second: UITitletextbg_11
+  - first:
+      213: 8713427964490818919
+    second: UITitletextbg_12
+  - first:
+      213: 8885852475008503843
+    second: UITitletextbg_13
+  - first:
+      213: 1828577133032374633
+    second: UITitletextbg_14
+  - first:
+      213: -4653302509538831096
+    second: UITitletextbg_15
+  - first:
+      213: -7659645867056491407
+    second: UITitletextbg_16
+  - first:
+      213: -6553849769276480807
+    second: UITitletextbg_17
+  - first:
+      213: -4589314825049421443
+    second: UITitletextbg_18
+  - first:
+      213: 5357203383009611435
+    second: UITitletextbg_19
+  - first:
+      213: 3237894843518825964
+    second: UITitletextbg_20
+  - first:
+      213: 9177496996258625010
+    second: UITitletextbg_21
+  - first:
+      213: 5323787208282843953
+    second: UITitletextbg_22
+  - first:
+      213: 2408169296359131310
+    second: UITitletextbg_23
+  - first:
+      213: -7844378661145318652
+    second: UITitletextbg_24
+  - first:
+      213: -7855198630375110688
+    second: UITitletextbg_25
+  - first:
+      213: -2822356423476297026
+    second: UITitletextbg_26
+  - first:
+      213: 5790852049183046854
+    second: UITitletextbg_27
+  - first:
+      213: 1942458549029644991
+    second: UITitletextbg_28
+  - first:
+      213: -5879427696505240514
+    second: UITitletextbg_29
+  - first:
+      213: -6742487641292461375
+    second: UITitletextbg_30
+  - first:
+      213: -2517588867011215510
+    second: UITitletextbg_31
+  - first:
+      213: -4563335637235396353
+    second: UITitletextbg_32
+  - first:
+      213: -7360304580810779332
+    second: UITitletextbg_33
+  - first:
+      213: -8101751780415658102
+    second: UITitletextbg_34
+  - first:
+      213: 6113084067874477058
+    second: UITitletextbg_35
+  - first:
+      213: -3763013994382555137
+    second: UITitletextbg_36
+  - first:
+      213: -4391517115896901495
+    second: UITitletextbg_37
+  - first:
+      213: 7695791104026203985
+    second: UITitletextbg_38
+  - first:
+      213: 801702846286963709
+    second: UITitletextbg_39
+  - first:
+      213: 5131931898749782566
+    second: UITitletextbg_40
+  - first:
+      213: -7742845621156801422
+    second: UITitletextbg_41
+  - first:
+      213: 2471165105698014798
+    second: UITitletextbg_42
+  - first:
+      213: 269582707417424596
+    second: UITitletextbg_43
+  - first:
+      213: 1893377924345078518
+    second: UITitletextbg_44
+  - first:
+      213: 3239116772632517796
+    second: UITitletextbg_45
+  - first:
+      213: 5869602537591122409
+    second: UITitletextbg_46
+  - first:
+      213: -1202576588961421057
+    second: UITitletextbg_47
+  - first:
+      213: 1264095386949306049
+    second: UITitletextbg_48
+  - first:
+      213: 3438376188535644749
+    second: UITitletextbg_49
+  - first:
+      213: -4782183318122057113
+    second: UITitletextbg_50
+  - first:
+      213: -8767914789285132109
+    second: UITitletextbg_51
+  - first:
+      213: -7142093428261633631
+    second: UITitletextbg_52
+  - first:
+      213: 403202037014449166
+    second: UITitletextbg_53
+  - first:
+      213: -1152287730281879119
+    second: UITitletextbg_54
+  - first:
+      213: 6209107605585377055
+    second: UITitletextbg_55
+  - first:
+      213: 119772327111749896
+    second: UITitletextbg_56
+  - first:
+      213: 3915643643971317087
+    second: UITitletextbg_57
+  - first:
+      213: 4925803021617198473
+    second: UITitletextbg_58
+  - first:
+      213: 4447652885572229027
+    second: UITitletextbg_59
+  - first:
+      213: -3125161672628647906
+    second: UITitletextbg_60
+  - first:
+      213: 6036266996432020109
+    second: UITitletextbg_61
+  - first:
+      213: 9100152365621508357
+    second: UITitletextbg_62
+  - first:
+      213: 7283686466835063651
+    second: UITitletextbg_63
+  - first:
+      213: 8393507107792784604
+    second: UITitletextbg_64
+  - first:
+      213: -4241832423928778347
+    second: UITitletextbg_65
+  - first:
+      213: 6896034750908794239
+    second: UITitletextbg_66
+  - first:
+      213: -3954777827439439102
+    second: UITitletextbg_67
+  - first:
+      213: 8283813285367826007
+    second: UITitletextbg_68
+  - first:
+      213: -5399390590392400832
+    second: UITitletextbg_69
+  - first:
+      213: -6286640493945837605
+    second: UITitletextbg_70
+  - first:
+      213: 1115377913978704643
+    second: UITitletextbg_71
+  - first:
+      213: 4774132294291767383
+    second: UITitletextbg_72
+  - first:
+      213: -3583602821993834258
+    second: UITitletextbg_73
+  - first:
+      213: -5286186430844612436
+    second: UITitletextbg_74
+  - first:
+      213: 4729123920186731030
+    second: UITitletextbg_75
+  - first:
+      213: 7994258314687362364
+    second: UITitletextbg_76
+  - first:
+      213: 6172418019829098499
+    second: UITitletextbg_77
+  - first:
+      213: -565834800653699095
+    second: UITitletextbg_78
+  - first:
+      213: -4552523798462468853
+    second: UITitletextbg_79
+  - first:
+      213: 2883012250190695887
+    second: UITitletextbg_80
+  - first:
+      213: 3530328215761749398
+    second: UITitletextbg_81
+  - first:
+      213: 3401625121010074244
+    second: UITitletextbg_82
+  - first:
+      213: 3354584346752717587
+    second: UITitletextbg_83
+  - first:
+      213: 8870770447938890672
+    second: UITitletextbg_84
+  - first:
+      213: -5586560570421423191
+    second: UITitletextbg_85
+  - first:
+      213: -3656469723679952507
+    second: UITitletextbg_86
+  - first:
+      213: -931195811665750611
+    second: UITitletextbg_87
+  - first:
+      213: -2923405115395851577
+    second: UITitletextbg_88
+  - first:
+      213: -2943323010207763949
+    second: UITitletextbg_89
+  - first:
+      213: 121650002284171147
+    second: UITitletextbg_90
+  - first:
+      213: 4873282667332415495
+    second: UITitletextbg_91
+  - first:
+      213: -2272149592223887179
+    second: UITitletextbg_92
+  - first:
+      213: 6128346217696858864
+    second: UITitletextbg_93
+  - first:
+      213: 8371454058525872822
+    second: UITitletextbg_94
+  - first:
+      213: -1339027648858459891
+    second: UITitletextbg_95
+  - first:
+      213: 2306595229936967434
+    second: UITitletextbg_96
+  - first:
+      213: 7318996944653360229
+    second: UITitletextbg_97
+  - first:
+      213: 86935696093263894
+    second: UITitletextbg_98
+  - first:
+      213: 592123978418904919
+    second: UITitletextbg_99
+  - first:
+      213: 4406364854343915050
+    second: UITitletextbg_100
+  - first:
+      213: 2744493514313317325
+    second: UITitletextbg_101
+  - first:
+      213: 6593009890445547823
+    second: UITitletextbg_102
+  - first:
+      213: 6868657640665461234
+    second: UITitletextbg_103
+  - first:
+      213: 5665288792517326034
+    second: UITitletextbg_104
+  - first:
+      213: -949239115727271074
+    second: UITitletextbg_105
+  - first:
+      213: 5868275657985745055
+    second: UITitletextbg_106
+  - first:
+      213: 943599176055200075
+    second: UITitletextbg_107
+  - first:
+      213: -2913771847816000293
+    second: UITitletextbg_108
+  - first:
+      213: 3547023260182758775
+    second: UITitletextbg_109
+  - first:
+      213: -906375998582861358
+    second: UITitletextbg_110
+  - first:
+      213: -4911502275613144872
+    second: UITitletextbg_111
+  - first:
+      213: -5352667478582390642
+    second: UITitletextbg_112
+  - first:
+      213: -2670109334889359067
+    second: UITitletextbg_113
+  - first:
+      213: -2558057640371968915
+    second: UITitletextbg_114
+  - first:
+      213: 5059803168432628361
+    second: UITitletextbg_115
+  - first:
+      213: -2353679557559792420
+    second: UITitletextbg_116
+  - first:
+      213: -6519481320958034664
+    second: UITitletextbg_117
+  - first:
+      213: 6012031180537817762
+    second: UITitletextbg_118
+  - first:
+      213: 985877031958621488
+    second: UITitletextbg_119
+  - first:
+      213: -5637665976342273951
+    second: UITitletextbg_120
+  - first:
+      213: 924108195273441171
+    second: UITitletextbg_121
+  - first:
+      213: -190150676434238424
+    second: UITitletextbg_122
+  - first:
+      213: -7770087275551881817
+    second: UITitletextbg_123
+  - first:
+      213: 625037114187729862
+    second: UITitletextbg_124
+  - first:
+      213: 2654107817414575822
+    second: UITitletextbg_125
+  - first:
+      213: 3535217162207798341
+    second: UITitletextbg_126
+  - first:
+      213: 7844883132027189996
+    second: UITitletextbg_127
+  - first:
+      213: -79885192521669196
+    second: UITitletextbg_128
+  - first:
+      213: 8537028733499587764
+    second: UITitletextbg_129
+  - first:
+      213: 3062351250411645484
+    second: UITitletextbg_130
+  - first:
+      213: 817823758618894815
+    second: UITitletextbg_131
+  - first:
+      213: 7554799345193890022
+    second: UITitletextbg_132
+  - first:
+      213: 5862024392751333410
+    second: UITitletextbg_133
+  - first:
+      213: 6910795372151520868
+    second: UITitletextbg_134
+  - first:
+      213: 1061229412078582850
+    second: UITitletextbg_135
+  - first:
+      213: -6275301207493530286
+    second: UITitletextbg_136
+  - first:
+      213: 140103357524922252
+    second: UITitletextbg_137
+  - first:
+      213: 2747385761510828855
+    second: UITitletextbg_138
+  - first:
+      213: -7964330777502789447
+    second: UITitletextbg_139
+  - first:
+      213: -3607098139513237201
+    second: UITitletextbg_140
+  - first:
+      213: -1606460522576058242
+    second: UITitletextbg_141
+  - first:
+      213: -1514423147444096064
+    second: UITitletextbg_142
+  - first:
+      213: -8482520874168218466
+    second: UITitletextbg_143
+  - first:
+      213: 5232462962798114427
+    second: UITitletextbg_144
+  - first:
+      213: -2237208091087525839
+    second: UITitletextbg_145
+  - first:
+      213: 6017178760964659080
+    second: UITitletextbg_146
+  - first:
+      213: -2187622548623623609
+    second: UITitletextbg_147
+  - first:
+      213: 8184636672372635434
+    second: UITitletextbg_148
+  - first:
+      213: -975121933270305702
+    second: UITitletextbg_149
+  - first:
+      213: 8470960978097326297
+    second: UITitletextbg_150
+  - first:
+      213: -3556231720424076109
+    second: UITitletextbg_151
+  - first:
+      213: 4706797978499114872
+    second: UITitletextbg_152
+  - first:
+      213: -7377668904963105928
+    second: UITitletextbg_153
+  - first:
+      213: 1260464465152748444
+    second: UITitletextbg_154
+  - first:
+      213: 7135285656836266318
+    second: UITitletextbg_155
+  - first:
+      213: 8264837755672982312
+    second: UITitletextbg_156
+  - first:
+      213: 9066037877261186147
+    second: UITitletextbg_157
+  - first:
+      213: -1917201677404579873
+    second: UITitletextbg_158
+  - first:
+      213: -4602178783524100749
+    second: UITitletextbg_159
+  - first:
+      213: 3791836544025121627
+    second: UITitletextbg_160
+  - first:
+      213: -3206374775807690540
+    second: UITitletextbg_161
+  - first:
+      213: 5241658547447227629
+    second: UITitletextbg_162
+  - first:
+      213: -4519614014543707285
+    second: UITitletextbg_163
+  - first:
+      213: 8897468582286834262
+    second: UITitletextbg_164
+  - first:
+      213: 5468865451139734862
+    second: UITitletextbg_165
+  - first:
+      213: -8352820532003159334
+    second: UITitletextbg_166
+  - first:
+      213: 5160858160825289379
+    second: UITitletextbg_167
+  - first:
+      213: -1450898906742583156
+    second: UITitletextbg_168
+  - first:
+      213: 7959857327763110884
+    second: UITitletextbg_169
+  - first:
+      213: -6840771203578051726
+    second: UITitletextbg_170
+  - first:
+      213: -9173985849874274064
+    second: UITitletextbg_171
+  - first:
+      213: 7845047197653159700
+    second: UITitletextbg_172
+  - first:
+      213: -6319198720380499104
+    second: UITitletextbg_173
+  - first:
+      213: 6010563785249204440
+    second: UITitletextbg_174
+  - first:
+      213: 6830763435278708958
+    second: UITitletextbg_175
+  - first:
+      213: 2156462763360612497
+    second: UITitletextbg_176
+  - first:
+      213: 4750483846018925833
+    second: UITitletextbg_177
+  - first:
+      213: -7245419773680161170
+    second: UITitletextbg_178
+  - first:
+      213: 6864485387563790718
+    second: UITitletextbg_179
+  - first:
+      213: -771244602663361748
+    second: UITitletextbg_180
+  - first:
+      213: 3869154831697992951
+    second: UITitletextbg_181
+  - first:
+      213: 676013237638777283
+    second: UITitletextbg_182
+  - first:
+      213: -5381123148458316130
+    second: UITitletextbg_183
+  - first:
+      213: 2349415036779997435
+    second: UITitletextbg_184
+  - first:
+      213: -616863949991186301
+    second: UITitletextbg_185
+  - first:
+      213: -8535263070109584096
+    second: UITitletextbg_186
+  - first:
+      213: 9123018508704647619
+    second: UITitletextbg_187
+  - first:
+      213: -7910765692677694933
+    second: UITitletextbg_188
+  - first:
+      213: 8315237189734600124
+    second: UITitletextbg_189
+  - first:
+      213: -3008907987268607749
+    second: UITitletextbg_190
+  - first:
+      213: 3747650969466887900
+    second: UITitletextbg_191
+  - first:
+      213: -225521346471691732
+    second: UITitletextbg_192
+  - first:
+      213: -4331176106681372710
+    second: UITitletextbg_193
+  - first:
+      213: 4761463263420410985
+    second: UITitletextbg_194
+  - first:
+      213: 3672395786717250752
+    second: UITitletextbg_195
+  - first:
+      213: -3201000250460660040
+    second: UITitletextbg_196
+  - first:
+      213: -7783394195906436324
+    second: UITitletextbg_197
+  - first:
+      213: 5886343105143420884
+    second: UITitletextbg_198
+  - first:
+      213: 1903601856584780466
+    second: UITitletextbg_199
+  - first:
+      213: -2095428728807086357
+    second: UITitletextbg_200
+  - first:
+      213: -7232296284176192977
+    second: UITitletextbg_201
+  - first:
+      213: 1714971225681600790
+    second: UITitletextbg_202
+  - first:
+      213: 2827416748888286838
+    second: UITitletextbg_203
+  - first:
+      213: -5922430198104815429
+    second: UITitletextbg_204
+  - first:
+      213: -8861990686519301761
+    second: UITitletextbg_205
+  - first:
+      213: -1722874932690857910
+    second: UITitletextbg_206
+  - first:
+      213: 6367563437345175710
+    second: UITitletextbg_207
+  - first:
+      213: 3417037921438153993
+    second: UITitletextbg_208
+  - first:
+      213: 2110322565449205976
+    second: UITitletextbg_209
+  - first:
+      213: 1647992039524472032
+    second: UITitletextbg_210
+  - first:
+      213: 4164874256027781493
+    second: UITitletextbg_211
+  - first:
+      213: -9139472105262993952
+    second: UITitletextbg_212
+  - first:
+      213: 3885027765049810535
+    second: UITitletextbg_213
+  - first:
+      213: -993885280722762911
+    second: UITitletextbg_214
+  - first:
+      213: -7323222873628686721
+    second: UITitletextbg_215
+  - first:
+      213: -9074122703375230911
+    second: UITitletextbg_216
+  - first:
+      213: 5455792038643533923
+    second: UITitletextbg_217
+  - first:
+      213: 3765092291678516451
+    second: UITitletextbg_218
+  - first:
+      213: 2935533784697780532
+    second: UITitletextbg_219
+  - first:
+      213: -449350600301246170
+    second: UITitletextbg_220
+  - first:
+      213: 7236451172669819123
+    second: UITitletextbg_221
+  - first:
+      213: -2971767998734824442
+    second: UITitletextbg_222
+  - first:
+      213: -9190337242444743134
+    second: UITitletextbg_223
+  - first:
+      213: 1438790468425928122
+    second: UITitletextbg_224
+  - first:
+      213: -8652363342794365650
+    second: UITitletextbg_225
+  - first:
+      213: 7907312967210552299
+    second: UITitletextbg_226
+  - first:
+      213: -1337070459671903521
+    second: UITitletextbg_227
+  - first:
+      213: 6310813631173482251
+    second: UITitletextbg_228
+  - first:
+      213: -6685792560735576898
+    second: UITitletextbg_229
+  - first:
+      213: 6023442590110878533
+    second: UITitletextbg_230
+  - first:
+      213: -8185573639536683802
+    second: UITitletextbg_231
+  - first:
+      213: -380367907367538327
+    second: UITitletextbg_232
+  - first:
+      213: -6912254233762339163
+    second: UITitletextbg_233
+  - first:
+      213: 966764413755556963
+    second: UITitletextbg_234
+  - first:
+      213: 4634485732517049338
+    second: UITitletextbg_235
+  - first:
+      213: 420402030377188361
+    second: UITitletextbg_236
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: UITitletextbg_0
+      rect:
+        serializedVersion: 2
+        x: 1431
+        y: 1051
+        width: 54
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4b78652382f4d960800000000000000
+      internalID: 7625986714127334221
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_1
+      rect:
+        serializedVersion: 2
+        x: 1529
+        y: 1061
+        width: 36
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3ab6898fee9a4460800000000000000
+      internalID: 7226763303711062586
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_2
+      rect:
+        serializedVersion: 2
+        x: 1581
+        y: 1051
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a3eaf4661e3b84be0800000000000000
+      internalID: -1492745495807807942
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_3
+      rect:
+        serializedVersion: 2
+        x: 1607
+        y: 1043
+        width: 30
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2faa84f6232476d10800000000000000
+      internalID: 2118734934083939058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_4
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 1046
+        width: 10
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ebc84d28d967c450800000000000000
+      internalID: 6108967796744965088
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_5
+      rect:
+        serializedVersion: 2
+        x: 1685
+        y: 1054
+        width: 39
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12c3b361f2adb79e0800000000000000
+      internalID: -1622463344965632991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_6
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 959
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9aff461f1c2fad430800000000000000
+      internalID: 3808623349687713705
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_7
+      rect:
+        serializedVersion: 2
+        x: 200
+        y: 962
+        width: 8
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cc837878f78473d70800000000000000
+      internalID: 9022760091031910604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_8
+      rect:
+        serializedVersion: 2
+        x: 225
+        y: 949
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 98a48dc78b7cccf80800000000000000
+      internalID: -8084867635854423415
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_9
+      rect:
+        serializedVersion: 2
+        x: 254
+        y: 969
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 66c1f905dbd0572f0800000000000000
+      internalID: -975858637503259546
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_10
+      rect:
+        serializedVersion: 2
+        x: 284
+        y: 950
+        width: 35
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6908c0c4723bfeec0800000000000000
+      internalID: -3535410201101565802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_11
+      rect:
+        serializedVersion: 2
+        x: 330
+        y: 967
+        width: 10
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b8f9aa38776c22a0800000000000000
+      internalID: -6760915174512002895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_12
+      rect:
+        serializedVersion: 2
+        x: 357
+        y: 952
+        width: 10
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7652e6761905ce870800000000000000
+      internalID: 8713427964490818919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_13
+      rect:
+        serializedVersion: 2
+        x: 383
+        y: 968
+        width: 9
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 320586b2fb3e05b70800000000000000
+      internalID: 8885852475008503843
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_14
+      rect:
+        serializedVersion: 2
+        x: 435
+        y: 966
+        width: 6
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9610ccad639606910800000000000000
+      internalID: 1828577133032374633
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_15
+      rect:
+        serializedVersion: 2
+        x: 441
+        y: 966
+        width: 6
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 805118695062c6fb0800000000000000
+      internalID: -4653302509538831096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_16
+      rect:
+        serializedVersion: 2
+        x: 1450
+        y: 927
+        width: 42
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1741fcc9aa873b590800000000000000
+      internalID: -7659645867056491407
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_17
+      rect:
+        serializedVersion: 2
+        x: 1528
+        y: 927
+        width: 45
+        height: 62
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d2effecb5c0c05a0800000000000000
+      internalID: -6553849769276480807
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_18
+      rect:
+        serializedVersion: 2
+        x: 1578
+        y: 962
+        width: 16
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d79ce7a5b7a7f40c0800000000000000
+      internalID: -4589314825049421443
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_19
+      rect:
+        serializedVersion: 2
+        x: 1632
+        y: 967
+        width: 12
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bae0fc9d71c985a40800000000000000
+      internalID: 5357203383009611435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_20
+      rect:
+        serializedVersion: 2
+        x: 1658
+        y: 957
+        width: 12
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ce5320084305fec20800000000000000
+      internalID: 3237894843518825964
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_21
+      rect:
+        serializedVersion: 2
+        x: 1711
+        y: 967
+        width: 10
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f5b535c4e40d5f70800000000000000
+      internalID: 9177496996258625010
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_22
+      rect:
+        serializedVersion: 2
+        x: 1787
+        y: 917
+        width: 18
+        height: 59
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 13ba7716244e1e940800000000000000
+      internalID: 5323787208282843953
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_23
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 140
+        width: 386
+        height: 822
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ea80d7c47398b6120800000000000000
+      internalID: 2408169296359131310
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_24
+      rect:
+        serializedVersion: 2
+        x: 322
+        y: 924
+        width: 28
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 40b67c24b2b232390800000000000000
+      internalID: -7844378661145318652
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_25
+      rect:
+        serializedVersion: 2
+        x: 404
+        y: 927
+        width: 23
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e74b5cd67abcf290800000000000000
+      internalID: -7855198630375110688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_26
+      rect:
+        serializedVersion: 2
+        x: 1525
+        y: 923
+        width: 19
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: eb2472d49c9f4d8d0800000000000000
+      internalID: -2822356423476297026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_27
+      rect:
+        serializedVersion: 2
+        x: 1575
+        y: 919
+        width: 22
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6ccf56ae14d3d5050800000000000000
+      internalID: 5790852049183046854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_28
+      rect:
+        serializedVersion: 2
+        x: 1605
+        y: 952
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fba25dd32cff4fa10800000000000000
+      internalID: 1942458549029644991
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_29
+      rect:
+        serializedVersion: 2
+        x: 1627
+        y: 922
+        width: 20
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e34463b19a3186ea0800000000000000
+      internalID: -5879427696505240514
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_30
+      rect:
+        serializedVersion: 2
+        x: 1653
+        y: 909
+        width: 24
+        height: 46
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ca2d46a63fdd62a0800000000000000
+      internalID: -6742487641292461375
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_31
+      rect:
+        serializedVersion: 2
+        x: 1707
+        y: 931
+        width: 41
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a6f7153a34abf0dd0800000000000000
+      internalID: -2517588867011215510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_32
+      rect:
+        serializedVersion: 2
+        x: 1758
+        y: 900
+        width: 24
+        height: 53
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff014bf5a66cba0c0800000000000000
+      internalID: -4563335637235396353
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_33
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 916
+        width: 32
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c35d716faf1fad990800000000000000
+      internalID: -7360304580810779332
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_34
+      rect:
+        serializedVersion: 2
+        x: 1397
+        y: 888
+        width: 10
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a87afed3eabc09f80800000000000000
+      internalID: -8101751780415658102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_35
+      rect:
+        serializedVersion: 2
+        x: 1423
+        y: 892
+        width: 10
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20412cb329906d450800000000000000
+      internalID: 6113084067874477058
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_36
+      rect:
+        serializedVersion: 2
+        x: 1447
+        y: 912
+        width: 14
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff7010c95b617cbc0800000000000000
+      internalID: -3763013994382555137
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_37
+      rect:
+        serializedVersion: 2
+        x: 1548
+        y: 881
+        width: 51
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 980dae943723e03c0800000000000000
+      internalID: -4391517115896901495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_38
+      rect:
+        serializedVersion: 2
+        x: 1603
+        y: 913
+        width: 19
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 157d71d2c31fcca60800000000000000
+      internalID: 7695791104026203985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_39
+      rect:
+        serializedVersion: 2
+        x: 1678
+        y: 909
+        width: 26
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: df3aa58bd78302b00800000000000000
+      internalID: 801702846286963709
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_40
+      rect:
+        serializedVersion: 2
+        x: 1738
+        y: 910
+        width: 11
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 62a0a7c2fd8483740800000000000000
+      internalID: 5131931898749782566
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_41
+      rect:
+        serializedVersion: 2
+        x: 1844
+        y: 899
+        width: 31
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27492405ee2eb8490800000000000000
+      internalID: -7742845621156801422
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_42
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 886
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e46887222975b4220800000000000000
+      internalID: 2471165105698014798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_43
+      rect:
+        serializedVersion: 2
+        x: 1447
+        y: 871
+        width: 16
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d224394b00cdb300800000000000000
+      internalID: 269582707417424596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_44
+      rect:
+        serializedVersion: 2
+        x: 1503
+        y: 901
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f2a72ec031a64a10800000000000000
+      internalID: 1893377924345078518
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_45
+      rect:
+        serializedVersion: 2
+        x: 1599
+        y: 874
+        width: 53
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ac55ca0b87a3fc20800000000000000
+      internalID: 3239116772632517796
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_46
+      rect:
+        serializedVersion: 2
+        x: 1707
+        y: 848
+        width: 21
+        height: 57
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e9a9d1d864057150800000000000000
+      internalID: 5869602537591122409
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_47
+      rect:
+        serializedVersion: 2
+        x: 1786
+        y: 870
+        width: 20
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ff8e0cfb6f69f4fe0800000000000000
+      internalID: -1202576588961421057
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_48
+      rect:
+        serializedVersion: 2
+        x: 516
+        y: 879
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c6c2559e08fa8110800000000000000
+      internalID: 1264095386949306049
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_49
+      rect:
+        serializedVersion: 2
+        x: 1441
+        y: 110
+        width: 439
+        height: 789
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d4224d91de097bf20800000000000000
+      internalID: 3438376188535644749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_50
+      rect:
+        serializedVersion: 2
+        x: 1473
+        y: 886
+        width: 14
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7623988fb9542adb0800000000000000
+      internalID: -4782183318122057113
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_51
+      rect:
+        serializedVersion: 2
+        x: 1871
+        y: 878
+        width: 9
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3b804cb14fb125680800000000000000
+      internalID: -8767914789285132109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_52
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 840
+        width: 17
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a140df0edf22ec90800000000000000
+      internalID: -7142093428261633631
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_53
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 837
+        width: 15
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0cc5fccd16789500800000000000000
+      internalID: 403202037014449166
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_54
+      rect:
+        serializedVersion: 2
+        x: 540
+        y: 819
+        width: 32
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1b9e1851a604200f0800000000000000
+      internalID: -1152287730281879119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_55
+      rect:
+        serializedVersion: 2
+        x: 1399
+        y: 850
+        width: 6
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f17b713587e2b2650800000000000000
+      internalID: 6209107605585377055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_56
+      rect:
+        serializedVersion: 2
+        x: 1422
+        y: 849
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 801fa630c4489a100800000000000000
+      internalID: 119772327111749896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_57
+      rect:
+        serializedVersion: 2
+        x: 1870
+        y: 833
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f5d2de1f529275630800000000000000
+      internalID: 3915643643971317087
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_58
+      rect:
+        serializedVersion: 2
+        x: 100
+        y: 796
+        width: 35
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 985f90900c7fb5440800000000000000
+      internalID: 4925803021617198473
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_59
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 794
+        width: 18
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3a716c81cbc39bd30800000000000000
+      internalID: 4447652885572229027
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_60
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 811
+        width: 15
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e18cd4d340231a4d0800000000000000
+      internalID: -3125161672628647906
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_61
+      rect:
+        serializedVersion: 2
+        x: 1420
+        y: 805
+        width: 17
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d82aebb0ad025c350800000000000000
+      internalID: 6036266996432020109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_62
+      rect:
+        serializedVersion: 2
+        x: 1870
+        y: 791
+        width: 10
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 509fcc2ac5c3a4e70800000000000000
+      internalID: 9100152365621508357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_63
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 757
+        width: 9
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 363260f304ad41560800000000000000
+      internalID: 7283686466835063651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_64
+      rect:
+        serializedVersion: 2
+        x: 117
+        y: 758
+        width: 19
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdc84bb6e3abb7470800000000000000
+      internalID: 8393507107792784604
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_65
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 756
+        width: 21
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 591bdf672ebf125c0800000000000000
+      internalID: -4241832423928778347
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_66
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 764
+        width: 36
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f750ba6b113a3bf50800000000000000
+      internalID: 6896034750908794239
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_67
+      rect:
+        serializedVersion: 2
+        x: 1371
+        y: 754
+        width: 8
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20391ede48ecd19c0800000000000000
+      internalID: -3954777827439439102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_68
+      rect:
+        serializedVersion: 2
+        x: 1398
+        y: 771
+        width: 10
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 756c2042b4406f270800000000000000
+      internalID: 8283813285367826007
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_69
+      rect:
+        serializedVersion: 2
+        x: 1415
+        y: 715
+        width: 28
+        height: 81
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 04403108dd28115b0800000000000000
+      internalID: -5399390590392400832
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_70
+      rect:
+        serializedVersion: 2
+        x: 1869
+        y: 744
+        width: 13
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bd7a5cf57cd51c8a0800000000000000
+      internalID: -6286640493945837605
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_71
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 771
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3035401ad4e9a7f00800000000000000
+      internalID: 1115377913978704643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_72
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 714
+        width: 12
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7504bf7f600214240800000000000000
+      internalID: 4774132294291767383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_73
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 717
+        width: 20
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee858fa583c744ec0800000000000000
+      internalID: -3583602821993834258
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_74
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 713
+        width: 26
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ca05405d271b3a6b0800000000000000
+      internalID: -5286186430844612436
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_75
+      rect:
+        serializedVersion: 2
+        x: 565
+        y: 694
+        width: 14
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 61a6881462931a140800000000000000
+      internalID: 4729123920186731030
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_76
+      rect:
+        serializedVersion: 2
+        x: 1372
+        y: 713
+        width: 7
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3537a1f49f41fe60800000000000000
+      internalID: 7994258314687362364
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_77
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 732
+        width: 14
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 30822257c75d8a550800000000000000
+      internalID: 6172418019829098499
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_78
+      rect:
+        serializedVersion: 2
+        x: 1867
+        y: 698
+        width: 14
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9e77b792f30c528f0800000000000000
+      internalID: -565834800653699095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_79
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 724
+        width: 11
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0de121c9bf22d0c0800000000000000
+      internalID: -4552523798462468853
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_80
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 675
+        width: 10
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fcd47bfdd54820820800000000000000
+      internalID: 2883012250190695887
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_81
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 675
+        width: 19
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6958409cece3ef030800000000000000
+      internalID: 3530328215761749398
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_82
+      rect:
+        serializedVersion: 2
+        x: 508
+        y: 673
+        width: 22
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 482c9d46600053f20800000000000000
+      internalID: 3401625121010074244
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_83
+      rect:
+        serializedVersion: 2
+        x: 537
+        y: 688
+        width: 16
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3131845a0b0ed8e20800000000000000
+      internalID: 3354584346752717587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_84
+      rect:
+        serializedVersion: 2
+        x: 1370
+        y: 675
+        width: 11
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0bb2e6919be4b1b70800000000000000
+      internalID: 8870770447938890672
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_85
+      rect:
+        serializedVersion: 2
+        x: 1394
+        y: 691
+        width: 17
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9a3d3d392cc8872b0800000000000000
+      internalID: -5586560570421423191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_86
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 676
+        width: 24
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 581f51cb82c914dc0800000000000000
+      internalID: -3656469723679952507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_87
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 682
+        width: 9
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da5d45dc75ab313f0800000000000000
+      internalID: -931195811665750611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_88
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 636
+        width: 10
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7ca3542598afd67d0800000000000000
+      internalID: -2923405115395851577
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_89
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 635
+        width: 19
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 312355d01573727d0800000000000000
+      internalID: -2943323010207763949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_90
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 629
+        width: 25
+        height: 42
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b8fc215580030b100800000000000000
+      internalID: 121650002284171147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_91
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 658
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 700ba6424c061a340800000000000000
+      internalID: 4873282667332415495
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_92
+      rect:
+        serializedVersion: 2
+        x: 1370
+        y: 635
+        width: 11
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b052f6fbf3b770e0800000000000000
+      internalID: -2272149592223887179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_93
+      rect:
+        serializedVersion: 2
+        x: 1393
+        y: 652
+        width: 19
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f21e666a624c0550800000000000000
+      internalID: 6128346217696858864
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_94
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 633
+        width: 24
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6b2dfe3cc116d2470800000000000000
+      internalID: 8371454058525872822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_95
+      rect:
+        serializedVersion: 2
+        x: 1867
+        y: 654
+        width: 16
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d017d55a271da6de0800000000000000
+      internalID: -1339027648858459891
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_96
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 631
+        width: 10
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a0fd009042ca20020800000000000000
+      internalID: 2306595229936967434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_97
+      rect:
+        serializedVersion: 2
+        x: 91
+        y: 588
+        width: 19
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 56c9b3681fc429560800000000000000
+      internalID: 7318996944653360229
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_98
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 591
+        width: 21
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 618b0f31e8bd43100800000000000000
+      internalID: 86935696093263894
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_99
+      rect:
+        serializedVersion: 2
+        x: 508
+        y: 593
+        width: 22
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75f56a40f95a73800800000000000000
+      internalID: 592123978418904919
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_100
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 609
+        width: 21
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a265fe53d7d862d30800000000000000
+      internalID: 4406364854343915050
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_101
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 617
+        width: 11
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dcb32017f46661620800000000000000
+      internalID: 2744493514313317325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_102
+      rect:
+        serializedVersion: 2
+        x: 1347
+        y: 560
+        width: 36
+        height: 61
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f29d4a860931f7b50800000000000000
+      internalID: 6593009890445547823
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_103
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 573
+        width: 21
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2f133a38bbf525f50800000000000000
+      internalID: 6868657640665461234
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_104
+      rect:
+        serializedVersion: 2
+        x: 1416
+        y: 590
+        width: 24
+        height: 43
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d43ffb04262f9e40800000000000000
+      internalID: 5665288792517326034
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_105
+      rect:
+        serializedVersion: 2
+        x: 1863
+        y: 608
+        width: 21
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e5b8b24bd00a3d2f0800000000000000
+      internalID: -949239115727271074
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_106
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 593
+        width: 11
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f90ef469e9d407150800000000000000
+      internalID: 5868275657985745055
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_107
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 552
+        width: 13
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b491f138376581d00800000000000000
+      internalID: 943599176055200075
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_108
+      rect:
+        serializedVersion: 2
+        x: 116
+        y: 553
+        width: 19
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdcc46631f33097d0800000000000000
+      internalID: -2913771847816000293
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_109
+      rect:
+        serializedVersion: 2
+        x: 506
+        y: 551
+        width: 26
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 775cd39bcde893130800000000000000
+      internalID: 3547023260182758775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_110
+      rect:
+        serializedVersion: 2
+        x: 569
+        y: 577
+        width: 7
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2d1578bd4d7eb63f0800000000000000
+      internalID: -906375998582861358
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_111
+      rect:
+        serializedVersion: 2
+        x: 1370
+        y: 556
+        width: 12
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d84e8cd3b6d6dbb0800000000000000
+      internalID: -4911502275613144872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_112
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 509
+        width: 23
+        height: 79
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e809f42b94187b5b0800000000000000
+      internalID: -5352667478582390642
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_113
+      rect:
+        serializedVersion: 2
+        x: 1864
+        y: 565
+        width: 21
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 529177ee4bdd1fad0800000000000000
+      internalID: -2670109334889359067
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_114
+      rect:
+        serializedVersion: 2
+        x: 533
+        y: 533
+        width: 24
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d64a7a61124ff7cd0800000000000000
+      internalID: -2558057640371968915
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_115
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 539
+        width: 11
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 982a2d77c28083640800000000000000
+      internalID: 5059803168432628361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_116
+      rect:
+        serializedVersion: 2
+        x: 1391
+        y: 532
+        width: 23
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cdccc88a9ec065fd0800000000000000
+      internalID: -2353679557559792420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_117
+      rect:
+        serializedVersion: 2
+        x: 1867
+        y: 525
+        width: 14
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81d7080c7462685a0800000000000000
+      internalID: -6519481320958034664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_118
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 549
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2aa678e61860f6350800000000000000
+      internalID: 6012031180537817762
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_119
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 471
+        width: 13
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03d2c1aefe98ead00800000000000000
+      internalID: 985877031958621488
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_120
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 514
+        width: 10
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 16020d50aacf2c1b0800000000000000
+      internalID: -5637665976342273951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_121
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 434
+        width: 11
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 39ffc49e18713dc00800000000000000
+      internalID: 924108195273441171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_122
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 468
+        width: 25
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 824465d97f27c5df0800000000000000
+      internalID: -190150676434238424
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_123
+      rect:
+        serializedVersion: 2
+        x: 115
+        y: 508
+        width: 22
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7a582f26aca1b2490800000000000000
+      internalID: -7770087275551881817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_124
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 433
+        width: 11
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6cb489a91f39ca800800000000000000
+      internalID: 625037114187729862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_125
+      rect:
+        serializedVersion: 2
+        x: 508
+        y: 512
+        width: 22
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ec645947ff845d420800000000000000
+      internalID: 2654107817414575822
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_126
+      rect:
+        serializedVersion: 2
+        x: 508
+        y: 470
+        width: 22
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 544a245574d9f0130800000000000000
+      internalID: 3535217162207798341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_127
+      rect:
+        serializedVersion: 2
+        x: 508
+        y: 428
+        width: 23
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cea3fe405af9edc60800000000000000
+      internalID: 7844883132027189996
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_128
+      rect:
+        serializedVersion: 2
+        x: 535
+        y: 455
+        width: 21
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b5aee437d034eef0800000000000000
+      internalID: -79885192521669196
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_129
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 491
+        width: 12
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4bcbb89e66e997670800000000000000
+      internalID: 8537028733499587764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_130
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 458
+        width: 12
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2a624abc38af7a20800000000000000
+      internalID: 3062351250411645484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_131
+      rect:
+        serializedVersion: 2
+        x: 567
+        y: 420
+        width: 10
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd1aa5d106e795b00800000000000000
+      internalID: 817823758618894815
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_132
+      rect:
+        serializedVersion: 2
+        x: 1348
+        y: 440
+        width: 34
+        height: 102
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e0b2a73af908d860800000000000000
+      internalID: 7554799345193890022
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_133
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 455
+        width: 20
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2204e9a70281a5150800000000000000
+      internalID: 5862024392751333410
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_134
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 418
+        width: 21
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46e3188a6c318ef50800000000000000
+      internalID: 6910795372151520868
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_135
+      rect:
+        serializedVersion: 2
+        x: 1393
+        y: 498
+        width: 19
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 24cf324178e3abe00800000000000000
+      internalID: 1061229412078582850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_136
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 469
+        width: 23
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 25da4ccbcc6a9e8a0800000000000000
+      internalID: -6275301207493530286
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_137
+      rect:
+        serializedVersion: 2
+        x: 1419
+        y: 425
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c8fcc19e24fb1f100800000000000000
+      internalID: 140103357524922252
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_138
+      rect:
+        serializedVersion: 2
+        x: 1863
+        y: 478
+        width: 22
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 73ba1d73bcca02620800000000000000
+      internalID: 2747385761510828855
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_139
+      rect:
+        serializedVersion: 2
+        x: 1864
+        y: 431
+        width: 20
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9b05c3dca53097190800000000000000
+      internalID: -7964330777502789447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_140
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 416
+        width: 11
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2157547a5301fdc0800000000000000
+      internalID: -3607098139513237201
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_141
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 507
+        width: 8
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e786a268aa4b4b9e0800000000000000
+      internalID: -1606460522576058242
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_142
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 461
+        width: 10
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c337f0db20bbfae0800000000000000
+      internalID: -1514423147444096064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_143
+      rect:
+        serializedVersion: 2
+        x: 93
+        y: 393
+        width: 11
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9c0e5f0538084a80800000000000000
+      internalID: -8482520874168218466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_144
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 386
+        width: 24
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b7638f587517d9840800000000000000
+      internalID: 5232462962798114427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_145
+      rect:
+        serializedVersion: 2
+        x: 536
+        y: 377
+        width: 38
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 138291a2817d3f0e0800000000000000
+      internalID: -2237208091087525839
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_146
+      rect:
+        serializedVersion: 2
+        x: 1350
+        y: 360
+        width: 31
+        height: 65
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 887d255e330518350800000000000000
+      internalID: 6017178760964659080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_147
+      rect:
+        serializedVersion: 2
+        x: 1392
+        y: 378
+        width: 21
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 74a77aee1e004a1e0800000000000000
+      internalID: -2187622548623623609
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_148
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 311
+        width: 52
+        height: 117
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a27f76080bba59170800000000000000
+      internalID: 8184636672372635434
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_149
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 394
+        width: 17
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a543bb2a4cba772f0800000000000000
+      internalID: -975121933270305702
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_150
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 371
+        width: 10
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9d8cfa5e026ee8570800000000000000
+      internalID: 8470960978097326297
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_151
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 356
+        width: 10
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3bc852d871ab5aec0800000000000000
+      internalID: -3556231720424076109
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_152
+      rect:
+        serializedVersion: 2
+        x: 120
+        y: 353
+        width: 10
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87767f1e2d7e15140800000000000000
+      internalID: 4706797978499114872
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_153
+      rect:
+        serializedVersion: 2
+        x: 507
+        y: 349
+        width: 25
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 87b9a3138314d9990800000000000000
+      internalID: -7377668904963105928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_154
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 343
+        width: 9
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c9bae69b0c11e7110800000000000000
+      internalID: 1260464465152748444
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_155
+      rect:
+        serializedVersion: 2
+        x: 1865
+        y: 349
+        width: 18
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e495aa22080a50360800000000000000
+      internalID: 7135285656836266318
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_156
+      rect:
+        serializedVersion: 2
+        x: 94
+        y: 315
+        width: 10
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 823ff19562a92b270800000000000000
+      internalID: 8264837755672982312
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_157
+      rect:
+        serializedVersion: 2
+        x: 508
+        y: 306
+        width: 23
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 364b36a5a6901dd70800000000000000
+      internalID: 9066037877261186147
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_158
+      rect:
+        serializedVersion: 2
+        x: 538
+        y: 305
+        width: 13
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd7548f6b3bb465e0800000000000000
+      internalID: -1917201677404579873
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_159
+      rect:
+        serializedVersion: 2
+        x: 1396
+        y: 339
+        width: 11
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 375e43f97c6c120c0800000000000000
+      internalID: -4602178783524100749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_160
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 302
+        width: 23
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b5356fc2f3f4f9430800000000000000
+      internalID: 3791836544025121627
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_161
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 327
+        width: 9
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d8b537212ba083d0800000000000000
+      internalID: -3206374775807690540
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_162
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 309
+        width: 13
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: de46b7a6dac1eb840800000000000000
+      internalID: 5241658547447227629
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_163
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 300
+        width: 12
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b63ce3deffa1741c0800000000000000
+      internalID: -4519614014543707285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_164
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 295
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65ab767e8882a7b70800000000000000
+      internalID: 8897468582286834262
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_165
+      rect:
+        serializedVersion: 2
+        x: 1866
+        y: 306
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e4d179b072055eb40800000000000000
+      internalID: 5468865451139734862
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_166
+      rect:
+        serializedVersion: 2
+        x: 1895
+        y: 281
+        width: 10
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad2cc553bf1d41c80800000000000000
+      internalID: -8352820532003159334
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_167
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 237
+        width: 8
+        height: 64
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3aaca24672d0f9740800000000000000
+      internalID: 5160858160825289379
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_168
+      rect:
+        serializedVersion: 2
+        x: 119
+        y: 267
+        width: 12
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c801b9aa12f5ddbe0800000000000000
+      internalID: -1450898906742583156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_169
+      rect:
+        serializedVersion: 2
+        x: 509
+        y: 220
+        width: 19
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4eb3c140118177e60800000000000000
+      internalID: 7959857327763110884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_170
+      rect:
+        serializedVersion: 2
+        x: 543
+        y: 237
+        width: 6
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 273420595d2b011a0800000000000000
+      internalID: -6840771203578051726
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_171
+      rect:
+        serializedVersion: 2
+        x: 566
+        y: 262
+        width: 9
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0f8a8c3b9747fa080800000000000000
+      internalID: -9173985849874274064
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_172
+      rect:
+        serializedVersion: 2
+        x: 1394
+        y: 255
+        width: 18
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41f4a468cd43fdc60800000000000000
+      internalID: 7845047197653159700
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_173
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 219
+        width: 13
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06b0e9e8e32bd48a0800000000000000
+      internalID: -6319198720380499104
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_174
+      rect:
+        serializedVersion: 2
+        x: 1417
+        y: 260
+        width: 21
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d82b97daefc96350800000000000000
+      internalID: 6010563785249204440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_175
+      rect:
+        serializedVersion: 2
+        x: 1418
+        y: 215
+        width: 21
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed0b388472fbbce50800000000000000
+      internalID: 6830763435278708958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_176
+      rect:
+        serializedVersion: 2
+        x: 1868
+        y: 255
+        width: 12
+        height: 39
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1907775357b4ded10800000000000000
+      internalID: 2156462763360612497
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_177
+      rect:
+        serializedVersion: 2
+        x: 1869
+        y: 218
+        width: 13
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 905803983eb1de140800000000000000
+      internalID: 4750483846018925833
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_178
+      rect:
+        serializedVersion: 2
+        x: 1896
+        y: 238
+        width: 9
+        height: 26
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e6ee33d8a19137b90800000000000000
+      internalID: -7245419773680161170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_179
+      rect:
+        serializedVersion: 2
+        x: 376
+        y: 165
+        width: 24
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e717993271d834f50800000000000000
+      internalID: 6864485387563790718
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_180
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 163
+        width: 22
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c23205fbe1dfb45f0800000000000000
+      internalID: -771244602663361748
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_181
+      rect:
+        serializedVersion: 2
+        x: 513
+        y: 190
+        width: 12
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7fc585cd1dff1b530800000000000000
+      internalID: 3869154831697992951
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_182
+      rect:
+        serializedVersion: 2
+        x: 1395
+        y: 179
+        width: 13
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c9cbec357ea16900800000000000000
+      internalID: 676013237638777283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_183
+      rect:
+        serializedVersion: 2
+        x: 1420
+        y: 180
+        width: 19
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9ea283c1096255b0800000000000000
+      internalID: -5381123148458316130
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_184
+      rect:
+        serializedVersion: 2
+        x: 1869
+        y: 176
+        width: 13
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf8ab39378cca9020800000000000000
+      internalID: 2349415036779997435
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_185
+      rect:
+        serializedVersion: 2
+        x: 1898
+        y: 197
+        width: 7
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 380f70a71857077f0800000000000000
+      internalID: -616863949991186301
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_186
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 162
+        width: 20
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 025bb91a577ac8980800000000000000
+      internalID: -8535263070109584096
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_187
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 151
+        width: 16
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3c987a27ff87b9e70800000000000000
+      internalID: 9123018508704647619
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_188
+      rect:
+        serializedVersion: 2
+        x: 220
+        y: 120
+        width: 24
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b2a599af380573290800000000000000
+      internalID: -7910765692677694933
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_189
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 99
+        width: 22
+        height: 73
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cbd8f350b28a56370800000000000000
+      internalID: 8315237189734600124
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_190
+      rect:
+        serializedVersion: 2
+        x: 297
+        y: 94
+        width: 24
+        height: 91
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf0e401a0263e36d0800000000000000
+      internalID: -3008907987268607749
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_191
+      rect:
+        serializedVersion: 2
+        x: 323
+        y: 133
+        width: 23
+        height: 41
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cded83963b4520430800000000000000
+      internalID: 3747650969466887900
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_192
+      rect:
+        serializedVersion: 2
+        x: 375
+        y: 126
+        width: 27
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c2a794eb789cedcf0800000000000000
+      internalID: -225521346471691732
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_193
+      rect:
+        serializedVersion: 2
+        x: 429
+        y: 133
+        width: 23
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: adfe89d474294e3c0800000000000000
+      internalID: -4331176106681372710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_194
+      rect:
+        serializedVersion: 2
+        x: 514
+        y: 148
+        width: 12
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 96cee3b5c9d141240800000000000000
+      internalID: 4761463263420410985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_195
+      rect:
+        serializedVersion: 2
+        x: 539
+        y: 157
+        width: 14
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0c44ce5c288f6f230800000000000000
+      internalID: 3672395786717250752
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_196
+      rect:
+        serializedVersion: 2
+        x: 1423
+        y: 135
+        width: 8
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8be1b595b33c393d0800000000000000
+      internalID: -3201000250460660040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_197
+      rect:
+        serializedVersion: 2
+        x: 1474
+        y: 138
+        width: 13
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c13e82e8734dbf390800000000000000
+      internalID: -7783394195906436324
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_198
+      rect:
+        serializedVersion: 2
+        x: 1521
+        y: 127
+        width: 25
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d7b420fddd70b150800000000000000
+      internalID: 5886343105143420884
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_199
+      rect:
+        serializedVersion: 2
+        x: 1573
+        y: 131
+        width: 26
+        height: 40
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2ba82878dc3fa6a10800000000000000
+      internalID: 1903601856584780466
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_200
+      rect:
+        serializedVersion: 2
+        x: 1604
+        y: 133
+        width: 17
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be62e475caa8be2e0800000000000000
+      internalID: -2095428728807086357
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_201
+      rect:
+        serializedVersion: 2
+        x: 1707
+        y: 132
+        width: 20
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f2aec4f09d8b1ab90800000000000000
+      internalID: -7232296284176192977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_202
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 106
+        width: 16
+        height: 47
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 611a4c25e3dccc710800000000000000
+      internalID: 1714971225681600790
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_203
+      rect:
+        serializedVersion: 2
+        x: 195
+        y: 112
+        width: 18
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 676e9758d800d3720800000000000000
+      internalID: 2827416748888286838
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_204
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 101
+        width: 35
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bb88aeafc1d4fcda0800000000000000
+      internalID: -5922430198104815429
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_205
+      rect:
+        serializedVersion: 2
+        x: 327
+        y: 100
+        width: 18
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f7962376c62e30580800000000000000
+      internalID: -8861990686519301761
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_206
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 126
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a40598c706e1718e0800000000000000
+      internalID: -1722874932690857910
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_207
+      rect:
+        serializedVersion: 2
+        x: 379
+        y: 96
+        width: 17
+        height: 25
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e9879bf95312e5850800000000000000
+      internalID: 6367563437345175710
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_208
+      rect:
+        serializedVersion: 2
+        x: 403
+        y: 120
+        width: 22
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90d3c53a2e1cb6f20800000000000000
+      internalID: 3417037921438153993
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_209
+      rect:
+        serializedVersion: 2
+        x: 433
+        y: 99
+        width: 14
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8d8471b313f594d10800000000000000
+      internalID: 2110322565449205976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_210
+      rect:
+        serializedVersion: 2
+        x: 463
+        y: 111
+        width: 9
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0e4178c4708ded610800000000000000
+      internalID: 1647992039524472032
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_211
+      rect:
+        serializedVersion: 2
+        x: 515
+        y: 125
+        width: 7
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 57984b4c11b9cc930800000000000000
+      internalID: 4164874256027781493
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_212
+      rect:
+        serializedVersion: 2
+        x: 1449
+        y: 116
+        width: 11
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ed25331b821a2180800000000000000
+      internalID: -9139472105262993952
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_213
+      rect:
+        serializedVersion: 2
+        x: 1526
+        y: 91
+        width: 14
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 76ed2562b246ae530800000000000000
+      internalID: 3885027765049810535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_214
+      rect:
+        serializedVersion: 2
+        x: 1548
+        y: 120
+        width: 23
+        height: 38
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 163c70f5a920532f0800000000000000
+      internalID: -993885280722762911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_215
+      rect:
+        serializedVersion: 2
+        x: 1576
+        y: 97
+        width: 19
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f76c856b89fae5a90800000000000000
+      internalID: -7323222873628686721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_216
+      rect:
+        serializedVersion: 2
+        x: 1605
+        y: 98
+        width: 15
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 14813016a7d321280800000000000000
+      internalID: -9074122703375230911
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_217
+      rect:
+        serializedVersion: 2
+        x: 1631
+        y: 104
+        width: 14
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 36880cff3fdd6bb40800000000000000
+      internalID: 5455792038643533923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_218
+      rect:
+        serializedVersion: 2
+        x: 1653
+        y: 106
+        width: 22
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3e43f00bd7b404430800000000000000
+      internalID: 3765092291678516451
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_219
+      rect:
+        serializedVersion: 2
+        x: 1680
+        y: 109
+        width: 23
+        height: 37
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 439b11f8c6c1db820800000000000000
+      internalID: 2935533784697780532
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_220
+      rect:
+        serializedVersion: 2
+        x: 1709
+        y: 108
+        width: 16
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6298f61820693c9f0800000000000000
+      internalID: -449350600301246170
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_221
+      rect:
+        serializedVersion: 2
+        x: 1734
+        y: 116
+        width: 20
+        height: 30
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f8817d400a0d6460800000000000000
+      internalID: 7236451172669819123
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_222
+      rect:
+        serializedVersion: 2
+        x: 1763
+        y: 120
+        width: 14
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 60c898010c822c6d0800000000000000
+      internalID: -2971767998734824442
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_223
+      rect:
+        serializedVersion: 2
+        x: 1790
+        y: 110
+        width: 12
+        height: 24
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 22eb90278fc557080800000000000000
+      internalID: -9190337242444743134
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_224
+      rect:
+        serializedVersion: 2
+        x: 411
+        y: 99
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: abdceb8de4c97f310800000000000000
+      internalID: 1438790468425928122
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_225
+      rect:
+        serializedVersion: 2
+        x: 1555
+        y: 90
+        width: 9
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e256125c161ace780800000000000000
+      internalID: -8652363342794365650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_226
+      rect:
+        serializedVersion: 2
+        x: 1737
+        y: 89
+        width: 7
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bebcc6abf3b6cbd60800000000000000
+      internalID: 7907312967210552299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_227
+      rect:
+        serializedVersion: 2
+        x: 1744
+        y: 90
+        width: 7
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fd286934085c17de0800000000000000
+      internalID: -1337070459671903521
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_228
+      rect:
+        serializedVersion: 2
+        x: 1764
+        y: 100
+        width: 12
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b07d9c9bf83849750800000000000000
+      internalID: 6310813631173482251
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_229
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 83
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ebc186fb61b4733a0800000000000000
+      internalID: -6685792560735576898
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_230
+      rect:
+        serializedVersion: 2
+        x: 1529
+        y: 15
+        width: 7
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54b84844f11979350800000000000000
+      internalID: 6023442590110878533
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_231
+      rect:
+        serializedVersion: 2
+        x: 1580
+        y: 1
+        width: 13
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e45d94d420076e80800000000000000
+      internalID: -8185573639536683802
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_232
+      rect:
+        serializedVersion: 2
+        x: 1607
+        y: 17
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 961366d4769a8baf0800000000000000
+      internalID: -380367907367538327
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_233
+      rect:
+        serializedVersion: 2
+        x: 1660
+        y: 29
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5a6e767a56db210a0800000000000000
+      internalID: -6912254233762339163
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_234
+      rect:
+        serializedVersion: 2
+        x: 1448
+        y: 4
+        width: 12
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3648367bc13aa6d00800000000000000
+      internalID: 966764413755556963
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_235
+      rect:
+        serializedVersion: 2
+        x: 1555
+        y: 3
+        width: 9
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af37b4b1830015040800000000000000
+      internalID: 4634485732517049338
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UITitletextbg_236
+      rect:
+        serializedVersion: 2
+        x: 1657
+        y: 2
+        width: 15
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90c3c735b6195d500800000000000000
+      internalID: 420402030377188361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      UITitletextbg_0: 7625986714127334221
+      UITitletextbg_1: 7226763303711062586
+      UITitletextbg_10: -3535410201101565802
+      UITitletextbg_100: 4406364854343915050
+      UITitletextbg_101: 2744493514313317325
+      UITitletextbg_102: 6593009890445547823
+      UITitletextbg_103: 6868657640665461234
+      UITitletextbg_104: 5665288792517326034
+      UITitletextbg_105: -949239115727271074
+      UITitletextbg_106: 5868275657985745055
+      UITitletextbg_107: 943599176055200075
+      UITitletextbg_108: -2913771847816000293
+      UITitletextbg_109: 3547023260182758775
+      UITitletextbg_11: -6760915174512002895
+      UITitletextbg_110: -906375998582861358
+      UITitletextbg_111: -4911502275613144872
+      UITitletextbg_112: -5352667478582390642
+      UITitletextbg_113: -2670109334889359067
+      UITitletextbg_114: -2558057640371968915
+      UITitletextbg_115: 5059803168432628361
+      UITitletextbg_116: -2353679557559792420
+      UITitletextbg_117: -6519481320958034664
+      UITitletextbg_118: 6012031180537817762
+      UITitletextbg_119: 985877031958621488
+      UITitletextbg_12: 8713427964490818919
+      UITitletextbg_120: -5637665976342273951
+      UITitletextbg_121: 924108195273441171
+      UITitletextbg_122: -190150676434238424
+      UITitletextbg_123: -7770087275551881817
+      UITitletextbg_124: 625037114187729862
+      UITitletextbg_125: 2654107817414575822
+      UITitletextbg_126: 3535217162207798341
+      UITitletextbg_127: 7844883132027189996
+      UITitletextbg_128: -79885192521669196
+      UITitletextbg_129: 8537028733499587764
+      UITitletextbg_13: 8885852475008503843
+      UITitletextbg_130: 3062351250411645484
+      UITitletextbg_131: 817823758618894815
+      UITitletextbg_132: 7554799345193890022
+      UITitletextbg_133: 5862024392751333410
+      UITitletextbg_134: 6910795372151520868
+      UITitletextbg_135: 1061229412078582850
+      UITitletextbg_136: -6275301207493530286
+      UITitletextbg_137: 140103357524922252
+      UITitletextbg_138: 2747385761510828855
+      UITitletextbg_139: -7964330777502789447
+      UITitletextbg_14: 1828577133032374633
+      UITitletextbg_140: -3607098139513237201
+      UITitletextbg_141: -1606460522576058242
+      UITitletextbg_142: -1514423147444096064
+      UITitletextbg_143: -8482520874168218466
+      UITitletextbg_144: 5232462962798114427
+      UITitletextbg_145: -2237208091087525839
+      UITitletextbg_146: 6017178760964659080
+      UITitletextbg_147: -2187622548623623609
+      UITitletextbg_148: 8184636672372635434
+      UITitletextbg_149: -975121933270305702
+      UITitletextbg_15: -4653302509538831096
+      UITitletextbg_150: 8470960978097326297
+      UITitletextbg_151: -3556231720424076109
+      UITitletextbg_152: 4706797978499114872
+      UITitletextbg_153: -7377668904963105928
+      UITitletextbg_154: 1260464465152748444
+      UITitletextbg_155: 7135285656836266318
+      UITitletextbg_156: 8264837755672982312
+      UITitletextbg_157: 9066037877261186147
+      UITitletextbg_158: -1917201677404579873
+      UITitletextbg_159: -4602178783524100749
+      UITitletextbg_16: -7659645867056491407
+      UITitletextbg_160: 3791836544025121627
+      UITitletextbg_161: -3206374775807690540
+      UITitletextbg_162: 5241658547447227629
+      UITitletextbg_163: -4519614014543707285
+      UITitletextbg_164: 8897468582286834262
+      UITitletextbg_165: 5468865451139734862
+      UITitletextbg_166: -8352820532003159334
+      UITitletextbg_167: 5160858160825289379
+      UITitletextbg_168: -1450898906742583156
+      UITitletextbg_169: 7959857327763110884
+      UITitletextbg_17: -6553849769276480807
+      UITitletextbg_170: -6840771203578051726
+      UITitletextbg_171: -9173985849874274064
+      UITitletextbg_172: 7845047197653159700
+      UITitletextbg_173: -6319198720380499104
+      UITitletextbg_174: 6010563785249204440
+      UITitletextbg_175: 6830763435278708958
+      UITitletextbg_176: 2156462763360612497
+      UITitletextbg_177: 4750483846018925833
+      UITitletextbg_178: -7245419773680161170
+      UITitletextbg_179: 6864485387563790718
+      UITitletextbg_18: -4589314825049421443
+      UITitletextbg_180: -771244602663361748
+      UITitletextbg_181: 3869154831697992951
+      UITitletextbg_182: 676013237638777283
+      UITitletextbg_183: -5381123148458316130
+      UITitletextbg_184: 2349415036779997435
+      UITitletextbg_185: -616863949991186301
+      UITitletextbg_186: -8535263070109584096
+      UITitletextbg_187: 9123018508704647619
+      UITitletextbg_188: -7910765692677694933
+      UITitletextbg_189: 8315237189734600124
+      UITitletextbg_19: 5357203383009611435
+      UITitletextbg_190: -3008907987268607749
+      UITitletextbg_191: 3747650969466887900
+      UITitletextbg_192: -225521346471691732
+      UITitletextbg_193: -4331176106681372710
+      UITitletextbg_194: 4761463263420410985
+      UITitletextbg_195: 3672395786717250752
+      UITitletextbg_196: -3201000250460660040
+      UITitletextbg_197: -7783394195906436324
+      UITitletextbg_198: 5886343105143420884
+      UITitletextbg_199: 1903601856584780466
+      UITitletextbg_2: -1492745495807807942
+      UITitletextbg_20: 3237894843518825964
+      UITitletextbg_200: -2095428728807086357
+      UITitletextbg_201: -7232296284176192977
+      UITitletextbg_202: 1714971225681600790
+      UITitletextbg_203: 2827416748888286838
+      UITitletextbg_204: -5922430198104815429
+      UITitletextbg_205: -8861990686519301761
+      UITitletextbg_206: -1722874932690857910
+      UITitletextbg_207: 6367563437345175710
+      UITitletextbg_208: 3417037921438153993
+      UITitletextbg_209: 2110322565449205976
+      UITitletextbg_21: 9177496996258625010
+      UITitletextbg_210: 1647992039524472032
+      UITitletextbg_211: 4164874256027781493
+      UITitletextbg_212: -9139472105262993952
+      UITitletextbg_213: 3885027765049810535
+      UITitletextbg_214: -993885280722762911
+      UITitletextbg_215: -7323222873628686721
+      UITitletextbg_216: -9074122703375230911
+      UITitletextbg_217: 5455792038643533923
+      UITitletextbg_218: 3765092291678516451
+      UITitletextbg_219: 2935533784697780532
+      UITitletextbg_22: 5323787208282843953
+      UITitletextbg_220: -449350600301246170
+      UITitletextbg_221: 7236451172669819123
+      UITitletextbg_222: -2971767998734824442
+      UITitletextbg_223: -9190337242444743134
+      UITitletextbg_224: 1438790468425928122
+      UITitletextbg_225: -8652363342794365650
+      UITitletextbg_226: 7907312967210552299
+      UITitletextbg_227: -1337070459671903521
+      UITitletextbg_228: 6310813631173482251
+      UITitletextbg_229: -6685792560735576898
+      UITitletextbg_23: 2408169296359131310
+      UITitletextbg_230: 6023442590110878533
+      UITitletextbg_231: -8185573639536683802
+      UITitletextbg_232: -380367907367538327
+      UITitletextbg_233: -6912254233762339163
+      UITitletextbg_234: 966764413755556963
+      UITitletextbg_235: 4634485732517049338
+      UITitletextbg_236: 420402030377188361
+      UITitletextbg_24: -7844378661145318652
+      UITitletextbg_25: -7855198630375110688
+      UITitletextbg_26: -2822356423476297026
+      UITitletextbg_27: 5790852049183046854
+      UITitletextbg_28: 1942458549029644991
+      UITitletextbg_29: -5879427696505240514
+      UITitletextbg_3: 2118734934083939058
+      UITitletextbg_30: -6742487641292461375
+      UITitletextbg_31: -2517588867011215510
+      UITitletextbg_32: -4563335637235396353
+      UITitletextbg_33: -7360304580810779332
+      UITitletextbg_34: -8101751780415658102
+      UITitletextbg_35: 6113084067874477058
+      UITitletextbg_36: -3763013994382555137
+      UITitletextbg_37: -4391517115896901495
+      UITitletextbg_38: 7695791104026203985
+      UITitletextbg_39: 801702846286963709
+      UITitletextbg_4: 6108967796744965088
+      UITitletextbg_40: 5131931898749782566
+      UITitletextbg_41: -7742845621156801422
+      UITitletextbg_42: 2471165105698014798
+      UITitletextbg_43: 269582707417424596
+      UITitletextbg_44: 1893377924345078518
+      UITitletextbg_45: 3239116772632517796
+      UITitletextbg_46: 5869602537591122409
+      UITitletextbg_47: -1202576588961421057
+      UITitletextbg_48: 1264095386949306049
+      UITitletextbg_49: 3438376188535644749
+      UITitletextbg_5: -1622463344965632991
+      UITitletextbg_50: -4782183318122057113
+      UITitletextbg_51: -8767914789285132109
+      UITitletextbg_52: -7142093428261633631
+      UITitletextbg_53: 403202037014449166
+      UITitletextbg_54: -1152287730281879119
+      UITitletextbg_55: 6209107605585377055
+      UITitletextbg_56: 119772327111749896
+      UITitletextbg_57: 3915643643971317087
+      UITitletextbg_58: 4925803021617198473
+      UITitletextbg_59: 4447652885572229027
+      UITitletextbg_6: 3808623349687713705
+      UITitletextbg_60: -3125161672628647906
+      UITitletextbg_61: 6036266996432020109
+      UITitletextbg_62: 9100152365621508357
+      UITitletextbg_63: 7283686466835063651
+      UITitletextbg_64: 8393507107792784604
+      UITitletextbg_65: -4241832423928778347
+      UITitletextbg_66: 6896034750908794239
+      UITitletextbg_67: -3954777827439439102
+      UITitletextbg_68: 8283813285367826007
+      UITitletextbg_69: -5399390590392400832
+      UITitletextbg_7: 9022760091031910604
+      UITitletextbg_70: -6286640493945837605
+      UITitletextbg_71: 1115377913978704643
+      UITitletextbg_72: 4774132294291767383
+      UITitletextbg_73: -3583602821993834258
+      UITitletextbg_74: -5286186430844612436
+      UITitletextbg_75: 4729123920186731030
+      UITitletextbg_76: 7994258314687362364
+      UITitletextbg_77: 6172418019829098499
+      UITitletextbg_78: -565834800653699095
+      UITitletextbg_79: -4552523798462468853
+      UITitletextbg_8: -8084867635854423415
+      UITitletextbg_80: 2883012250190695887
+      UITitletextbg_81: 3530328215761749398
+      UITitletextbg_82: 3401625121010074244
+      UITitletextbg_83: 3354584346752717587
+      UITitletextbg_84: 8870770447938890672
+      UITitletextbg_85: -5586560570421423191
+      UITitletextbg_86: -3656469723679952507
+      UITitletextbg_87: -931195811665750611
+      UITitletextbg_88: -2923405115395851577
+      UITitletextbg_89: -2943323010207763949
+      UITitletextbg_9: -975858637503259546
+      UITitletextbg_90: 121650002284171147
+      UITitletextbg_91: 4873282667332415495
+      UITitletextbg_92: -2272149592223887179
+      UITitletextbg_93: 6128346217696858864
+      UITitletextbg_94: 8371454058525872822
+      UITitletextbg_95: -1339027648858459891
+      UITitletextbg_96: 2306595229936967434
+      UITitletextbg_97: 7318996944653360229
+      UITitletextbg_98: 86935696093263894
+      UITitletextbg_99: 592123978418904919
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

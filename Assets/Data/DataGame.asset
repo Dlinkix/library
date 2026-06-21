@@ -21,8 +21,8 @@ MonoBehaviour:
     maxCardOnHand: 15
     dekaPlayer: 10
     baseStartLight: 3
-    cardPlayer: []
-    diceRollPlayer: 0
+    cardPlayerIds: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
+    diceRollPlayer: 1
   enemyData:
   - enemyName: 
     maxHealth: 10
@@ -31,49 +31,40 @@ MonoBehaviour:
     baseSpeedMaxn: 4
     dekaPlayer: 10
     baseStartLight: 3
-    cardPlayer:
-    - cardId: 1
-      cardName: Ember Cut
-      lightCost: 1
-      cardSprite: {fileID: 0}
-      attacks:
-      - attackName: Ember Slash
-        RollMin: 2
-        RollMax: 5
-        staggerDamage: 1
-        attackDuration: 1
-        onHitEffects: []
-        attackSound: {fileID: 0}
-      passiveActions:
-      - effectType: 14
-        value: 1
-        statusToApply:
-          type: 0
-          intensity: 0
-          duration: 0
-          canStack: 0
-          maxStack: 0
-        onPlay: 1
-        onDiscard: 0
-        onDraw: 0
-        customDescription: 
-      endOfTurnEffects: []
-      onDiscardEffects: []
+    cardEnemyIds: 
     color: {r: 0, g: 0, b: 0, a: 0}
+    diceRollEnemy: 3
   enemyCount: 5
   allCards:
   - cardId: 1
     cardName: Ember Cut
-    lightCost: 1
+    lightCost: 0
     cardSprite: {fileID: -3715471705655931315, guid: ee7f0f584198a8f4a9f6d2474fa7e4cc, type: 3}
     attacks:
     - attackName: Ember Slash
-      RollMin: 2
-      RollMax: 5
+      RollMin: 1
+      RollMax: 2
       staggerDamage: 1
       attackDuration: 1
       onHitEffects: []
       attackSound: {fileID: 0}
+      type: 0
+    - attackName: Ember Slash
+      RollMin: 1
+      RollMax: 2
+      staggerDamage: 1
+      attackDuration: 1
+      onHitEffects: []
+      attackSound: {fileID: 0}
+      type: 0
+    - attackName: Ember Slash
+      RollMin: 1
+      RollMax: 2
+      staggerDamage: 1
+      attackDuration: 1
+      onHitEffects: []
+      attackSound: {fileID: 0}
+      type: 0
     passiveActions:
     - effectType: 14
       value: 1
@@ -106,6 +97,7 @@ MonoBehaviour:
         canStack: 1
         maxStack: 3
       attackSound: {fileID: 0}
+      type: 0
     passiveActions: []
     endOfTurnEffects: []
     onDiscardEffects: []
@@ -113,7 +105,15 @@ MonoBehaviour:
     cardName: Flash Notes
     lightCost: 1
     cardSprite: {fileID: -7418382926054524929, guid: 8702263a578bdef4baf4a039adc21a38, type: 3}
-    attacks: []
+    attacks:
+    - attackName: 
+      RollMin: 3
+      RollMax: 5
+      staggerDamage: 0
+      attackDuration: 1
+      onHitEffects: []
+      attackSound: {fileID: 0}
+      type: 0
     passiveActions:
     - effectType: 4
       value: 1
@@ -141,6 +141,7 @@ MonoBehaviour:
       attackDuration: 1
       onHitEffects: []
       attackSound: {fileID: 0}
+      type: 0
     passiveActions:
     - effectType: 10
       value: 2
@@ -193,6 +194,7 @@ MonoBehaviour:
         canStack: 1
         maxStack: 3
       attackSound: {fileID: 0}
+      type: 0
     passiveActions: []
     endOfTurnEffects: []
     onDiscardEffects: []
@@ -213,6 +215,7 @@ MonoBehaviour:
         canStack: 1
         maxStack: 3
       attackSound: {fileID: 0}
+      type: 0
     passiveActions: []
     endOfTurnEffects: []
     onDiscardEffects: []
@@ -228,6 +231,7 @@ MonoBehaviour:
       attackDuration: 1
       onHitEffects: []
       attackSound: {fileID: 0}
+      type: 0
     passiveActions:
     - effectType: 5
       value: 1

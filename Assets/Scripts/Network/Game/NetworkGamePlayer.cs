@@ -1,10 +1,12 @@
+using Mirror;
+using System;
 using System.Collections;
 using System.Collections.Generic;
-using Mirror;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using static DataGame;
 
 public class NetworkGamePlayer : NetworkBehaviour
 {
@@ -38,18 +40,22 @@ public class NetworkGamePlayer : NetworkBehaviour
     [SyncVar(hook = nameof(OnHpChanged))]
     public int maxLight;
 
+
     [Header("UI")]
     [SerializeField] private Vector2 uiOffset = Vector2.zero;
     [SerializeField] private DataGame dataGame;
     [SerializeField] private int startingHandSize = 4;
     [SerializeField] private int cardsToDrawAfterReadyCycle = 1;
 
+    [Header("Setting")]
+    [SerializeField] private float attackDelay = 0.5f;
+
     private readonly List<int> playerPool = new List<int>();
     private readonly List<int> playerDeck = new List<int>();
     private readonly List<int> playerHand = new List<int>();
     private readonly List<int> localHandCardIds = new List<int>();
     private DataGame.PlayerData activePlayerData;
-
+    
     private GameObject uiObject;
     private RectTransform uiRect;
     private bool uiCreated;
@@ -61,14 +67,26 @@ public class NetworkGamePlayer : NetworkBehaviour
     private TMP_Text nametext;
     private Button readyButton;
     private bool isShowingRollResult;
-
+    private int selectedCardId = -1;
+    private uint selectedTargetEnemyNetId = 0;
+    private int selectedTargetDiceIndex = -1;
     private RectTransform localHandRoot;
     private RectTransform localHandContentRoot;
     private TMP_Text localHandTitle;
     private Coroutine delayedHandRefreshCoroutine;
-
+    private Queue<Action> pendingActions = new Queue<Action>();
+    private float actionTimer = 0f;
+    private bool isExecutingActions = false;
     public static List<NetworkGamePlayer> AllPlayers { get; } = new List<NetworkGamePlayer>();
 
+
+    public int GetSelectedCardId() => selectedCardId;
+    public uint GetSelectedTargetEnemyNetId() => selectedTargetEnemyNetId;
+    public int GetSelectedTargetDiceIndex() => selectedTargetDiceIndex;
+
+
+
+    #region other
     public override void OnStartServer()
     {
         if (!AllPlayers.Contains(this))
@@ -109,129 +127,8 @@ public class NetworkGamePlayer : NetworkBehaviour
         CmdRequestInitialHandSync();
     }
 
-    [Server]
-    public void ServerSetSlotIndex(int index)
-    {
-        slotIndex = index;
-    }
+   
 
-    [Server]
-    public void InitializeCardState()
-    {
-        EnsureDataGameReference();
-        activePlayerData = GetActivePlayerData();
-
-        playerPool.Clear();
-        playerDeck.Clear();
-        playerHand.Clear();
-
-        if (dataGame == null)
-        {
-            Debug.LogWarning($"DataGame is missing on {name}. Cards will not initialize.");
-            SyncHandToOwner();
-            return;
-        }
-
-        if (activePlayerData == null)
-        {
-            Debug.LogWarning($"Player data is missing in DataGame for {name}. Cards will not initialize.");
-            SyncHandToOwner();
-            return;
-        }
-
-        List<int> configuredCardIds = dataGame.GetPlayerCardIds();
-        if (configuredCardIds.Count == 0)
-        {
-            Debug.LogWarning($"Player data for {name} does not contain any valid cards. Cards will not initialize.");
-            SyncHandToOwner();
-            return;
-        }
-
-        int deckLimit = Mathf.Max(0, activePlayerData.dekaPlayer);
-        if (configuredCardIds.Count > deckLimit && deckLimit > 0)
-        {
-            Debug.LogWarning($"Player data for {name} contains more cards ({configuredCardIds.Count}) than dekaPlayer ({deckLimit}). Extra cards will be ignored.");
-        }
-
-        int cardsToUse = deckLimit > 0 ? Mathf.Min(configuredCardIds.Count, deckLimit) : 0;
-        for (int i = 0; i < cardsToUse; i++)
-        {
-            int cardId = configuredCardIds[i];
-            playerPool.Add(cardId);
-            playerDeck.Add(cardId);
-        }
-
-        SyncHandToOwner();
-    }
-
-    [Server]
-    public void PrepareStartingHand()
-    {
-        ApplyPlayerStatsFromData();
-        InitializeCardState();
-        DrawCardFromDeck(startingHandSize);
-    }
-
-    [Server]
-    public void AddRandomCardFromPoolToDeck()
-    {
-        EnsureDataGameReference();
-
-        if (dataGame == null)
-        {
-            return;
-        }
-
-        int cardId = dataGame.GetRandomAllCardId();
-        if (cardId <= 0)
-        {
-            Debug.LogWarning($"AllCards does not contain a valid random card for {name}.");
-            return;
-        }
-
-        playerDeck.Add(cardId);
-    }
-
-    [Server]
-    public void DrawCardFromDeck(int count = 1)
-    {
-        int maxCardsInHand = GetMaxCardsInHand();
-
-        for (int i = 0; i < count; i++)
-        {
-            if (playerHand.Count >= maxCardsInHand)
-            {
-                break;
-            }
-
-            if (playerDeck.Count == 0)
-            {
-                AddRandomCardFromPoolToDeck();
-            }
-
-            if (playerDeck.Count == 0)
-            {
-                break;
-            }
-
-            int cardId = playerDeck[0];
-            playerDeck.RemoveAt(0);
-            playerHand.Add(cardId);
-        }
-
-        SyncHandToOwner();
-    }
-
-    [Server]
-    public void SyncHandToOwner()
-    {
-        if (connectionToClient == null)
-        {
-            return;
-        }
-
-        TargetSyncHand(connectionToClient, playerHand.ToArray());
-    }
 
     private void OnSlotIndexChanged(int oldValue, int newValue)
     {
@@ -310,10 +207,13 @@ public class NetworkGamePlayer : NetworkBehaviour
             Destroy(uiObject);
             return;
         }
+        
 
         uiRect.localPosition = new Vector3(uiOffset.x, uiOffset.y, 0f);
         uiRect.localRotation = Quaternion.identity;
         uiRect.localScale = Vector3.one;
+
+        CreateDiceUI();
         if (isLocalPlayer)
         {
             UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
@@ -332,11 +232,10 @@ public class NetworkGamePlayer : NetworkBehaviour
                 aimLine.SetOwner(this);
             }
         }
-        Transform imageTransform = uiObject.transform.Find("DiceRoll");
-        if (imageTransform != null)
-        {
-            rollText = imageTransform.Find("Text (TMP)")?.GetComponent<TMP_Text>();
-        }
+        Transform gridTransform = uiObject.transform.Find("GridDice");
+        Transform imageDice = gridTransform?.Find("DiceRoll");
+        rollText = imageDice?.Find("Text (TMP)")?.GetComponent<TMP_Text>();
+
         hpText = uiObject.transform.Find("HpText")?.GetComponent<TMP_Text>();
         staggerText = uiObject.transform.Find("StaggerText")?.GetComponent<TMP_Text>();
         hpSlider = uiObject.transform.Find("HpSlider")?.GetComponent<Slider>();
@@ -373,6 +272,33 @@ public class NetworkGamePlayer : NetworkBehaviour
         ApplyUIPositionBySlot();
     }
 
+    private void CreateDiceUI()
+    {
+        Transform gridTransform = uiObject.transform.Find("GridDice");
+        if (gridTransform == null)
+        {
+            Debug.LogWarning("GridDice not found in UI!");
+            return;
+        }
+
+        // Удаляем старые кубики
+        foreach (Transform child in gridTransform)
+            Destroy(child.gameObject);
+
+        GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
+        if (dicePrefab == null)
+        {
+            Debug.LogWarning("DiceRoll prefab not found!");
+            return;
+        }
+
+        for (int i = 0; i < DiceRollAmount; i++)
+        {
+            GameObject diceObj = Instantiate(dicePrefab, gridTransform);
+            DiceRoll dice = diceObj.GetComponent<DiceRoll>();
+            dice.SetOwner(this, i);
+        }
+    }
     private void SetupUIForLocalOrRemotePlayer()
     {
         if (readyButton == null)
@@ -449,7 +375,30 @@ public class NetworkGamePlayer : NetworkBehaviour
             nametext.text = isReady ? $"{PlayerName}: ready" : $"{PlayerName}: not ready";
         }
     }
+    
 
+    public void SelectCard(int cardId)
+    {
+        selectedCardId = cardId;
+    }
+    public void SelectTarget(uint enemyNetId, int diceIndex)
+    {
+        selectedTargetEnemyNetId = enemyNetId;
+        selectedTargetDiceIndex = diceIndex;
+    }
+
+
+    public void ClearSelection()
+    {
+        selectedCardId = -1;
+        selectedTargetEnemyNetId = 0;
+        selectedTargetDiceIndex = -1;
+    }
+
+    public bool HasSelection()
+    {
+        return selectedCardId != -1 && selectedTargetEnemyNetId != 0;
+    }
     private void UpdateIconDiceRoll()
     {
 
@@ -479,19 +428,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
     }
 
-    private void Update()
-    {
-        if (!isLocalPlayer)
-        {
-            return;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Space) && !isReady)
-        {
-            CmdSetPlayerReady();
-        }
-    }
-
     private void OnReadyButtonClick()
     {
         if (isLocalPlayer && !isReady)
@@ -500,122 +436,29 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
     }
 
-    [Command]
-    private void CmdSetPlayerReady()
-    {
-        // Проверяем, не готов ли уже игрок
-        if (isReady)
-        {
-            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is already ready!");
-            return;
-        }
-
-        // Проверяем, активен ли бой
-        if (FightManager.Instance != null && FightManager.Instance.IsFightActive)
-        {
-            // Проверяем, можно ли сейчас готовиться (только Waiting и Rolling)
-            if (!FightManager.Instance.CanPlayerReady())
-            {
-                Debug.LogWarning($"[CmdSetPlayerReady] Cannot ready in state: {FightManager.Instance.CurrentState}");
-                return;
-            }
-
-            // Устанавливаем готовность
-            isReady = true;
-
-            // Уведомляем FightManager о готовности игрока
-            FightManager.Instance.PlayerReady(this);
-
-            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in fight! ({FightManager.Instance.GetReadyPlayersCount()}/{FightManager.Instance.GetTotalPlayersCount()})");
-        }
-        else
-        {
-            // Старая логика для лобби (до начала боя)
-            SetReady(true);
-            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in lobby!");
-        }
-    }
-
-    [Command]
-    private void CmdRequestInitialHandSync()
-    {
-        SyncHandToOwner();
-    }
-
-    [Server]
-    public void SetReady(bool ready)
-    {
-        isReady = ready;
-        CheckAllPlayersReady();
-    }
-
-    [Server]
-    public static void CheckAllPlayersReady()
-    {
-        if (AllPlayers.Count == 0)
-        {
-            return;
-        }
-
-        for (int i = 0; i < AllPlayers.Count; i++)
-        {
-            if (!AllPlayers[i].isReady)
-            {
-                return;
-            }
-        }
-
-        for (int i = 0; i < AllPlayers.Count; i++)
-        {
-            NetworkGamePlayer player = AllPlayers[i];
-            int roll = player.GetRollValue();
-            player.RpcShowRollResult(roll, player.PlayerName);
-        }
-
-        NetworkGameEnemy.RunEnemyReadyCycle();
-
-        for (int i = 0; i < AllPlayers.Count; i++)
-        {
-            NetworkGamePlayer player = AllPlayers[i];
-            player.AddRandomCardFromPoolToDeck();
-            player.DrawCardFromDeck(player.cardsToDrawAfterReadyCycle);
-            player.isReady = false;
-        }
-    }
-
-    [TargetRpc]
-    private void TargetSyncHand(NetworkConnection target, int[] handCardIds)
-    {
-        localHandCardIds.Clear();
-        if (handCardIds != null)
-        {
-            localHandCardIds.AddRange(handCardIds);
-        }
-
-        RefreshLocalHandUI();
-        QueueLocalHandRefresh();
-    }
-
-    [ClientRpc]
-    public void RpcShowRollResult(int roll, string playerName)
-    {
-        if (rollText == null)
-        {
-            return;
-        }
-
-        isShowingRollResult = true;
-        rollText.text = $"{roll}";
-        nametext.text = $"{playerName}";
-
-        //CancelInvoke(nameof(ClearRollText));
-        //Invoke(nameof(ClearRollText), 3f);
-    }
 
     private void ClearRollText()
     {
         isShowingRollResult = false;
         UpdateReadyText();
+    }
+
+    private void Update()
+    {
+        // Клиентская часть
+        if (isLocalPlayer)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && !isReady)
+            {
+                CmdSetPlayerReady();
+            }
+        }
+
+        // Серверная часть
+        if (isServer)
+        {
+            ProcessActionQueue();
+        }
     }
 
     private void EnsureLocalHandUI()
@@ -745,7 +588,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         descText.overflowMode = TextOverflowModes.Ellipsis;
 
         LocalHandCardView hoverView = cardRootObject.AddComponent<LocalHandCardView>();
-        hoverView.Setup(cardRect, layoutElement, descText, cardBackground);
+        hoverView.Setup(cardRect, layoutElement, descText, cardBackground, cardId, this);
     }
 
     private Vector2 GetHandCardPosition(int cardIndex, int totalCards)
@@ -875,6 +718,12 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         return dataGame.GetPlayerData();
     }
+    public DataGame.CardData GetCardData(int cardId)
+    {
+        if (dataGame == null) return null;
+        dataGame.TryGetCardById(cardId, out CardData card);
+        return card;
+    }
     public int GetCardsToDrawAfterReadyCycle()
     {
         return cardsToDrawAfterReadyCycle;
@@ -907,9 +756,21 @@ public class NetworkGamePlayer : NetworkBehaviour
             maxSpeed = temp;
         }
 
-        return Random.Range(minSpeed, maxSpeed + 1);
+        return UnityEngine.Random.Range(minSpeed, maxSpeed + 1);
     }
+    private NetworkGameEnemy FindEnemyByDice(DiceRoll dice)
+    {
+        if (dice == null) return null;
 
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy != null && enemy.netId == dice.ownerNetId)
+            {
+                return enemy;
+            }
+        }
+        return null;
+    }
     public override void OnStopClient()
     {
         if (uiObject != null)
@@ -924,9 +785,523 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         uiCreated = false;
     }
+    private DiceRoll FindDiceByNetId(uint netId)
+    {
+        // Ищем среди кубиков игроков
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player == null) continue;
+            // Найти все DiceRoll на UI игрока
+            DiceRoll[] dices = player.GetComponentsInChildren<DiceRoll>();
+            foreach (var dice in dices)
+            {
+                if (dice != null && dice.netId == netId)
+                    return dice;
+            }
+        }
+
+        // Ищем среди кубиков врагов
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy == null) continue;
+            DiceRoll[] dices = enemy.GetComponentsInChildren<DiceRoll>();
+            foreach (var dice in dices)
+            {
+                if (dice != null && dice.netId == netId)
+                    return dice;
+            }
+        }
+
+        return null;
+    }
 
     public override void OnStopServer()
     {
         AllPlayers.Remove(this);
     }
+
+    #endregion
+
+    #region Server
+
+    [Server]
+    public void QueueCardForTarget(int cardId, NetworkGameEnemy targetEnemy)
+    {
+        if (dataGame == null) return;
+        if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
+        if (targetEnemy == null) return;
+
+        // Тратим Light
+        currentLight -= card.lightCost;
+
+        // Удаляем карту из руки
+        if (playerHand.Contains(cardId))
+        {
+            playerHand.Remove(cardId);
+            SyncHandToOwner();
+        }
+
+        // Добавляем эффекты в очередь
+        QueueCardEffects(card, targetEnemy);
+
+        Debug.Log($"[QueueCardForTarget] Card {card.cardName} queued for {targetEnemy.EnemyName}");
+    }
+
+
+    [Server]
+    private void ProcessActionQueue()
+    {
+        if (!isExecutingActions || pendingActions.Count == 0)
+        {
+            isExecutingActions = false;
+            return;
+        }
+
+        actionTimer += Time.deltaTime;
+
+        if (actionTimer >= attackDelay)
+        {
+            actionTimer = 0f;
+            Action action = pendingActions.Dequeue();
+            action?.Invoke();
+
+            if (pendingActions.Count == 0)
+            {
+                isExecutingActions = false;
+                Debug.Log("[ProcessActionQueue] All actions completed");
+            }
+        }
+    }
+
+
+    [Server]
+    public void QueueCardEffects(DataGame.CardData card, NetworkGameEnemy targetEnemy)
+    {
+        Debug.Log($"[QueueCardEffects] Card: {card.cardName}, Attacks: {card.attacks?.Length ?? 0}");
+
+        if (card.attacks != null)
+        {
+            foreach (var attack in card.attacks)
+            {
+                pendingActions.Enqueue(() => ApplyAttack(attack, targetEnemy));
+                Debug.Log($"[QueueCardEffects] Added attack: {attack.attackName}");
+            }
+        }
+
+        if (card.passiveActions != null)
+        {
+            foreach (var passive in card.passiveActions)
+            {
+                pendingActions.Enqueue(() => ApplyPassiveEffect(passive));
+            }
+        }
+
+        if (!isExecutingActions)
+        {
+            isExecutingActions = true;
+            actionTimer = 0f;
+            Debug.Log("[QueueCardEffects] Started executing actions");
+        }
+    }
+
+    
+
+    //[Server]
+    //public void ApplyCardToEnemy(int cardId, NetworkGameEnemy targetEnemy)
+    //{
+    //    if (dataGame == null) return;
+    //    if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
+
+    //    // Тратим Light
+    //    currentLight -= card.lightCost;
+
+    //    // Применяем эффекты
+    //    ApplyCardEffects(card, targetEnemy);
+
+    //    // Удаляем карту из руки
+    //    if (playerHand.Contains(cardId))
+    //    {
+    //        playerHand.Remove(cardId);
+    //        SyncHandToOwner();
+    //    }
+    //}
+
+    [Server]
+    private void ApplyCardEffects(DataGame.CardData card, NetworkGameEnemy targetEnemy)
+    {
+        // Применяем атаки
+        if (card.attacks != null)
+        {
+            foreach (var attack in card.attacks)
+            {
+                ApplyAttack(attack, targetEnemy);
+            }
+        }
+
+        // Применяем пассивные эффекты
+        if (card.passiveActions != null)
+        {
+            foreach (var passive in card.passiveActions)
+            {
+                ApplyPassiveEffect(passive);
+            }
+        }
+    }
+
+    [Server]
+    private void ApplyAttack(DataGame.AttackData attack, NetworkGameEnemy target)
+    {
+        if (target == null) return;
+
+        int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
+
+        // ===== ИСПОЛЬЗУЕМ attack.Type (поле объекта), а не DataGame.AttackData.Type =====
+        switch (attack.type)
+        {
+            case DataGame.AttackData.Type.Damage:
+                target.hp -= roll;
+                if (target.hp < 0) target.hp = 0;
+                Debug.Log($"{PlayerName} нанес {roll} урона {target.EnemyName}");
+                break;
+
+            case DataGame.AttackData.Type.Block:
+                Debug.Log($"{PlayerName} использовал Block");
+                break;
+
+            case DataGame.AttackData.Type.Escape:
+                Debug.Log($"{PlayerName} использовал Escape");
+                break;
+        }
+
+        if (attack.staggerDamage > 0)
+        {
+            target.stagger += attack.staggerDamage;
+            Debug.Log($"{PlayerName} нанес {attack.staggerDamage} стагера {target.EnemyName}");
+        }
+    }
+
+    [Server]
+    private void ApplyPassiveEffect(DataGame.PassiveAction passive)
+    {
+        if (passive == null) return;
+
+        switch (passive.effectType)
+        {
+            case DataGame.PassiveEffectType.DrawCard:
+                DrawCardFromDeck(passive.value);
+                Debug.Log($"{PlayerName} нарисовал {passive.value} карт(ы)");
+                break;
+
+            case DataGame.PassiveEffectType.GainLight:
+                currentLight += passive.value;
+                Debug.Log($"{PlayerName} получил {passive.value} света");
+                break;
+
+            case DataGame.PassiveEffectType.HealPlayer:
+                hp += passive.value;
+                if (hp > Maxhp) hp = Maxhp;
+                Debug.Log($"{PlayerName} вылечил {passive.value} HP");
+                break;
+
+            default:
+                Debug.Log($"Passive effect {passive.effectType} not implemented yet");
+                break;
+        }
+    }
+
+    [Server]
+    public void PrepareStartingHand()
+    {
+        ApplyPlayerStatsFromData();
+        InitializeCardState();
+        DrawCardFromDeck(startingHandSize);
+    }
+
+    [Server]
+    public void ServerSetSlotIndex(int index)
+    {
+        slotIndex = index;
+    }
+
+    [Server]
+    public void InitializeCardState()
+    {
+        EnsureDataGameReference();
+        activePlayerData = GetActivePlayerData();
+
+        playerPool.Clear();
+        playerDeck.Clear();
+        playerHand.Clear();
+
+        if (dataGame == null)
+        {
+            Debug.LogWarning($"DataGame is missing on {name}. Cards will not initialize.");
+            SyncHandToOwner();
+            return;
+        }
+
+        if (activePlayerData == null)
+        {
+            Debug.LogWarning($"Player data is missing in DataGame for {name}. Cards will not initialize.");
+            SyncHandToOwner();
+            return;
+        }
+
+        List<int> configuredCardIds = dataGame.GetPlayerCardIds();
+        if (configuredCardIds.Count == 0)
+        {
+            Debug.LogWarning($"Player data for {name} does not contain any valid cards. Cards will not initialize.");
+            SyncHandToOwner();
+            return;
+        }
+
+        int deckLimit = Mathf.Max(0, activePlayerData.dekaPlayer);
+        if (configuredCardIds.Count > deckLimit && deckLimit > 0)
+        {
+            Debug.LogWarning($"Player data for {name} contains more cards ({configuredCardIds.Count}) than dekaPlayer ({deckLimit}). Extra cards will be ignored.");
+        }
+
+        int cardsToUse = deckLimit > 0 ? Mathf.Min(configuredCardIds.Count, deckLimit) : 0;
+        for (int i = 0; i < cardsToUse; i++)
+        {
+            int cardId = configuredCardIds[i];
+            playerPool.Add(cardId);
+            playerDeck.Add(cardId);
+        }
+
+        SyncHandToOwner();
+    }
+
+
+    [Server]
+    public void AddRandomCardFromPoolToDeck()
+    {
+        EnsureDataGameReference();
+
+        if (dataGame == null)
+        {
+            return;
+        }
+
+        int cardId = dataGame.GetRandomAllCardId();
+        if (cardId <= 0)
+        {
+            Debug.LogWarning($"AllCards does not contain a valid random card for {name}.");
+            return;
+        }
+
+        playerDeck.Add(cardId);
+    }
+
+    [Server]
+    public void SyncHandToOwner()
+    {
+        if (connectionToClient == null)
+        {
+            return;
+        }
+
+        TargetSyncHand(connectionToClient, playerHand.ToArray());
+    }
+
+    [Server]
+    public void DrawCardFromDeck(int count = 1)
+    {
+        int maxCardsInHand = GetMaxCardsInHand();
+
+        for (int i = 0; i < count; i++)
+        {
+            if (playerHand.Count >= maxCardsInHand)
+            {
+                break;
+            }
+
+            if (playerDeck.Count == 0)
+            {
+                AddRandomCardFromPoolToDeck();
+            }
+
+            if (playerDeck.Count == 0)
+            {
+                break;
+            }
+
+            int cardId = playerDeck[0];
+            playerDeck.RemoveAt(0);
+            playerHand.Add(cardId);
+        }
+
+        SyncHandToOwner();
+    }
+
+    [Server]
+    public void SetReady(bool ready)
+    {
+        isReady = ready;
+        CheckAllPlayersReady();
+    }
+
+    [Server]
+    public static void CheckAllPlayersReady()
+    {
+        if (AllPlayers.Count == 0)
+        {
+            return;
+        }
+
+        for (int i = 0; i < AllPlayers.Count; i++)
+        {
+            if (!AllPlayers[i].isReady)
+            {
+                return;
+            }
+        }
+
+        for (int i = 0; i < AllPlayers.Count; i++)
+        {
+            NetworkGamePlayer player = AllPlayers[i];
+            int roll = player.GetRollValue();
+            player.RpcShowRollResult(roll, player.PlayerName);
+        }
+
+        NetworkGameEnemy.RunEnemyReadyCycle();
+
+        for (int i = 0; i < AllPlayers.Count; i++)
+        {
+            NetworkGamePlayer player = AllPlayers[i];
+            player.AddRandomCardFromPoolToDeck();
+            player.DrawCardFromDeck(player.cardsToDrawAfterReadyCycle);
+            player.isReady = false;
+        }
+    }
+
+    #endregion
+
+
+    #region Client
+
+    [TargetRpc]
+    private void TargetSyncHand(NetworkConnection target, int[] handCardIds)
+    {
+        localHandCardIds.Clear();
+        if (handCardIds != null)
+        {
+            localHandCardIds.AddRange(handCardIds);
+        }
+
+        RefreshLocalHandUI();
+        QueueLocalHandRefresh();
+    }
+
+    [ClientRpc]
+    public void RpcShowRollResult(int roll, string playerName)
+    {
+        if (rollText == null)
+        {
+            return;
+        }
+
+        isShowingRollResult = true;
+        rollText.text = $"{roll}";
+        nametext.text = $"{playerName}";
+
+        //CancelInvoke(nameof(ClearRollText));
+        //Invoke(nameof(ClearRollText), 3f);
+    }
+
+
+    #endregion
+
+
+    #region Command
+
+
+    [Command]
+    public void CmdPlayCard(int cardId, uint enemyNetId, int enemyDiceIndex)
+    {
+        Debug.Log($"[CmdPlayCard] Called! Player: {PlayerName}, Card: {cardId}, EnemyNetId: {enemyNetId}, DiceIndex: {enemyDiceIndex}");
+
+        if (!isLocalPlayer) return;
+        if (FightManager.Instance == null || !FightManager.Instance.IsFightActive) return;
+        if (FightManager.Instance.CurrentState != FightState.Rolling) return;
+
+        if (!playerHand.Contains(cardId)) return;
+        if (dataGame == null) return;
+        if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
+        if (currentLight < card.lightCost) return;
+
+        // ===== НАХОДИМ ВРАГА ПО netId =====
+        NetworkGameEnemy targetEnemy = null;
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy != null && enemy.netId == enemyNetId)
+            {
+                targetEnemy = enemy;
+                break;
+            }
+        }
+
+        if (targetEnemy == null)
+        {
+            Debug.Log($"[CmdPlayCard] Enemy with netId {enemyNetId} not found!");
+            return;
+        }
+
+        // Проверяем, что кубик с таким индексом существует у врага
+        // (можно добавить дополнительную проверку)
+
+        currentLight -= card.lightCost;
+        playerHand.Remove(cardId);
+
+        // Добавляем в очередь вместо прямого вызова
+        QueueCardEffects(card, targetEnemy);
+
+        SyncHandToOwner();
+    }
+
+    [Command]
+    private void CmdSetPlayerReady()
+    {
+        // Проверяем, не готов ли уже игрок
+        if (isReady)
+        {
+            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is already ready!");
+            return;
+        }
+
+        // Проверяем, активен ли бой
+        if (FightManager.Instance != null && FightManager.Instance.IsFightActive)
+        {
+            // Проверяем, можно ли сейчас готовиться (только Waiting и Rolling)
+            if (!FightManager.Instance.CanPlayerReady())
+            {
+                Debug.LogWarning($"[CmdSetPlayerReady] Cannot ready in state: {FightManager.Instance.CurrentState}");
+                return;
+            }
+
+            // Устанавливаем готовность
+            isReady = true;
+
+            // Уведомляем FightManager о готовности игрока
+            FightManager.Instance.PlayerReady(this);
+
+            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in fight! ({FightManager.Instance.GetReadyPlayersCount()}/{FightManager.Instance.GetTotalPlayersCount()})");
+        }
+        else
+        {
+            // Старая логика для лобби (до начала боя)
+            SetReady(true);
+            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in lobby!");
+        }
+    }
+
+    [Command]
+    private void CmdRequestInitialHandSync()
+    {
+        SyncHandToOwner();
+    }
+
+
+    #endregion
+
 }
