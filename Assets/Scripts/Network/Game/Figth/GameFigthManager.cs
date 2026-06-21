@@ -2,6 +2,7 @@ using Mirror;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using static DataGame;
 
 public enum FightState
 {
@@ -105,42 +106,25 @@ public class FightManager : NetworkBehaviour
 
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
-            if (player != null && player.HasSelection())
+            if (player != null)
             {
-                int cardId = player.GetSelectedCardId();
-                uint enemyNetId = player.GetSelectedTargetEnemyNetId();
+                // Получаем все кубики игрока
+                DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
 
-                // Находим врага
-                NetworkGameEnemy targetEnemy = null;
-                foreach (var enemy in NetworkGameEnemy.AllEnemies)
+                foreach (var dice in dices)
                 {
-                    if (enemy != null && enemy.netId == enemyNetId)
+                    if (dice != null && dice.hasSelection)
                     {
-                        targetEnemy = enemy;
-                        break;
+                        // Применяем карту с этого кубика
+                        ApplyCardFromDice(player, dice);
+                        // Сбрасываем выбор кубика
+                        dice.ClearSelection();
                     }
                 }
-
-                if (targetEnemy != null)
-                {
-                    // ===== ВМЕСТО ApplyCadToEnemy ИСПОЛЬЗУЕМ QueueCardForTarget =====
-                    player.QueueCardForTarget(cardId, targetEnemy);
-                    Debug.Log($"[FightManager] Player {player.PlayerName} queued card for {targetEnemy.EnemyName}");
-                }
-                else
-                {
-                    Debug.LogWarning($"[FightManager] Target enemy not found for player {player.PlayerName}");
-                }
-
-                // Очищаем выбор
-                player.ClearSelection();
-            }
-            else
-            {
-                Debug.Log($"[FightManager] Player {player?.PlayerName} has no selection");
             }
             yield return new WaitForSeconds(0.2f);
         }
+
 
         //// ===== ПРИМЕНЯЕМ ДЕЙСТВИЯ ВРАГОВ (AI) =====
         //foreach (var enemy in NetworkGameEnemy.AllEnemies)
@@ -155,13 +139,62 @@ public class FightManager : NetworkBehaviour
         //}
 
         yield return new WaitForSeconds(actionDuration);
-
         ChangeState(FightState.EndTurn);
         StartCoroutine(ExecuteEndTurnPhase());
     }
+    [Server]
+    private void ApplyCardFromDice(NetworkGamePlayer player, DiceRoll dice)
+    {
+        if (player == null || dice == null || !dice.hasSelection) return;
 
+        // Находим врага
+        NetworkGameEnemy targetEnemy = null;
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy != null && enemy.netId == dice.selectedTargetEnemyNetId)
+            {
+                targetEnemy = enemy;
+                break;
+            }
+        }
 
-        [Server]
+        if (targetEnemy == null)
+        {
+            Debug.LogWarning($"[ApplyCardFromDice] Target enemy not found for dice {dice.ownerSlotIndex}");
+            return;
+        }
+
+        // Получаем карту
+        if (!player.DataGame.TryGetCardById(dice.selectedCardId, out CardData card))
+        {
+            Debug.LogWarning($"[ApplyCardFromDice] Card {dice.selectedCardId} not found");
+            return;
+        }
+
+        // Проверяем Light
+        if (player.currentLight < card.lightCost)
+        {
+            Debug.Log($"[ApplyCardFromDice] Not enough Light for card {card.cardName}");
+            return;
+        }
+
+        // Тратим Light
+        player.currentLight -= card.lightCost;
+
+        // Удаляем карту из руки
+        if (player.PlayerHand.Contains(dice.selectedCardId))
+        {
+            player.PlayerHand.Remove(dice.selectedCardId);
+            player.SyncHandToOwner();
+        }
+
+        // Применяем эффекты
+        player.QueueCardEffects(card, targetEnemy);
+
+        Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
+    }
+
+    [Server]
     public void StartFight()
     {
         if (isFightActive) return;
@@ -201,6 +234,11 @@ public class FightManager : NetworkBehaviour
         {
             RpcPlayRollingSound();
         }
+        if (newState == FightState.Action) {
+            DiceSelectionManager.Instance.ClearSelection();
+        }
+        RpcUpdateDiceUI(newState);
+
     }
 
     // ===== Ролл кубиков =====
@@ -214,8 +252,13 @@ public class FightManager : NetworkBehaviour
         {
             if (player != null)
             {
+                // ===== ОБНОВЛЯЕМ КУБИКИ =====
+                player.RollAllDice();
+
+                // ===== ПОКАЗЫВАЕМ В UI =====
                 int roll = player.GetRollValue();
                 player.RpcShowRollResult(roll, player.PlayerName);
+
                 Debug.Log($"[FightManager] Player {player.PlayerName} rolled: {roll}");
             }
         }
@@ -224,6 +267,7 @@ public class FightManager : NetworkBehaviour
         {
             if (enemy != null)
             {
+                enemy.RollAllDice();
                 int roll = enemy.GetRollValue();
                 enemy.RpcShowRollResult(roll, enemy.EnemyName);
                 Debug.Log($"[FightManager] Enemy {enemy.EnemyName} rolled: {roll}");
@@ -428,7 +472,50 @@ public class FightManager : NetworkBehaviour
             audioSource.PlayOneShot(rollingSound, soundVolume);
         }
     }
+    [ClientRpc]
+    private void RpcUpdateDiceUI(FightState state)
+    {
+        switch (state)
+        {
+            case FightState.Waiting:
+                // Обновляем всех игроков (только локального)
+                foreach (var player in NetworkGamePlayer.AllPlayers)
+                {
+                    if (player != null && player.isLocalPlayer)
+                    {
+                        player.UpdateAllDiceRange();
+                    }
+                }
 
+                //// Обновляем всех врагов
+                //foreach (var enemy in NetworkGameEnemy.AllEnemies)
+                //{
+                //    if (enemy != null)
+                //    {
+                //        enemy.UpdateAllDiceRange();
+                //    }
+                //}
+                break;
+
+            case FightState.Rolling:
+                foreach (var player in NetworkGamePlayer.AllPlayers)
+                {
+                    if (player != null && player.isLocalPlayer)
+                    {
+                        player.UpdateAllDiceResult();
+                    }
+                }
+
+                //foreach (var enemy in NetworkGameEnemy.AllEnemies)
+                //{
+                //    if (enemy != null)
+                //    {
+                //        enemy.UpdateAllDiceResult();
+                //    }
+                //}
+                break;
+        }
+    }
     [Client]
     public FightState GetCurrentState()
     {

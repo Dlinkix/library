@@ -53,6 +53,8 @@ public class UIAimLine : MonoBehaviour
     private PointerEventData pointerData;
     private RectTransform anchorRect;
     private bool isCardSelected = false;
+    private DiceRoll ownerDice; // <-- ДОБАВЛЕНО
+    private bool isTargetSelected = false;
 
     public void SetOwner(NetworkGamePlayer player, RectTransform anchor = null)
     {
@@ -78,11 +80,23 @@ public class UIAimLine : MonoBehaviour
             else
             {
                 InitializeComponents();
-                // ===== ПОДПИСЫВАЕМСЯ НА СОБЫТИЯ =====
                 DiceSelectionManager.OnEnemyDiceSelected += SetTarget;
             }
         }
         DiceSelectionManager.OnPlayerDiceSelected += SetPlayerDice;
+    }
+
+    // ===== ДОБАВЛЕННЫЙ МЕТОД ДЛЯ ПРИВЯЗКИ К КУБИКУ =====
+    public void SetOwnerDice(DiceRoll dice)
+    {
+        ownerDice = dice;
+        // Находим владельца через кубик
+        NetworkGamePlayer player = dice.GetComponentInParent<NetworkGamePlayer>();
+        if (player != null)
+        {
+            SetOwner(player, dice.GetComponent<RectTransform>());
+        }
+        Debug.Log($"[UIAimLine] SetOwnerDice for dice {dice.ownerSlotIndex}");
     }
 
     public void SetOwner(NetworkGameEnemy enemy)
@@ -105,11 +119,13 @@ public class UIAimLine : MonoBehaviour
         {
             targetPosition = GetRectTransformPosition(enemyDice.GetComponent<RectTransform>());
             hasTarget = true;
+            isTargetSelected = true; 
             Debug.Log("UIAimLine: Target set to enemy dice!");
         }
         else
         {
             hasTarget = false;
+            isTargetSelected = false;
             selectedEnemyDice = null;
             Debug.Log("UIAimLine: Target cleared");
         }
@@ -197,16 +213,19 @@ public class UIAimLine : MonoBehaviour
         isInitialized = true;
         Debug.Log("UIAimLine: Initialized successfully");
     }
+
     public void SetCardSelected(bool selected)
     {
         isCardSelected = selected;
         if (!selected)
         {
             hasTarget = false;
+            isTargetSelected = false;
             if (lineContainer != null) lineContainer.SetActive(false);
             if (endIconObject != null) endIconObject.SetActive(false);
         }
     }
+
     void CreateSquareSprite()
     {
         Texture2D texture = new Texture2D(4, 4);
@@ -298,12 +317,12 @@ public class UIAimLine : MonoBehaviour
         if (!canDraw)
         {
             isCardSelected = false;
+            isTargetSelected = false;
             if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
             if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
             return;
         }
 
-        // ===== ВЫБОР КАРТЫ (ЛКМ) - ВКЛЮЧАЕТ ЛИНИЮ =====
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())
@@ -318,19 +337,22 @@ public class UIAimLine : MonoBehaviour
                         raycastResults[i].gameObject.GetComponentInParent<LocalHandCardView>() != null)
                     {
                         isCardSelected = true;
-                        // Сбрасываем цель при выборе новой карты
-                        hasTarget = false;
+                        // Сбрасываем цель только если она еще не выбрана
+                        if (!isTargetSelected)
+                        {
+                            hasTarget = false;
+                        }
                         break;
                     }
                 }
             }
         }
 
-        // ===== ОТМЕНА (ПКМ) =====
         if (Input.GetMouseButtonDown(1))
         {
             isCardSelected = false;
             hasTarget = false;
+            isTargetSelected = false;
             selectedPlayerDice = null;
             selectedEnemyDice = null;
             if (lineContainer != null) lineContainer.SetActive(false);
@@ -338,7 +360,6 @@ public class UIAimLine : MonoBehaviour
             animationOffset = 0f;
         }
 
-        // ===== АНИМАЦИЯ =====
         if (isCardSelected && selectedPlayerDice != null)
         {
             animationOffset += Time.deltaTime * animationSpeed;
@@ -351,13 +372,8 @@ public class UIAimLine : MonoBehaviour
             if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
             if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
         }
-
-        // ===== ОБНОВЛЕНИЕ ПОЗИЦИИ ЦЕЛИ =====
-        if (hasTarget && selectedEnemyDice != null)
-        {
-            targetPosition = GetRectTransformPosition(selectedEnemyDice.GetComponent<RectTransform>());
-        }
     }
+
 
     void UpdateLine()
     {
@@ -375,12 +391,14 @@ public class UIAimLine : MonoBehaviour
         }
 
         Vector2 endPos;
-        if (hasTarget)
+        if (hasTarget && selectedEnemyDice != null)
         {
-            endPos = targetPosition;
+            // Если есть цель - рисуем к ней
+            endPos = GetRectTransformPosition(selectedEnemyDice.GetComponent<RectTransform>());
         }
         else
         {
+            // Если цели нет - рисуем к курсору
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
                 canvasRect,

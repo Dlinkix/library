@@ -120,7 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7841289134882169469}
   - component: {fileID: 607256787407179339}
-  - component: {fileID: 5105288688959362646}
+  - component: {fileID: 8349264210422558596}
   m_Layer: 5
   m_Name: PlayerUI
   m_TagString: Untagged
@@ -164,7 +164,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1844538118417403893}
   m_CullTransparentMesh: 1
---- !u!114 &5105288688959362646
+--- !u!114 &8349264210422558596
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -175,10 +175,10 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b3f54ff60071057468c5c4bbe8a3aca7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerAimLine
+  m_EditorClassIdentifier: Assembly-CSharp::UIAimLine
   playerRect: {fileID: 0}
   maxDistance: 3000
-  lineColor: {r: 1, g: 1, b: 1, a: 1}
+  lineColor: {r: 0, g: 1, b: 1, a: 1}
   dotWidth: 30
   dotHeight: 10
   spacing: 50

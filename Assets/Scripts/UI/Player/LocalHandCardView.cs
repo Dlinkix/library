@@ -52,8 +52,8 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (!player.isLocalPlayer) return;
         if (FightManager.Instance.CurrentState != FightState.Rolling) return;
 
-        DiceRoll playerDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
-        if (playerDice == null)
+        DiceRoll activeDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
+        if (activeDice == null)
         {
             Debug.Log("[LocalHandCardView] Select your dice first!");
             return;
@@ -68,20 +68,16 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
             return;
         }
 
-        // ===== ¬€¡»–¿≈Ã  ¿–“” =====
-        player.SelectCard(cardId);
+        activeDice.SelectCard(cardId);
 
-        // ===== ≈—À» ”∆≈ ¬€¡–¿Õ¿ ÷≈À‹ ó œŒ ¿«€¬¿≈Ã À»Õ»ﬁ =====
-        if (player.GetSelectedTargetEnemyNetId() != 0)
+        // ===== œŒ ¿«€¬¿≈Ã À»Õ»ﬁ ” ¿ “»¬ÕŒ√Œ  ”¡» ¿ =====
+        UIAimLine aimLine = activeDice.GetComponentInChildren<UIAimLine>();
+        if (aimLine != null)
         {
-            UIAimLine aimLine = Object.FindFirstObjectByType<UIAimLine>();
-            if (aimLine != null)
-            {
-                aimLine.SetCardSelected(true);
-            }
+            aimLine.SetPlayerDice(activeDice);
+            aimLine.SetCardSelected(true);
+            aimLine.gameObject.SetActive(true);
         }
-
-        Debug.Log($"[LocalHandCardView] Card selected: {card.cardName}");
     }
 
     private void CacheDefaults()

@@ -432,6 +432,21 @@ public class NetworkGameEnemy : NetworkBehaviour
             dataGame = loadedData[0];
         }
     }
+    [Server]
+    public void RollAllDice()
+    {
+        DiceRoll[] dices = GetComponentsInChildren<DiceRoll>();
+        foreach (var dice in dices)
+        {
+            if (dice != null)
+            {
+                int roll = GetRollValue();
+                dice.RollDice(roll, roll);
+                Debug.Log($"[NetworkGameEnemy] {EnemyName} dice rolled: {roll}");
+            }
+        }
+    }
+
 
     [Server]
     private void ApplyEnemyStatsFromData()

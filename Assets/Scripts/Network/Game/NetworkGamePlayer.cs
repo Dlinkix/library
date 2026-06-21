@@ -6,6 +6,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using static DataGame;
 
 public class NetworkGamePlayer : NetworkBehaviour
@@ -40,6 +41,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     [SyncVar(hook = nameof(OnHpChanged))]
     public int maxLight;
 
+    public static List<NetworkGamePlayer> AllPlayers { get; } = new List<NetworkGamePlayer>();
 
     [Header("UI")]
     [SerializeField] private Vector2 uiOffset = Vector2.zero;
@@ -59,17 +61,14 @@ public class NetworkGamePlayer : NetworkBehaviour
     private GameObject uiObject;
     private RectTransform uiRect;
     private bool uiCreated;
-    private Slider hpSlider;
-    private Slider staggerSlider;
+    private UnityEngine.UI.Slider hpSlider;
+    private UnityEngine.UI.Slider staggerSlider;
     private TMP_Text hpText;
     private TMP_Text staggerText;
     private TMP_Text rollText;
     private TMP_Text nametext;
-    private Button readyButton;
+    private UnityEngine.UI.Button readyButton;
     private bool isShowingRollResult;
-    private int selectedCardId = -1;
-    private uint selectedTargetEnemyNetId = 0;
-    private int selectedTargetDiceIndex = -1;
     private RectTransform localHandRoot;
     private RectTransform localHandContentRoot;
     private TMP_Text localHandTitle;
@@ -77,13 +76,9 @@ public class NetworkGamePlayer : NetworkBehaviour
     private Queue<Action> pendingActions = new Queue<Action>();
     private float actionTimer = 0f;
     private bool isExecutingActions = false;
-    public static List<NetworkGamePlayer> AllPlayers { get; } = new List<NetworkGamePlayer>();
-
-
-    public int GetSelectedCardId() => selectedCardId;
-    public uint GetSelectedTargetEnemyNetId() => selectedTargetEnemyNetId;
-    public int GetSelectedTargetDiceIndex() => selectedTargetDiceIndex;
-
+    public GameObject UIObject => uiObject;
+    public List<int> PlayerHand => playerHand;
+    public DataGame DataGame => dataGame;
 
 
     #region other
@@ -96,6 +91,9 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         ApplyPlayerStatsFromData();
         InitializeCardState();
+
+        // ===== УБИРАЕМ СОЗДАНИЕ КУБИКОВ ЗДЕСЬ =====
+        // ServerCreateDiceUI(); /
     }
 
 
@@ -103,6 +101,12 @@ public class NetworkGamePlayer : NetworkBehaviour
     {
         CreateUI();
         ApplyUIPositionBySlot();
+
+        // ===== СОЗДАЕМ КУБИКИ ПОСЛЕ СОЗДАНИЯ UI =====
+        if (isServer)
+        {
+            ServerCreateDiceUI();
+        }
 
         if (!isLocalPlayer)
         {
@@ -125,6 +129,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         RefreshLocalHandUI();
         QueueLocalHandRefresh();
         CmdRequestInitialHandSync();
+        UpdateAllDiceRange();
     }
 
    
@@ -183,7 +188,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        // Находим Anchor по slotIndex
         PlayerUIAnchor[] anchors = FindObjectsByType<PlayerUIAnchor>(FindObjectsSortMode.None);
         PlayerUIAnchor targetAnchor = null;
         for (int i = 0; i < anchors.Length; i++)
@@ -207,20 +211,18 @@ public class NetworkGamePlayer : NetworkBehaviour
             Destroy(uiObject);
             return;
         }
-        
 
         uiRect.localPosition = new Vector3(uiOffset.x, uiOffset.y, 0f);
         uiRect.localRotation = Quaternion.identity;
         uiRect.localScale = Vector3.one;
 
-        CreateDiceUI();
         if (isLocalPlayer)
         {
             UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
             if (aimLine == null)
             {
                 aimLine = uiObject.AddComponent<UIAimLine>();
-            }        
+            }
             aimLine.SetOwner(this, targetAnchor.GetComponent<RectTransform>());
         }
         else
@@ -228,21 +230,20 @@ public class NetworkGamePlayer : NetworkBehaviour
             UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
             if (aimLine != null)
             {
-                // Для нелокального игрока тоже вызываем SetOwner до Start()
                 aimLine.SetOwner(this);
             }
         }
+
         Transform gridTransform = uiObject.transform.Find("GridDice");
         Transform imageDice = gridTransform?.Find("DiceRoll");
         rollText = imageDice?.Find("Text (TMP)")?.GetComponent<TMP_Text>();
 
         hpText = uiObject.transform.Find("HpText")?.GetComponent<TMP_Text>();
         staggerText = uiObject.transform.Find("StaggerText")?.GetComponent<TMP_Text>();
-        hpSlider = uiObject.transform.Find("HpSlider")?.GetComponent<Slider>();
-        staggerSlider = uiObject.transform.Find("StaggerSlider")?.GetComponent<Slider>();
-        readyButton = uiObject.transform.Find("ReadyButton")?.GetComponent<Button>();
+        hpSlider = uiObject.transform.Find("HpSlider")?.GetComponent<UnityEngine.UI.Slider>();
+        staggerSlider = uiObject.transform.Find("StaggerSlider")?.GetComponent<UnityEngine.UI.Slider>();
+        readyButton = uiObject.transform.Find("ReadyButton")?.GetComponent<UnityEngine.UI.Button>();
         nametext = uiObject.transform.Find("NameText")?.GetComponent<TMP_Text>();
-
 
         if (hpSlider != null)
         {
@@ -271,7 +272,15 @@ public class NetworkGamePlayer : NetworkBehaviour
         UpdateReadyText();
         ApplyUIPositionBySlot();
     }
-
+    public void UpdateHandVisibility()
+    {
+        if (localHandRoot != null)
+        {
+            // Показываем руку только если выбран свой кубик
+            bool hasSelectedDice = DiceSelectionManager.Instance.GetSelectedPlayerDice() != null;
+            localHandRoot.gameObject.SetActive(hasSelectedDice);
+        }
+    }
     private void CreateDiceUI()
     {
         Transform gridTransform = uiObject.transform.Find("GridDice");
@@ -299,6 +308,12 @@ public class NetworkGamePlayer : NetworkBehaviour
             dice.SetOwner(this, i);
         }
     }
+
+    public bool IsHandVisible()
+    {
+        return localHandRoot != null && localHandRoot.gameObject.activeSelf;
+    }
+
     private void SetupUIForLocalOrRemotePlayer()
     {
         if (readyButton == null)
@@ -375,30 +390,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             nametext.text = isReady ? $"{PlayerName}: ready" : $"{PlayerName}: not ready";
         }
     }
-    
-
-    public void SelectCard(int cardId)
-    {
-        selectedCardId = cardId;
-    }
-    public void SelectTarget(uint enemyNetId, int diceIndex)
-    {
-        selectedTargetEnemyNetId = enemyNetId;
-        selectedTargetDiceIndex = diceIndex;
-    }
-
-
-    public void ClearSelection()
-    {
-        selectedCardId = -1;
-        selectedTargetEnemyNetId = 0;
-        selectedTargetDiceIndex = -1;
-    }
-
-    public bool HasSelection()
-    {
-        return selectedCardId != -1 && selectedTargetEnemyNetId != 0;
-    }
     private void UpdateIconDiceRoll()
     {
 
@@ -474,7 +465,7 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        GameObject rootObject = new GameObject("LocalHandUI", typeof(RectTransform), typeof(Image));
+        GameObject rootObject = new GameObject("LocalHandUI", typeof(RectTransform), typeof(UnityEngine.UI.Image));
         localHandRoot = rootObject.GetComponent<RectTransform>();
         localHandRoot.SetParent(canvas.transform, false);
         localHandRoot.anchorMin = new Vector2(0.5f, 0f);
@@ -483,7 +474,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         localHandRoot.anchoredPosition = new Vector2(0f, 24f);
         localHandRoot.sizeDelta = new Vector2(980f, 250f);
 
-        Image background = rootObject.GetComponent<Image>();
+        UnityEngine.UI.Image background = rootObject.GetComponent<UnityEngine.UI.Image>();
         background.color = new Color(0.06f, 0.07f, 0.11f, 0.88f);
         background.raycastTarget = false;
 
@@ -511,6 +502,9 @@ public class NetworkGamePlayer : NetworkBehaviour
         localHandContentRoot.pivot = new Vector2(0f, 0f);
         localHandContentRoot.offsetMin = new Vector2(16f, 16f);
         localHandContentRoot.offsetMax = new Vector2(-16f, -48f);
+
+        localHandRoot.gameObject.SetActive(false);
+
 
         RefreshLocalHandUI();
     }
@@ -549,7 +543,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void CreateHandCardView(DataGame.CardData cardData, int cardId, int cardIndex, int totalCards)
     {
-        GameObject cardRootObject = new GameObject($"Card_{cardId}", typeof(RectTransform), typeof(Image), typeof(LayoutElement));
+        GameObject cardRootObject = new GameObject($"Card_{cardId}", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(LayoutElement));
         RectTransform cardRect = cardRootObject.GetComponent<RectTransform>();
         cardRect.SetParent(localHandContentRoot, false);
         cardRect.anchorMin = new Vector2(0f, 0f);
@@ -562,11 +556,11 @@ public class NetworkGamePlayer : NetworkBehaviour
         layoutElement.preferredWidth = 150f;
         layoutElement.preferredHeight = 180f;
 
-        Image cardBackground = cardRootObject.GetComponent<Image>();
+        UnityEngine.UI.Image cardBackground = cardRootObject.GetComponent<UnityEngine.UI.Image>();
         cardBackground.color = new Color(0.13f, 0.14f, 0.2f, 0.96f);
         cardBackground.raycastTarget = true;
 
-        GameObject artObject = new GameObject("Art", typeof(RectTransform), typeof(Image));
+        GameObject artObject = new GameObject("Art", typeof(RectTransform), typeof(UnityEngine.UI.Image));
         RectTransform artRect = artObject.GetComponent<RectTransform>();
         artRect.SetParent(cardRect, false);
         artRect.anchorMin = new Vector2(0.5f, 1f);
@@ -575,7 +569,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         artRect.anchoredPosition = new Vector2(0f, -10f);
         artRect.sizeDelta = new Vector2(126f, 82f);
 
-        Image artImage = artObject.GetComponent<Image>();
+        UnityEngine.UI.Image artImage = artObject.GetComponent<UnityEngine.UI.Image>();
         artImage.sprite = cardData != null ? cardData.cardSprite : null;
         artImage.preserveAspect = true;
         artImage.color = artImage.sprite == null ? new Color(0.18f, 0.19f, 0.26f) : Color.white;
@@ -823,6 +817,98 @@ public class NetworkGamePlayer : NetworkBehaviour
     #endregion
 
     #region Server
+
+
+    [Server]
+    private void ApplyCardFromDice(DiceRoll dice)
+    {
+        if (dice == null || !dice.hasSelection) return;
+
+        // Находим врага по цели
+        NetworkGameEnemy targetEnemy = null;
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy != null && enemy.netId == dice.selectedTargetEnemyNetId)
+            {
+                targetEnemy = enemy;
+                break;
+            }
+        }
+
+        if (targetEnemy == null) return;
+
+        // Получаем карту
+        if (!dataGame.TryGetCardById(dice.selectedCardId, out CardData card)) return;
+
+        // Применяем карту
+        if (playerHand.Contains(dice.selectedCardId))
+        {
+            playerHand.Remove(dice.selectedCardId);
+            SyncHandToOwner();
+        }
+
+        QueueCardEffects(card, targetEnemy);
+    }
+
+    [Server]
+    public void ServerCreateDiceUI()
+        {
+        if (uiObject == null) return;
+
+        Transform gridTransform = uiObject.transform.Find("GridDice");
+        if (gridTransform == null)
+        {
+            Debug.LogWarning("GridDice not found in UI!");
+            return;
+        }
+
+        foreach (Transform child in gridTransform)
+            Destroy(child.gameObject);
+
+        GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
+        if (dicePrefab == null)
+        {
+            Debug.LogWarning("DiceRoll prefab not found!");
+            return;
+        }
+
+        for (int i = 0; i < DiceRollAmount; i++)
+        {
+            GameObject diceObj = Instantiate(dicePrefab, gridTransform);
+            DiceRoll dice = diceObj.GetComponent<DiceRoll>();
+            dice.SetOwner(this, i);
+            NetworkServer.Spawn(diceObj);
+        }
+    }
+    // Добавьте этот метод в NetworkGamePlayer:
+
+    [Server]
+    public void RollAllDice()
+    {
+        if (uiObject == null)
+        {
+            Debug.LogWarning($"[RollAllDice] uiObject is null for {PlayerName}");
+            return;
+        }
+
+        // Ищем кубики в uiObject, а не в this
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        List<int> values = new List<int>();
+
+        foreach (var dice in dices)
+        {
+            if (dice != null)
+            {
+                int roll = GetRollValue();
+                dice.RollDice(roll, roll);
+                values.Add(roll);
+            }
+        }
+
+        Debug.Log($"[RollAllDice] Player {PlayerName} rolled {values.Count} dice. Values: {string.Join(", ", values)}");
+
+        RpcUpdateDiceValues(values.ToArray());
+    }
 
     [Server]
     public void QueueCardForTarget(int cardId, NetworkGameEnemy targetEnemy)
@@ -1179,6 +1265,75 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     #region Client
+
+    [Client]
+    public void UpdateAllDiceRange()
+    {
+        if (uiObject == null) return;
+
+        DataGame.PlayerData playerData = GetActivePlayerData();
+        if (playerData == null) return;
+
+        int minSpeed = playerData.baseSpeedMin;
+        int maxSpeed = playerData.baseSpeedMax;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        foreach (var dice in dices)
+        {
+            if (dice != null)
+            {
+                dice.ShowDiceRange(minSpeed, maxSpeed);
+            }
+        }
+    }
+    [Client]
+    public void UpdateAllDiceResult()
+    {
+        if (uiObject == null) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        foreach (var dice in dices)
+        {
+            if (dice != null && dice.isReady)
+            {
+                dice.ShowDiceResult(dice.diceValue);
+            }
+        }
+    }
+
+    [ClientRpc]
+    public void RpcUpdateDiceValues(int[] values)
+    {
+        Debug.Log($"[RpcUpdateDiceValues] Received for {PlayerName}: {values?.Length ?? 0} values");
+
+        if (values == null || values.Length == 0) return;
+        if (uiObject == null) return;
+
+        // Ищем кубики в uiObject
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        Debug.Log($"[RpcUpdateDiceValues] Found {dices.Length} dice on {PlayerName}");
+
+        for (int i = 0; i < dices.Length && i < values.Length; i++)
+        {
+            if (dices[i] != null)
+            {
+                Debug.Log($"[RpcUpdateDiceValues] Setting dice {i} to {values[i]}");
+                dices[i].SetDiceValue(values[i]);
+            }
+        }
+    }
+    [TargetRpc]
+    public void TargetUpdateDiceValues(NetworkConnection target, int[] values)
+    {
+        DiceRoll[] dices = GetComponentsInChildren<DiceRoll>();
+        for (int i = 0; i < dices.Length && i < values.Length; i++)
+        {
+            if (dices[i] != null)
+            {
+                dices[i].SetDiceValue(values[i]);
+            }
+        }
+    }
 
     [TargetRpc]
     private void TargetSyncHand(NetworkConnection target, int[] handCardIds)

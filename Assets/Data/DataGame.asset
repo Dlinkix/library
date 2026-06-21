@@ -22,7 +22,7 @@ MonoBehaviour:
     dekaPlayer: 10
     baseStartLight: 3
     cardPlayerIds: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
-    diceRollPlayer: 1
+    diceRollPlayer: 2
   enemyData:
   - enemyName: 
     maxHealth: 10

@@ -17,48 +17,96 @@ public class DiceSelectionManager : MonoBehaviour
             Destroy(gameObject);
     }
 
+    void Update()
+    {
+        // Сброс выбора по правой кнопке мыши
+        if (Input.GetMouseButtonDown(1))
+        {
+            ClearSelection();
+        }
+    }
+
     public void SelectPlayerDice(DiceRoll dice)
     {
         if (selectedPlayerDice != null)
+        {
             selectedPlayerDice.SetSelected(false);
+        }
 
         selectedPlayerDice = dice;
         selectedPlayerDice.SetSelected(true);
         OnPlayerDiceSelected?.Invoke(dice);
 
+        // ===== НАХОДИМ ЛИНИЮ И УСТАНАВЛИВАЕМ selectedPlayerDice =====
+        UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
+        if (aimLine != null)
+        {
+            aimLine.SetPlayerDice(dice);
+            // Если уже есть выбранная карта - показываем линию
+            if (dice.selectedCardId != -1)
+            {
+                aimLine.SetCardSelected(true);
+                aimLine.gameObject.SetActive(true);
+            }
+        }
+
+        UpdateHandVisibilityForAllPlayers();
         Debug.Log($"Selected player dice: {dice.diceValue}");
     }
 
     public void SelectEnemyDice(DiceRoll dice)
     {
-        if (selectedPlayerDice == null)
+        if (selectedEnemyDice != null)
         {
-            Debug.Log("Select player dice first!");
-            return;
-        }
-
-        if (!dice.isEnemyDice)
-        {
-            Debug.Log("This is not an enemy dice!");
-            return;
+            selectedEnemyDice.SetSelected(false);
         }
 
         selectedEnemyDice = dice;
+        selectedEnemyDice.SetSelected(true);
         OnEnemyDiceSelected?.Invoke(dice);
-
-        Debug.Log($"Selected enemy dice: {dice.diceValue}");
     }
+
+
+
 
     public void ClearSelection()
     {
         if (selectedPlayerDice != null)
         {
             selectedPlayerDice.SetSelected(false);
+
+            // Скрываем линию
+            UIAimLine aimLine = selectedPlayerDice.GetComponentInChildren<UIAimLine>();
+            if (aimLine != null)
+            {
+                aimLine.SetCardSelected(false);
+                aimLine.gameObject.SetActive(false);
+            }
+
             selectedPlayerDice = null;
         }
-        selectedEnemyDice = null;
+
+        if (selectedEnemyDice != null)
+        {
+            selectedEnemyDice.SetSelected(false);
+            selectedEnemyDice = null;
+        }
+
         OnEnemyDiceSelected?.Invoke(null);
+        UpdateHandVisibilityForAllPlayers();
     }
+
+    private void UpdateHandVisibilityForAllPlayers()
+    {
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.isLocalPlayer)
+            {
+                player.UpdateHandVisibility();
+            }
+        }
+    }
+
 
     public DiceRoll GetSelectedPlayerDice()
     {
