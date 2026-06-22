@@ -170,7 +170,7 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             {
                 if (player != null && player.isLocalPlayer)
                 {
-                    DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+                    DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>(true);
                     foreach (var dice in dices)
                     {
                         if (dice != null && dice != this && dice.selectedCardIndex == cardIndex)
@@ -290,8 +290,11 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
 
         if (ownerPlayer != null && ownerPlayer.isLocalPlayer)
         {
-            // ¬ыбираем этот кубик как активный
             DiceSelectionManager.Instance.SelectPlayerDice(this);
+
+            ownerPlayer.UpdateHandVisibility(); // <-- вот это
+
+            Debug.Log("[DiceRoll] Selected dice, showing hand");
         }
         else if (isEnemyDice)
         {

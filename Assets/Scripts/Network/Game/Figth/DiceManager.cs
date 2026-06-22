@@ -1,3 +1,4 @@
+using Mirror;
 using UnityEngine;
 
 public class DiceSelectionManager : MonoBehaviour
@@ -30,12 +31,10 @@ public class DiceSelectionManager : MonoBehaviour
     {
         if (selectedPlayerDice != null)
         {
-            Debug.Log($"[SelectPlayerDice] Old dice {selectedPlayerDice.ownerSlotIndex}: cardId={selectedPlayerDice.selectedCardId}, target={selectedPlayerDice.selectedTargetEnemyNetId}");
             selectedPlayerDice.SetSelected(false);
         }
 
         selectedPlayerDice = dice;
-        Debug.Log($"[SelectPlayerDice] New dice {dice.ownerSlotIndex}: cardId={dice.selectedCardId}, target={dice.selectedTargetEnemyNetId}");
         selectedPlayerDice.SetSelected(true);
         OnPlayerDiceSelected?.Invoke(dice);
 
@@ -44,7 +43,28 @@ public class DiceSelectionManager : MonoBehaviour
         if (aimLine != null && dice.selectedCardId != -1)
         {
             aimLine.SetCardSelected(true);
-            // Õ≈ ¬€ Àﬁ◊¿≈Ã aimLine.gameObject.SetActive(true);
+        }
+
+        // ===== »Ÿ≈Ã ÀŒ ¿À‹ÕŒ√Œ »√–Œ ¿ ¡≈«Œœ¿—ÕŒ =====
+        NetworkGamePlayer localPlayer = null;
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.isLocalPlayer)
+            {
+                localPlayer = player;
+                break;
+            }
+        }
+
+        if (localPlayer != null)
+        {
+            localPlayer.EnsureLocalHandUI();
+            localPlayer.UpdateHandVisibility();
+            localPlayer.RefreshLocalHandUI();
+        }
+        else
+        {
+            Debug.LogWarning("[SelectPlayerDice] Local player not found in AllPlayers!");
         }
 
         UpdateHandVisibilityForAllPlayers();

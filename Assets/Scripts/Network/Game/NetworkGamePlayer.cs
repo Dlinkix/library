@@ -119,17 +119,56 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
     public override void OnStartLocalPlayer()
     {
+        Debug.Log("[OnStartLocalPlayer] Started!");
         SetupUIForLocalOrRemotePlayer();
         EnsureLocalHandUI();
         UpdateReadyText();
-        RefreshLocalHandUI();
+
         QueueLocalHandRefresh();
         CmdRequestInitialHandSync();
         Invoke(nameof(UpdateAllDiceRange), 1f);
+
+        if (DiceSelectionManager.Instance != null &&
+            DiceSelectionManager.Instance.GetSelectedPlayerDice() != null)
+        {
+            UpdateHandVisibility();
+        }
+        Invoke(nameof(DebugHand), 2f);
     }
+    private IEnumerator RefreshHandAfterUIReady()
+    {
+        for (int i = 0; i < 30; i++)
+        {
+            EnsureLocalHandUI();
 
+            if (localHandRoot != null && localHandContentRoot != null)
+            {
+                RefreshLocalHandUI();
 
+                if (DiceSelectionManager.Instance != null &&
+                    DiceSelectionManager.Instance.GetSelectedPlayerDice() != null)
+                {
+                    UpdateHandVisibility();
+                }
 
+                yield break;
+            }
+
+            yield return null;
+        }
+
+        Debug.LogWarning("Hand UI was not ready after waiting");
+    }
+    private void DebugHand()
+    {
+        Debug.Log($"HAND COUNT = {localHandCardIds.Count}");
+    }
+    public bool IsCardInLocalHand(int cardId, int cardIndex)
+    {
+        if (cardIndex < 0 || cardIndex >= localHandCardIds.Count)
+            return false;
+        return localHandCardIds[cardIndex] == cardId;
+    }
 
     private void OnSlotIndexChanged(int oldValue, int newValue)
     {
@@ -145,6 +184,26 @@ public class NetworkGamePlayer : NetworkBehaviour
         if (uiCreated)
         {
             UpdateAllDiceRange();
+        }
+
+        // ===== ДЛЯ ЛОКАЛЬНОГО ИГРОКА: СОЗДАЁМ РУКУ ПОСЛЕ UI =====
+        if (isLocalPlayer && uiCreated)
+        {
+            EnsureLocalHandUI();
+            // Если есть выбранный кубик — показываем руку
+            if (DiceSelectionManager.Instance != null &&
+                DiceSelectionManager.Instance.GetSelectedPlayerDice() != null)
+            {
+                UpdateHandVisibility();
+            }
+            else
+            {
+                // Рука скрыта, но создана
+                if (localHandRoot != null)
+                {
+                    localHandRoot.gameObject.SetActive(false);
+                }
+            }
         }
     }
     private void OnDiceRollAmountChanged(int oldValue, int newValue)
@@ -289,11 +348,28 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
     public void UpdateHandVisibility()
     {
-        if (localHandRoot != null)
+        if (!isLocalPlayer)
         {
-            // Показываем руку только если выбран свой кубик
-            bool hasSelectedDice = DiceSelectionManager.Instance.GetSelectedPlayerDice() != null;
-            localHandRoot.gameObject.SetActive(hasSelectedDice);
+            Debug.Log("[UpdateHandVisibility] Not local player, skipping");
+            return;
+        }
+
+        EnsureLocalHandUI();
+        if (localHandRoot == null)
+        {
+            Debug.LogWarning("[UpdateHandVisibility] localHandRoot is null after EnsureLocalHandUI!");
+            return;
+        }
+
+        bool hasSelectedDice = DiceSelectionManager.Instance != null &&
+                               DiceSelectionManager.Instance.GetSelectedPlayerDice() != null;
+
+        localHandRoot.gameObject.SetActive(hasSelectedDice);
+        Debug.Log($"[UpdateHandVisibility] Hand visibility set to {hasSelectedDice}, card count: {localHandCardIds.Count}");
+
+        if (hasSelectedDice && localHandCardIds.Count > 0)
+        {
+            RefreshLocalHandUI();
         }
     }
     private void CreateDiceUI()
@@ -468,7 +544,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
     }
 
-    private void EnsureLocalHandUI()
+    public void EnsureLocalHandUI()
     {
         if (!isLocalPlayer || localHandRoot != null)
         {
@@ -525,7 +601,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         RefreshLocalHandUI();
     }
 
-    private void RefreshLocalHandUI()
+    public void RefreshLocalHandUI()
     {
         if (!isLocalPlayer)
         {
@@ -1438,14 +1514,16 @@ public class NetworkGamePlayer : NetworkBehaviour
     private void TargetSyncHand(NetworkConnection target, int[] handCardIds)
     {
         localHandCardIds.Clear();
-        if (handCardIds != null)
-        {
-            localHandCardIds.AddRange(handCardIds);
-        }
 
-        RefreshLocalHandUI();
-        QueueLocalHandRefresh();
+        if (handCardIds != null)
+            localHandCardIds.AddRange(handCardIds);
+
+
+        StartCoroutine(RefreshHandAfterUIReady());
     }
+
+
+    
 
     [ClientRpc]
     public void RpcShowRollResult(int roll, string playerName)
@@ -1471,9 +1549,9 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     [Command]
-    public void CmdPlayCard(int cardId, uint enemyNetId, int enemyDiceIndex)
+    public void CmdPlayCard(int cardId, int cardIndex, uint enemyNetId)
     {
-        Debug.Log($"[CmdPlayCard] Called! Player: {PlayerName}, Card: {cardId}, EnemyNetId: {enemyNetId}, DiceIndex: {enemyDiceIndex}");
+        Debug.Log($"[CmdPlayCard] Called! Player: {PlayerName}, Card: {cardId}, EnemyNetId: {enemyNetId}");
 
         if (!isLocalPlayer) return;
         if (FightManager.Instance == null || !FightManager.Instance.IsFightActive) return;
@@ -1483,7 +1561,11 @@ public class NetworkGamePlayer : NetworkBehaviour
         if (dataGame == null) return;
         if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
         if (currentLight < card.lightCost) return;
+        if (cardIndex < 0 || cardIndex >= playerHand.Count)
+            return;
 
+        if (playerHand[cardIndex] != cardId)
+            return;
         // ===== НАХОДИМ ВРАГА ПО netId =====
         NetworkGameEnemy targetEnemy = null;
         foreach (var enemy in NetworkGameEnemy.AllEnemies)
@@ -1505,7 +1587,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         // (можно добавить дополнительную проверку)
 
         currentLight -= card.lightCost;
-        playerHand.Remove(cardId);
+        playerHand.RemoveAt(cardIndex);
 
         // Добавляем в очередь вместо прямого вызова
         QueueCardEffects(card, targetEnemy);

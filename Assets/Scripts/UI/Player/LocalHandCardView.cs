@@ -41,20 +41,24 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
     {
         if (player == null || cardBackground == null) return;
 
+        // Проверяем UIObject
+        if (player.UIObject == null)
+        {
+            Debug.LogWarning("[UpdateCardState] UIObject is null for player");
+            return;
+        }
+
         // Проверяем, есть ли карта в руке по индексу
-        if (cardIndex >= player.PlayerHand.Count || player.PlayerHand[cardIndex] != cardId)
+        if (!player.IsCardInLocalHand(cardId, cardIndex))
         {
             cardBackground.color = usedColor;
             return;
         }
 
-        bool isSelected = false;
-        DiceRoll selectedDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
-
-        // Проверяем, не выбрана ли ЭТА КОНКРЕТНАЯ карта (по индексу)
+        // Проверяем, выбрана ли эта карта активным кубиком
+        DiceRoll selectedDice = DiceSelectionManager.Instance?.GetSelectedPlayerDice();
         if (selectedDice != null && selectedDice.selectedCardIndex == cardIndex)
         {
-            isSelected = true;
             cardBackground.color = selectedColor;
             return;
         }
@@ -62,26 +66,23 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         // Проверяем, не выбрана ли эта карта другим кубиком
         foreach (var p in NetworkGamePlayer.AllPlayers)
         {
-            if (p != null && p.isLocalPlayer)
+            if (p == null)
+                continue;
+
+            DiceRoll[] dices = p.UIObject.GetComponentsInChildren<DiceRoll>();
+
+            foreach (var dice in dices)
             {
-                DiceRoll[] dices = p.UIObject.GetComponentsInChildren<DiceRoll>();
-                foreach (var dice in dices)
+                if (dice != null && dice.selectedCardIndex == cardIndex)
                 {
-                    if (dice != null && dice.selectedCardIndex == cardIndex)
-                    {
-                        isSelected = true;
-                        cardBackground.color = usedColor;
-                        return;
-                    }
+                    cardBackground.color = usedColor;
+                    return;
                 }
             }
         }
 
         // Если не выбрана - возвращаем стандартный цвет
-        if (!isSelected)
-        {
-            cardBackground.color = defaultColor;
-        }
+        cardBackground.color = defaultColor;
     }
 
 
@@ -90,7 +91,7 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         CacheDefaults();
 
         // Не поднимаем карту если она использована
-        if (player != null && !player.PlayerHand.Contains(cardId)) return;
+        if (player != null && !player.IsCardInLocalHand(cardId, cardIndex)) return;
 
         if (cardRect != null)
         {
@@ -114,12 +115,11 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (!player.isLocalPlayer) return;
         if (FightManager.Instance.CurrentState != FightState.Rolling) return;
 
-        // Проверяем, что карта в руке по индексу
-        if (cardIndex >= player.PlayerHand.Count || player.PlayerHand[cardIndex] != cardId)
-        {
-            Debug.Log($"[LocalHandCardView] Card at index {cardIndex} is no longer in hand!");
-            return;
-        }
+        if (!player.IsCardInLocalHand(cardId, cardIndex))
+{
+    Debug.Log($"[LocalHandCardView] Card at index {cardIndex} is no longer in hand!");
+    return;
+}
 
         DiceRoll activeDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
         if (activeDice == null)
