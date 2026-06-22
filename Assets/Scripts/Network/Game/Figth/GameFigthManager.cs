@@ -189,11 +189,15 @@ public class FightManager : NetworkBehaviour
         {
             if (entry.dice != null && entry.dice.hasSelection)
             {
-                Debug.Log($"[ExecuteActionPhase] Applying card from dice {entry.diceIndex} (Player {entry.player.PlayerName})");
                 ApplyCardFromDice(entry.player, entry.dice);
                 entry.dice.ClearSelection();
+
+                // Ждём пока ВСЕ атаки этого кубика завершатся
+                while (entry.player.IsExecutingActions)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                }
             }
-            yield return new WaitForSeconds(0.3f);
         }
 
         // ===== ЖДЕМ ЗАВЕРШЕНИЯ ВСЕХ АТАК =====

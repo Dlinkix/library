@@ -1182,7 +1182,10 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         actionTimer += Time.deltaTime;
 
-        if (actionTimer >= attackDelay)
+        // Увеличь задержку чтобы анимация успела проиграться
+        float totalDelay = attackDelay + 1.2f; // 0.5 + 0.7 анимация + пуза
+
+        if (actionTimer >= totalDelay)
         {
             actionTimer = 0f;
             Action action = pendingActions.Dequeue();
@@ -1206,8 +1209,10 @@ public class NetworkGamePlayer : NetworkBehaviour
         {
             foreach (var attack in card.attacks)
             {
-                pendingActions.Enqueue(() => ApplyAttack(attack, targetEnemy));
-                Debug.Log($"[QueueCardEffects] Added attack: {attack.attackName}");
+                pendingActions.Enqueue(() => {
+                    targetEnemy.PushEnemyUI(this);
+                    ApplyAttack(attack, targetEnemy);
+                });
             }
         }
 
@@ -1219,6 +1224,7 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
         }
 
+        // ===== ВАЖНО! ВКЛЮЧАЕМ ОБРАБОТКУ ОЧЕРЕДИ =====
         if (!isExecutingActions)
         {
             isExecutingActions = true;
@@ -1227,7 +1233,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
     }
 
-    
 
     //[Server]
     //public void ApplyCardToEnemy(int cardId, NetworkGameEnemy targetEnemy)
