@@ -1278,13 +1278,15 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
 
-        // ===== ИСПОЛЬЗУЕМ attack.Type (поле объекта), а не DataGame.AttackData.Type =====
         switch (attack.type)
         {
             case DataGame.AttackData.Type.Damage:
                 target.hp -= roll;
                 if (target.hp < 0) target.hp = 0;
-                Debug.Log($"{PlayerName} нанес {roll} урона {target.EnemyName}");
+                Debug.Log($"[DEBUG][ApplyAttack] {PlayerName} нанес {roll} урона {target.EnemyName}");
+
+                // ===== ВЫЗЫВАЕМ ОДИН РАЗ! =====
+                target.PushEnemyUI(this);
                 break;
 
             case DataGame.AttackData.Type.Block:
