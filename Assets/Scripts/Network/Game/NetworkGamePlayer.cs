@@ -92,25 +92,22 @@ public class NetworkGamePlayer : NetworkBehaviour
         ApplyPlayerStatsFromData();
         InitializeCardState();
 
-        // ===== ÓÁÈĞÀÅÌ ÑÎÇÄÀÍÈÅ ÊÓÁÈÊÎÂ ÇÄÅÑÜ =====
-        // ServerCreateDiceUI(); /
+        StartCoroutine(ServerCreateDiceDelayed());
     }
 
 
     public override void OnStartClient()
     {
+        Debug.Log($"[DEBUG][NetworkGamePlayer] OnStartClient: {PlayerName}, NetId: {netId}, SlotIndex: {slotIndex}, IsLocalPlayer: {isLocalPlayer}, IsServer: {isServer}");
+
         CreateUI();
+
         ApplyUIPositionBySlot();
-
-        // ===== ÑÎÇÄÀÅÌ ÊÓÁÈÊÈ ÏÎÑËÅ ÑÎÇÄÀÍÈß UI =====
-        if (isServer)
-        {
-            ServerCreateDiceUI();
-        }
-
+       
         if (!isLocalPlayer)
         {
             UIAimLine[] aimLines = FindObjectsByType<UIAimLine>(FindObjectsSortMode.None);
+
             foreach (var line in aimLines)
             {
                 if (line.gameObject.GetComponentInParent<NetworkGamePlayer>() == this)
@@ -120,7 +117,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
         }
     }
-
     public override void OnStartLocalPlayer()
     {
         SetupUIForLocalOrRemotePlayer();
@@ -129,19 +125,36 @@ public class NetworkGamePlayer : NetworkBehaviour
         RefreshLocalHandUI();
         QueueLocalHandRefresh();
         CmdRequestInitialHandSync();
-        UpdateAllDiceRange();
+        Invoke(nameof(UpdateAllDiceRange), 1f);
     }
 
-   
+
 
 
     private void OnSlotIndexChanged(int oldValue, int newValue)
     {
+        Debug.Log($"[SlotChanged] {PlayerName} slot {newValue}");
+
+        if (!uiCreated)
+        {
+            CreateUI();
+        }
+
         ApplyUIPositionBySlot();
+
+        if (uiCreated)
+        {
+            UpdateAllDiceRange();
+        }
     }
     private void OnDiceRollAmountChanged(int oldValue, int newValue)
     {
-        UpdateIconDiceRoll();
+        Debug.Log($"Dice amount changed {oldValue} -> {newValue}");
+
+        if (uiObject != null)
+        {
+            CreateDiceUI();
+        }
     }
 
     private void OnLightAmountChanged(int oldValue, int newValue)
@@ -213,6 +226,10 @@ public class NetworkGamePlayer : NetworkBehaviour
         uiRect.localRotation = Quaternion.identity;
         uiRect.localScale = Vector3.one;
 
+        if (DiceRollAmount > 0)
+        {
+            CreateDiceUI();
+        }
         // ===== ÓÁÈĞÀÅÌ ÑÎÇÄÀÍÈÅ ËÈÍÈÈ ÍÀ UI =====
         // if (isLocalPlayer)
         // {
@@ -298,6 +315,7 @@ public class NetworkGamePlayer : NetworkBehaviour
             Debug.LogWarning("DiceRoll prefab not found!");
             return;
         }
+        Debug.Log($"Creating dice {DiceRollAmount} for {PlayerName}");
 
         for (int i = 0; i < DiceRollAmount; i++)
         {
@@ -816,7 +834,14 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     #region Server
 
+    [Server]
+    private IEnumerator ServerCreateDiceDelayed()
+    {
+        yield return null;
+        yield return null;
 
+        //ServerCreateDiceUI();
+    }
     [Server]
     private void ApplyCardFromDice(NetworkGamePlayer player, DiceRoll dice)
     {
@@ -906,50 +931,54 @@ public class NetworkGamePlayer : NetworkBehaviour
         Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
     }
 
-    [Server]
-    public void ServerCreateDiceUI()
-    {
-        if (uiObject == null) return;
+    //[Server]
+    //public void ServerCreateDiceUI()
+    //{
+    //    if (uiObject == null)
+    //    {
+    //        Debug.Log($"[ServerCreateDiceUI] No UI yet for {PlayerName}");
+    //        return;
+    //    }
 
-        Transform gridTransform = uiObject.transform.Find("GridDice");
-        if (gridTransform == null)
-        {
-            Debug.LogWarning("GridDice not found in UI!");
-            return;
-        }
+    //    Transform gridTransform = uiObject.transform.Find("GridDice");
+    //    if (gridTransform == null)
+    //    {
+    //        Debug.LogWarning("GridDice not found in UI!");
+    //        return;
+    //    }
 
-        foreach (Transform child in gridTransform)
-            Destroy(child.gameObject);
+    //    foreach (Transform child in gridTransform)
+    //        Destroy(child.gameObject);
 
-        GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
-        if (dicePrefab == null)
-        {
-            Debug.LogWarning("DiceRoll prefab not found!");
-            return;
-        }
+    //    GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
+    //    if (dicePrefab == null)
+    //    {
+    //        Debug.LogWarning("DiceRoll prefab not found!");
+    //        return;
+    //    }
 
-        for (int i = 0; i < DiceRollAmount; i++)
-        {
-            GameObject diceObj = Instantiate(dicePrefab, gridTransform);
-            DiceRoll dice = diceObj.GetComponent<DiceRoll>();
-            dice.SetOwner(this, i);
+    //    for (int i = 0; i < DiceRollAmount; i++)
+    //    {
+    //        GameObject diceObj = Instantiate(dicePrefab, gridTransform);
+    //        DiceRoll dice = diceObj.GetComponent<DiceRoll>();
+    //        dice.SetOwner(this, i);
 
-            // ===== ÍÀÕÎÄÈÌ UIAimLine ÍÀ ÏĞÅÔÀÁÅ =====
-            UIAimLine aimLine = diceObj.GetComponent<UIAimLine>();
-            if (aimLine != null)
-            {
-                aimLine.SetOwnerDice(dice);
-                dice.SetAimLine(aimLine);
-                // Ëèíèÿ áóäåò ñêğûòà ïî óìîë÷àíèş
-            }
-            else
-            {
-                Debug.LogWarning($"[ServerCreateDiceUI] UIAimLine not found on dice {i}!");
-            }
+    //        // ===== ÍÀÕÎÄÈÌ UIAimLine ÍÀ ÏĞÅÔÀÁÅ =====
+    //        UIAimLine aimLine = diceObj.GetComponent<UIAimLine>();
+    //        if (aimLine != null)
+    //        {
+    //            aimLine.SetOwnerDice(dice);
+    //            dice.SetAimLine(aimLine);
+    //            // Ëèíèÿ áóäåò ñêğûòà ïî óìîë÷àíèş
+    //        }
+    //        else
+    //        {
+    //            Debug.LogWarning($"[ServerCreateDiceUI] UIAimLine not found on dice {i}!");
+    //        }
 
-            NetworkServer.Spawn(diceObj);
-        }
-    }
+    //        NetworkServer.Spawn(diceObj);
+    //    }
+    //}
     // Äîáàâüòå ıòîò ìåòîä â NetworkGamePlayer:
 
     [Server]
