@@ -121,11 +121,8 @@ public class NetworkGamePlayer : NetworkBehaviour
     {
         Debug.Log("[OnStartLocalPlayer] Started!");
         SetupUIForLocalOrRemotePlayer();
-        EnsureLocalHandUI();
         UpdateReadyText();
-
-        QueueLocalHandRefresh();
-        CmdRequestInitialHandSync();
+        StartCoroutine(WaitForReadyAndInitialize());
         Invoke(nameof(UpdateAllDiceRange), 1f);
 
         if (DiceSelectionManager.Instance != null &&
@@ -134,6 +131,52 @@ public class NetworkGamePlayer : NetworkBehaviour
             UpdateHandVisibility();
         }
         Invoke(nameof(DebugHand), 2f);
+    }
+
+    private IEnumerator WaitForReadyAndInitialize()
+    {
+        // Ждём пока slotIndex установится сервером (не -1)
+        float timeout = 5f;
+        float timer = 0f;
+
+        while (slotIndex < 0 && timer < timeout)
+        {
+            yield return new WaitForSeconds(0.1f);
+            timer += 0.1f;
+        }
+
+        if (slotIndex < 0)
+        {
+            Debug.LogError("[WaitForReadyAndInitialize] Timeout waiting for slot index!");
+            yield break;
+        }
+
+        Debug.Log($"[WaitForReadyAndInitialize] Slot index received: {slotIndex}");
+
+        // Ждём ещё кадр для уверенности
+        yield return null;
+
+        // Теперь создаём UI
+        EnsureLocalHandUI();
+
+        // Ждём пока UI точно создастся
+        yield return null;
+
+        // Обновляем руку
+        QueueLocalHandRefresh();
+        CmdRequestInitialHandSync();
+
+        // Обновляем диапазоны кубиков
+        Invoke(nameof(UpdateAllDiceRange), 0.5f);
+
+        // Если уже есть выбранный кубик - показываем руку
+        if (DiceSelectionManager.Instance != null &&
+            DiceSelectionManager.Instance.GetSelectedPlayerDice() != null)
+        {
+            UpdateHandVisibility();
+        }
+
+        Debug.Log("[WaitForReadyAndInitialize] Local player initialization complete!");
     }
     private IEnumerator RefreshHandAfterUIReady()
     {
@@ -186,11 +229,11 @@ public class NetworkGamePlayer : NetworkBehaviour
             UpdateAllDiceRange();
         }
 
-        // ===== ДЛЯ ЛОКАЛЬНОГО ИГРОКА: СОЗДАЁМ РУКУ ПОСЛЕ UI =====
-        if (isLocalPlayer && uiCreated)
+        // Для локального игрока
+        if (isLocalPlayer)
         {
             EnsureLocalHandUI();
-            // Если есть выбранный кубик — показываем руку
+
             if (DiceSelectionManager.Instance != null &&
                 DiceSelectionManager.Instance.GetSelectedPlayerDice() != null)
             {
@@ -198,7 +241,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
             else
             {
-                // Рука скрыта, но создана
                 if (localHandRoot != null)
                 {
                     localHandRoot.gameObject.SetActive(false);
@@ -398,6 +440,21 @@ public class NetworkGamePlayer : NetworkBehaviour
             GameObject diceObj = Instantiate(dicePrefab, gridTransform);
             DiceRoll dice = diceObj.GetComponent<DiceRoll>();
             dice.SetOwner(this, i);
+
+            // ===== ДОБАВЬ ЭТО: Инициализируем UIAimLine =====
+            UIAimLine aimLine = diceObj.GetComponent<UIAimLine>();
+            if (aimLine != null && isLocalPlayer)
+            {
+                aimLine.SetOwnerDice(dice);
+                dice.SetAimLine(aimLine);
+                Debug.Log($"[CreateDiceUI] UIAimLine initialized for dice {i}");
+            }
+            else if (aimLine != null && !isLocalPlayer)
+            {
+                // Удаляем UIAimLine для чужих игроков
+                Destroy(aimLine);
+                Debug.Log($"[CreateDiceUI] UIAimLine destroyed for non-local player dice {i}");
+            }
         }
     }
 
@@ -1546,7 +1603,43 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     #region Command
+    [Command]
+    public void CmdSyncDiceSelection(int diceSlotIndex, int cardId, int cardIndex, uint enemyNetId, int enemyDiceIndex)
+    {
+        Debug.Log($"[CmdSyncDiceSelection] Dice {diceSlotIndex}: cardId={cardId}, cardIndex={cardIndex}, enemyNetId={enemyNetId}, enemyDiceIndex={enemyDiceIndex}");
 
+        if (FightManager.Instance == null || FightManager.Instance.CurrentState != FightState.Rolling)
+            return;
+
+        // Находим кубик на сервере
+        DiceRoll[] serverDices = uiObject.GetComponentsInChildren<DiceRoll>();
+        DiceRoll serverDice = null;
+
+        foreach (var dice in serverDices)
+        {
+            if (dice.ownerSlotIndex == diceSlotIndex)
+            {
+                serverDice = dice;
+                break;
+            }
+        }
+
+        if (serverDice == null)
+        {
+            Debug.LogWarning($"[CmdSyncDiceSelection] Server dice {diceSlotIndex} not found!");
+            return;
+        }
+
+        // Проверяем валидность карты
+        if (cardIndex < 0 || cardIndex >= playerHand.Count) return;
+        if (playerHand[cardIndex] != cardId) return;
+
+        // Сохраняем выбор на серверном кубике
+        serverDice.SelectCard(cardId, cardIndex);
+        serverDice.SelectTarget(enemyNetId, enemyDiceIndex);
+
+        Debug.Log($"[CmdSyncDiceSelection] Server dice {diceSlotIndex} synced. hasSelection: {serverDice.hasSelection}");
+    }
 
     [Command]
     public void CmdPlayCard(int cardId, int cardIndex, uint enemyNetId)

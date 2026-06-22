@@ -23,13 +23,14 @@ public class DiceSelectionManager : MonoBehaviour
         // Сброс выбора по правой кнопке мыши
         if (Input.GetMouseButtonDown(1))
         {
-            ClearSelection();
+            ClearAllSelections();
         }
     }
 
     public void SelectPlayerDice(DiceRoll dice)
     {
-        if (selectedPlayerDice != null)
+        // Сбрасываем старый кубик
+        if (selectedPlayerDice != null && selectedPlayerDice != dice)
         {
             selectedPlayerDice.SetSelected(false);
         }
@@ -38,21 +39,53 @@ public class DiceSelectionManager : MonoBehaviour
         selectedPlayerDice.SetSelected(true);
         OnPlayerDiceSelected?.Invoke(dice);
 
-        // Показываем линию у выбранного кубика
+        // Показываем линию у нового кубика
         UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
-        if (aimLine != null && dice.selectedCardId != -1)
+        if (aimLine != null)
         {
-            aimLine.SetCardSelected(true);
+            aimLine.SetPlayerDice(dice);
+
+            if (dice.selectedCardId != -1)
+            {
+                aimLine.SetCardSelected(true);
+
+                if (dice.selectedTargetEnemyNetId != 0)
+                {
+                    foreach (var enemy in NetworkGameEnemy.AllEnemies)
+                    {
+                        if (enemy != null && enemy.netId == dice.selectedTargetEnemyNetId)
+                        {
+                            DiceRoll[] enemyDices = enemy.GetComponentsInChildren<DiceRoll>();
+                            if (dice.selectedTargetDiceIndex >= 0 && dice.selectedTargetDiceIndex < enemyDices.Length)
+                            {
+                                aimLine.SetTarget(enemyDices[dice.selectedTargetDiceIndex]);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // ===== ИЩЕМ ЛОКАЛЬНОГО ИГРОКА БЕЗОПАСНО =====
+        // ===== ИСПРАВЛЕНО: Ищем локального игрока через connection =====
         NetworkGamePlayer localPlayer = null;
-        foreach (var player in NetworkGamePlayer.AllPlayers)
+
+        // Способ 1: через NetworkClient
+        if (NetworkClient.connection != null && NetworkClient.connection.identity != null)
         {
-            if (player != null && player.isLocalPlayer)
+            localPlayer = NetworkClient.connection.identity.GetComponent<NetworkGamePlayer>();
+        }
+
+        // Способ 2: через AllPlayers (запасной)
+        if (localPlayer == null)
+        {
+            foreach (var player in NetworkGamePlayer.AllPlayers)
             {
-                localPlayer = player;
-                break;
+                if (player != null && player.isLocalPlayer)
+                {
+                    localPlayer = player;
+                    break;
+                }
             }
         }
 
@@ -64,43 +97,51 @@ public class DiceSelectionManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[SelectPlayerDice] Local player not found in AllPlayers!");
+            Debug.LogWarning("[SelectPlayerDice] Local player not found! Trying alternative method...");
+
+            // Способ 3: найти любой NetworkGamePlayer и проверить isLocalPlayer
+            NetworkGamePlayer[] allPlayers = FindObjectsByType<NetworkGamePlayer>(FindObjectsSortMode.None);
+            foreach (var player in allPlayers)
+            {
+                if (player != null && player.isLocalPlayer)
+                {
+                    localPlayer = player;
+                    player.EnsureLocalHandUI();
+                    player.UpdateHandVisibility();
+                    player.RefreshLocalHandUI();
+                    Debug.Log("[SelectPlayerDice] Local player found via FindObjectsByType");
+                    break;
+                }
+            }
         }
 
         UpdateHandVisibilityForAllPlayers();
-        Debug.Log($"Selected player dice: {dice.diceValue}");
+        Debug.Log($"Selected player dice: {dice.ownerSlotIndex}, value: {dice.diceValue}");
     }
 
     public void SelectEnemyDice(DiceRoll dice)
     {
-        if (selectedEnemyDice != null)
+        if (selectedEnemyDice != null && selectedEnemyDice != dice)
         {
             selectedEnemyDice.SetSelected(false);
         }
 
         selectedEnemyDice = dice;
-        selectedEnemyDice.SetSelected(true);
+
+        if (selectedEnemyDice != null)
+        {
+            selectedEnemyDice.SetSelected(true);
+        }
+
         OnEnemyDiceSelected?.Invoke(dice);
     }
 
-
-
-
-    public void ClearSelection()
+    public void ClearAllSelections()
     {
+        // Очищаем только выделение, но не данные кубиков
         if (selectedPlayerDice != null)
         {
             selectedPlayerDice.SetSelected(false);
-
-            UIAimLine aimLine = selectedPlayerDice.GetComponentInChildren<UIAimLine>();
-            if (aimLine != null)
-            {
-                aimLine.SetCardSelected(false);
-                aimLine.ClearAimData();
-                // НЕ ВЫКЛЮЧАЙ aimLine.gameObject!
-                // aimLine.gameObject.SetActive(false);
-            }
-
             selectedPlayerDice = null;
         }
 
@@ -114,6 +155,12 @@ public class DiceSelectionManager : MonoBehaviour
         UpdateHandVisibilityForAllPlayers();
     }
 
+    // ===== ОСТАВЛЯЕМ СТАРЫЙ МЕТОД ДЛЯ СОВМЕСТИМОСТИ =====
+    public void ClearSelection()
+    {
+        ClearAllSelections();
+    }
+
     private void UpdateHandVisibilityForAllPlayers()
     {
         foreach (var player in NetworkGamePlayer.AllPlayers)
@@ -124,7 +171,6 @@ public class DiceSelectionManager : MonoBehaviour
             }
         }
     }
-
 
     public DiceRoll GetSelectedPlayerDice()
     {

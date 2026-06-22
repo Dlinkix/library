@@ -128,24 +128,11 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
             return;
         }
 
-        // ===== ПРОВЕРЯЕМ, ВЫБРАН ЛИ ВРАЖЕСКИЙ КУБИК =====
-        DiceRoll enemyDice = DiceSelectionManager.Instance.GetSelectedEnemyDice();
-        if (enemyDice == null)
-        {
-            Debug.Log("[LocalHandCardView] Select enemy dice first!");
-            return;
-        }
-
         // Если карта уже выбрана этим кубиком - снимаем выбор
         if (activeDice.selectedCardIndex == cardIndex)
         {
             Debug.Log($"[LocalHandCardView] Deselecting card at index {cardIndex}");
             activeDice.ClearSelection();
-            UIAimLine AimLine = activeDice.GetComponentInChildren<UIAimLine>();
-            if (AimLine != null)
-            {
-                AimLine.SetCardSelected(false);
-            }
             UpdateAllCards();
             return;
         }
@@ -159,7 +146,7 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
             return;
         }
 
-        // ===== ПРОВЕРЯЕМ, НЕ ЗАНЯТА ЛИ КАРТА ДРУГИМ КУБИКОМ =====
+        // Проверяем, не занята ли карта другим кубиком
         foreach (var p in NetworkGamePlayer.AllPlayers)
         {
             if (p != null && p.isLocalPlayer)
@@ -169,39 +156,51 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 {
                     if (dice != null && dice != activeDice && dice.selectedCardIndex == cardIndex)
                     {
-                        Debug.Log($"[LocalHandCardView] Card at index {cardIndex} was selected by another dice, reassigning to current dice");
+                        Debug.Log($"[LocalHandCardView] Card at index {cardIndex} was selected by another dice, reassigning");
                         dice.ClearSelection();
-                        UIAimLine oldLine = dice.GetComponentInChildren<UIAimLine>();
-                        if (oldLine != null)
-                        {
-                            oldLine.SetCardSelected(false);
-                        }
                         break;
                     }
                 }
             }
         }
 
-        // ===== ОТПРАВЛЯЕМ КОМАНДУ НА СЕРВЕР ЧЕРЕЗ ИГРОКА =====
-        player.CmdPlayCard(cardId, cardIndex, enemyDice.ownerNetId);
-
-        // Локально обновляем UI
+        // Сохраняем выбор карты в активном кубике
         activeDice.SelectCard(cardId, cardIndex);
-        activeDice.SelectTarget(enemyDice.ownerNetId, enemyDice.ownerSlotIndex);
 
-        // Показываем линию у активного кубика
+        // Если враг уже выбран - синхронизируем с сервером
+        DiceRoll enemyDice = DiceSelectionManager.Instance.GetSelectedEnemyDice();
+        if (enemyDice != null)
+        {
+            activeDice.SelectTarget(enemyDice.ownerNetId, enemyDice.ownerSlotIndex);
+
+            // ===== ОТПРАВЛЯЕМ КОМАНДУ НА СЕРВЕР =====
+            player.CmdSyncDiceSelection(
+                activeDice.ownerSlotIndex,
+                cardId,
+                cardIndex,
+                enemyDice.ownerNetId,
+                enemyDice.ownerSlotIndex
+            );
+
+            Debug.Log($"[LocalHandCardView] Synced dice {activeDice.ownerSlotIndex} with server");
+        }
+
+        // Обновляем линию
         UIAimLine aimLine = activeDice.GetComponentInChildren<UIAimLine>();
         if (aimLine != null)
         {
             aimLine.SetPlayerDice(activeDice);
-            aimLine.SetTarget(enemyDice);
             aimLine.SetCardSelected(true);
+            if (enemyDice != null)
+            {
+                aimLine.SetTarget(enemyDice);
+            }
         }
 
         // Обновляем состояние всех карт
         UpdateAllCards();
 
-        Debug.Log($"[LocalHandCardView] Card {cardId} at index {cardIndex} sent to server via CmdPlayCard, target enemy NetId: {enemyDice.ownerNetId}");
+        Debug.Log($"[LocalHandCardView] Card {cardId} at index {cardIndex} assigned to dice {activeDice.ownerSlotIndex}. Has target: {enemyDice != null}");
     }
 
     private void CacheDefaults()

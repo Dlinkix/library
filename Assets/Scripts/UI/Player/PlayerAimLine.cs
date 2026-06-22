@@ -55,6 +55,9 @@ public class UIAimLine : MonoBehaviour
     private bool isCardSelected = false;
     private DiceRoll ownerDice; // <-- ƒŒ¡¿¬À≈ÕŒ
     private bool isTargetSelected = false;
+    private RectTransform targetEnemyDiceRect;
+
+
 
     public void SetOwner(NetworkGamePlayer player, RectTransform anchor = null)
     {
@@ -116,20 +119,20 @@ public class UIAimLine : MonoBehaviour
 
     public void SetTarget(DiceRoll enemyDice)
     {
-        selectedEnemyDice = enemyDice;
-
         if (enemyDice != null)
         {
-            targetPosition = GetRectTransformPosition(enemyDice.GetComponent<RectTransform>());
+            selectedEnemyDice = enemyDice;
+            targetEnemyDiceRect = enemyDice.GetComponent<RectTransform>(); // <-- ›“¿ —“–Œ ¿ ¬¿∆Õ¿
             hasTarget = true;
-            isTargetSelected = true; 
-            Debug.Log("UIAimLine: Target set to enemy dice!");
+            isTargetSelected = true;
+            Debug.Log($"UIAimLine: Target set to enemy dice {enemyDice.ownerSlotIndex}! Rect: {targetEnemyDiceRect != null}");
         }
         else
         {
             hasTarget = false;
             isTargetSelected = false;
             selectedEnemyDice = null;
+            targetEnemyDiceRect = null;
             Debug.Log("UIAimLine: Target cleared");
         }
     }
@@ -195,11 +198,12 @@ public class UIAimLine : MonoBehaviour
         isCardSelected = selected;
         if (!selected)
         {
-            hasTarget = false;
-            isTargetSelected = false;
+            // Õ≈ —¡–¿—€¬¿≈Ã hasTarget! œÛÒÚ¸ ˆÂÎ¸ ÓÒÚ‡∏ÚÒˇ
+            // hasTarget = false;  // <-- ”¡≈–» ›“Œ ≈—À» ≈—“‹
+            // isTargetSelected = false;  // <-- ”¡≈–» ›“Œ ≈—À» ≈—“‹
+
             if (lineContainer != null) lineContainer.SetActive(false);
             if (endIconObject != null) endIconObject.SetActive(false);
-            // Õ≈ ¬€ Àﬁ◊¿… gameObject.SetActive(false)!
         }
     }
     public void ClearAimData()
@@ -208,11 +212,22 @@ public class UIAimLine : MonoBehaviour
         isCardSelected = false;
         isTargetSelected = false;
         selectedEnemyDice = null;
-        if (lineContainer != null) lineContainer.SetActive(false);
-        if (endIconObject != null) endIconObject.SetActive(false);
+        targetEnemyDiceRect = null; // <-- ¬¿∆ÕŒ: Ó˜Ë˘‡ÂÏ ÒÒ˚ÎÍÛ
+
+        // œËÌÛ‰ËÚÂÎ¸ÌÓ ÒÍ˚‚‡ÂÏ ÎËÌË˛
+        if (lineContainer != null)
+        {
+            lineContainer.SetActive(false);
+            HideAllDots();
+        }
+        if (endIconObject != null)
+        {
+            endIconObject.SetActive(false);
+        }
+
         animationOffset = 0f;
-        // Õ≈ ¬€ Àﬁ◊¿…“≈ gameObject.SetActive(false)!
-        Debug.Log($"[UIAimLine] ClearAimData for dice {ownerDice?.ownerSlotIndex}");
+
+        Debug.Log($"[UIAimLine] ClearAimData complete. targetEnemyDiceRect cleared: {targetEnemyDiceRect == null}");
     }
     void CreateSquareSprite()
     {
@@ -394,22 +409,24 @@ public class UIAimLine : MonoBehaviour
         {
             startPos = GetRectTransformPosition(ownerDice.GetComponent<RectTransform>());
         }
-        else if (selectedPlayerDice != null)
-        {
-            startPos = GetRectTransformPosition(selectedPlayerDice.GetComponent<RectTransform>());
-        }
         else
         {
             if (playerRect == null) return;
             startPos = playerRect.anchoredPosition;
         }
 
-        Vector2 endPos;
-        if (hasTarget && selectedEnemyDice != null)
+        Vector2 endPos = Vector2.zero;
+        bool targetFound = false;
+
+        // ===== »—œŒÀ‹«”≈Ã œ–ﬂÃ”ﬁ ——€À ” =====
+        if (targetEnemyDiceRect != null)
         {
-            endPos = GetRectTransformPosition(selectedEnemyDice.GetComponent<RectTransform>());
+            endPos = GetRectTransformPosition(targetEnemyDiceRect);
+            targetFound = true;
         }
-        else
+
+        // ≈ÒÎË ˆÂÎ¸ ÌÂ Ì‡È‰ÂÌ‡ - ÚˇÌÂÏ Í ÍÛÒÓÛ
+        if (!targetFound)
         {
             Vector2 mousePos;
             RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -418,14 +435,7 @@ public class UIAimLine : MonoBehaviour
                 null,
                 out mousePos
             );
-            Vector2 direction = mousePos - startPos;
-            float distance = direction.magnitude;
-            if (distance > maxDistance)
-            {
-                direction = direction.normalized * maxDistance;
-                distance = maxDistance;
-            }
-            endPos = startPos + direction;
+            endPos = startPos + Vector2.ClampMagnitude(mousePos - startPos, maxDistance);
         }
 
         DrawLine(startPos, endPos);

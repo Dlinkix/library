@@ -178,7 +178,7 @@ public class FightManager : NetworkBehaviour
         Debug.Log($"[ExecuteActionPhase] Turn order: {turnOrder.Count} entries");
         foreach (var entry in turnOrder)
         {
-            Debug.Log($"[ExecuteActionPhase] Dice {entry.diceIndex} (Player {entry.player.PlayerName}) speed: {entry.speedValue}");
+            Debug.Log($"[ExecuteActionPhase] Dice {entry.diceIndex} (Player {entry.player.PlayerName}) speed: {entry.speedValue}, cardId: {entry.dice.selectedCardId}, target: {entry.dice.selectedTargetEnemyNetId}");
         }
 
         // ===== ВЫПОЛНЯЕМ ХОДЫ ПО ПОРЯДКУ =====
@@ -186,15 +186,19 @@ public class FightManager : NetworkBehaviour
         {
             if (entry.dice != null && entry.dice.hasSelection)
             {
+                Debug.Log($"[ExecuteActionPhase] Applying card from dice {entry.diceIndex} (Player {entry.player.PlayerName})");
                 ApplyCardFromDice(entry.player, entry.dice);
                 entry.dice.ClearSelection();
             }
-            yield return new WaitForSeconds(0.2f);
+            yield return new WaitForSeconds(0.3f);
         }
 
         // ===== ЖДЕМ ЗАВЕРШЕНИЯ ВСЕХ АТАК =====
+        float timeout = 10f; // Максимальное время ожидания
+        float timer = 0f;
         bool allActionsCompleted = false;
-        while (!allActionsCompleted)
+
+        while (!allActionsCompleted && timer < timeout)
         {
             allActionsCompleted = true;
             foreach (var player in NetworkGamePlayer.AllPlayers)
@@ -202,17 +206,31 @@ public class FightManager : NetworkBehaviour
                 if (player != null && player.IsExecutingActions)
                 {
                     allActionsCompleted = false;
+                    Debug.Log($"[ExecuteActionPhase] Waiting for {player.PlayerName} to finish actions...");
                     break;
                 }
             }
-            yield return new WaitForSeconds(0.1f);
+
+            if (!allActionsCompleted)
+            {
+                yield return new WaitForSeconds(0.1f);
+                timer += 0.1f;
+            }
         }
 
-        // ===== ОЧИЩАЕМ ТОЛЬКО ПОСЛЕ ВСЕХ АТАК =====
+        if (timer >= timeout)
+        {
+            Debug.LogWarning("[ExecuteActionPhase] Timeout waiting for actions to complete!");
+        }
+
+        // ===== ОЧИЩАЕМ ПОСЛЕ ВСЕХ АТАК =====
+        Debug.Log("[ExecuteActionPhase] All actions completed, cleaning up...");
         ClearAllDiceSelections();
         RpcClearAllAimLines();
 
+        // Небольшая пауза перед EndTurn
         yield return new WaitForSeconds(actionDuration);
+
         ChangeState(FightState.EndTurn);
         StartCoroutine(ExecuteEndTurnPhase());
     }
@@ -360,19 +378,28 @@ public class FightManager : NetworkBehaviour
     [Server]
     private void ChangeState(FightState newState)
     {
+        if (currentState == newState) return; // Не меняем если тот же
+
+        FightState oldState = currentState;
         currentState = newState;
-        Debug.Log($"[FightManager] State changed to: {newState}");
+
+        Debug.Log($"[FightManager] State changed from {oldState} to: {newState}");
         OnFightStateChanged?.Invoke(newState);
 
         if (newState == FightState.Rolling)
         {
             RpcPlayRollingSound();
         }
-        // ===== УБИРАЕМ ОЧИСТКУ ЗДЕСЬ =====
-        // if (newState == FightState.Action) 
-        // {
-        //     RpcClearAllSelections();
-        // }
+
+        // ===== Очищаем ТОЛЬКО при входе в Waiting =====
+        if (newState == FightState.Waiting)
+        {
+            Debug.Log("[FightManager] Entering Waiting state - clearing all selections");
+            ClearAllDiceSelections();
+            RpcClearAllAimLines();
+            RpcClearAllSelections();
+        }
+
         RpcUpdateDiceUI(newState);
     }
 
@@ -467,6 +494,10 @@ public class FightManager : NetworkBehaviour
 
         OnAllPlayersReady += HandleAllPlayersReady;
 
+        // ===== Очищаем все выборы кубиков на клиентах =====
+        RpcClearAllAimLines();
+        RpcClearAllSelections();
+
         Debug.Log($"[FightManager] Waiting for {NetworkGamePlayer.AllPlayers.Count} players...");
     }
 
@@ -485,6 +516,7 @@ public class FightManager : NetworkBehaviour
                 break;
 
             case FightState.Rolling:
+                // ===== НЕ ОЧИЩАЕМ ПЕРЕД ACTION! =====
                 ChangeState(FightState.Action);
                 StartCoroutine(ExecuteActionPhase());
                 break;
@@ -603,6 +635,8 @@ public class FightManager : NetworkBehaviour
     [ClientRpc]
     private void RpcClearAllSelections()
     {
+        Debug.Log("[RpcClearAllSelections] Clearing all selections...");
+
         // Очищаем выборы кубиков
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
@@ -614,16 +648,22 @@ public class FightManager : NetworkBehaviour
                     if (dice != null)
                     {
                         dice.ClearSelection();
+
+                        // Дополнительно очищаем UIAimLine
                         UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
                         if (aimLine != null)
                         {
-                            aimLine.SetCardSelected(false);
-                            // НЕ ВЫКЛЮЧАЕМ aimLine.gameObject.SetActive(false)! <-- УБЕРИ ЭТО
-                            // aimLine.gameObject.SetActive(false);
+                            aimLine.ClearAimData();
                         }
                     }
                 }
             }
+        }
+
+        // Очищаем глобальный выбор
+        if (DiceSelectionManager.Instance != null)
+        {
+            DiceSelectionManager.Instance.ClearAllSelections();
         }
 
         // Обновляем все карты
@@ -632,11 +672,15 @@ public class FightManager : NetworkBehaviour
         {
             card.UpdateCardState();
         }
+
+        Debug.Log("[RpcClearAllSelections] Complete");
     }
 
     [ClientRpc]
     private void RpcClearAllAimLines()
     {
+        Debug.Log("[RpcClearAllAimLines] Clearing all aim lines...");
+
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
             if (player != null && player.isLocalPlayer)
@@ -650,7 +694,7 @@ public class FightManager : NetworkBehaviour
                         if (aimLine != null)
                         {
                             aimLine.ClearAimData();
-                            // НЕ ВЫКЛЮЧАЙТЕ aimLine.gameObject.SetActive(false)!
+                            Debug.Log($"[RpcClearAllAimLines] Cleared aim line for dice {dice.ownerSlotIndex}");
                         }
                     }
                 }
@@ -673,23 +717,38 @@ public class FightManager : NetworkBehaviour
         switch (state)
         {
             case FightState.Waiting:
-                // Обновляем всех игроков (только локального)
+                // Очищаем все выборы кубиков локального игрока
                 foreach (var player in NetworkGamePlayer.AllPlayers)
                 {
                     if (player != null && player.isLocalPlayer)
                     {
+                        // Очищаем выборы кубиков
+                        DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
+                        foreach (var dice in dices)
+                        {
+                            if (dice != null)
+                            {
+                                dice.ClearSelection();
+                            }
+                        }
+
+                        // Обновляем диапазоны кубиков
                         player.UpdateAllDiceRange();
                     }
                 }
 
-                //// Обновляем всех врагов
-                //foreach (var enemy in NetworkGameEnemy.AllEnemies)
-                //{
-                //    if (enemy != null)
-                //    {
-                //        enemy.UpdateAllDiceRange();
-                //    }
-                //}
+                // Очищаем глобальный выбор
+                if (DiceSelectionManager.Instance != null)
+                {
+                    DiceSelectionManager.Instance.ClearAllSelections();
+                }
+
+                // Обновляем все карты в руке
+                LocalHandCardView[] cards = FindObjectsByType<LocalHandCardView>(FindObjectsSortMode.None);
+                foreach (var card in cards)
+                {
+                    card.UpdateCardState();
+                }
                 break;
 
             case FightState.Rolling:
@@ -700,14 +759,6 @@ public class FightManager : NetworkBehaviour
                         player.UpdateAllDiceResult();
                     }
                 }
-
-                //foreach (var enemy in NetworkGameEnemy.AllEnemies)
-                //{
-                //    if (enemy != null)
-                //    {
-                //        enemy.UpdateAllDiceResult();
-                //    }
-                //}
                 break;
         }
     }
