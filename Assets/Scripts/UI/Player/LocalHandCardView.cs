@@ -116,15 +116,23 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         if (FightManager.Instance.CurrentState != FightState.Rolling) return;
 
         if (!player.IsCardInLocalHand(cardId, cardIndex))
-{
-    Debug.Log($"[LocalHandCardView] Card at index {cardIndex} is no longer in hand!");
-    return;
-}
+        {
+            Debug.Log($"[LocalHandCardView] Card at index {cardIndex} is no longer in hand!");
+            return;
+        }
 
         DiceRoll activeDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
         if (activeDice == null)
         {
             Debug.Log("[LocalHandCardView] Select your dice first!");
+            return;
+        }
+
+        // ===== ПРОВЕРЯЕМ, ВЫБРАН ЛИ ВРАЖЕСКИЙ КУБИК =====
+        DiceRoll enemyDice = DiceSelectionManager.Instance.GetSelectedEnemyDice();
+        if (enemyDice == null)
+        {
+            Debug.Log("[LocalHandCardView] Select enemy dice first!");
             return;
         }
 
@@ -161,10 +169,8 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
                 {
                     if (dice != null && dice != activeDice && dice.selectedCardIndex == cardIndex)
                     {
-                        // Сбрасываем выбор у старого кубика
                         Debug.Log($"[LocalHandCardView] Card at index {cardIndex} was selected by another dice, reassigning to current dice");
                         dice.ClearSelection();
-                        // Сбрасываем линию у старого кубика
                         UIAimLine oldLine = dice.GetComponentInChildren<UIAimLine>();
                         if (oldLine != null)
                         {
@@ -176,19 +182,26 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
             }
         }
 
-        // Выбираем карту для активного кубика
+        // ===== ОТПРАВЛЯЕМ КОМАНДУ НА СЕРВЕР ЧЕРЕЗ ИГРОКА =====
+        player.CmdPlayCard(cardId, cardIndex, enemyDice.ownerNetId);
+
+        // Локально обновляем UI
         activeDice.SelectCard(cardId, cardIndex);
+        activeDice.SelectTarget(enemyDice.ownerNetId, enemyDice.ownerSlotIndex);
 
         // Показываем линию у активного кубика
         UIAimLine aimLine = activeDice.GetComponentInChildren<UIAimLine>();
         if (aimLine != null)
         {
             aimLine.SetPlayerDice(activeDice);
+            aimLine.SetTarget(enemyDice);
             aimLine.SetCardSelected(true);
         }
 
         // Обновляем состояние всех карт
         UpdateAllCards();
+
+        Debug.Log($"[LocalHandCardView] Card {cardId} at index {cardIndex} sent to server via CmdPlayCard, target enemy NetId: {enemyDice.ownerNetId}");
     }
 
     private void CacheDefaults()

@@ -291,9 +291,7 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
         if (ownerPlayer != null && ownerPlayer.isLocalPlayer)
         {
             DiceSelectionManager.Instance.SelectPlayerDice(this);
-
-            ownerPlayer.UpdateHandVisibility(); // <-- вот это
-
+            ownerPlayer.UpdateHandVisibility();
             Debug.Log("[DiceRoll] Selected dice, showing hand");
         }
         else if (isEnemyDice)
@@ -308,31 +306,10 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
                 return;
             }
 
-            int selectedCardId = activeDice.selectedCardId;
-            if (selectedCardId == -1)
-            {
-                Debug.Log("[DiceRoll] Select a card first!");
-                return;
-            }
-
-            DataGame.CardData card = localPlayer.GetCardData(selectedCardId);
-            if (card == null) return;
-
-            if (localPlayer.currentLight < card.lightCost)
-            {
-                Debug.Log($"[DiceRoll] Not enough Light! Need {card.lightCost}, have {localPlayer.currentLight}");
-                return;
-            }
-
-            // ===== ВАЖНО: Устанавливаем вражеский кубик в DiceSelectionManager =====
+            // Просто выбираем вражеский кубик как цель (без отправки команд)
             DiceSelectionManager.Instance.SelectEnemyDice(this);
 
-            // Сохраняем цель в активном кубике
-            activeDice.SelectTarget(ownerNetId, ownerSlotIndex);
-
-            // ===== ДОБАВЬ ЭТО =====
-            Debug.Log($"[DiceRoll] After SelectTarget: dice {activeDice.ownerSlotIndex} hasSelection={activeDice.hasSelection}, cardId={activeDice.selectedCardId}, target={activeDice.selectedTargetEnemyNetId}");
-            // Находим линию у активного кубика
+            // Обновляем линию для UI
             UIAimLine aimLine = activeDice.GetComponentInChildren<UIAimLine>();
             if (aimLine != null)
             {
@@ -341,6 +318,8 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
                 aimLine.SetCardSelected(true);
                 aimLine.gameObject.SetActive(true);
             }
+
+            Debug.Log($"[DiceRoll] Enemy dice {ownerSlotIndex} selected as target");
         }
     }
 }

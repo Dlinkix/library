@@ -1551,22 +1551,37 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Command]
     public void CmdPlayCard(int cardId, int cardIndex, uint enemyNetId)
     {
-        Debug.Log($"[CmdPlayCard] Called! Player: {PlayerName}, Card: {cardId}, EnemyNetId: {enemyNetId}");
+        Debug.Log($"[CmdPlayCard] Called! Player: {PlayerName}, Card: {cardId}, CardIndex: {cardIndex}, EnemyNetId: {enemyNetId}");
 
-        if (!isLocalPlayer) return;
-        if (FightManager.Instance == null || !FightManager.Instance.IsFightActive) return;
-        if (FightManager.Instance.CurrentState != FightState.Rolling) return;
+        if (FightManager.Instance == null || !FightManager.Instance.IsFightActive)
+        {
+            Debug.Log("[CmdPlayCard] Fight not active!");
+            return;
+        }
 
-        if (!playerHand.Contains(cardId)) return;
+        if (FightManager.Instance.CurrentState != FightState.Rolling)
+        {
+            Debug.Log($"[CmdPlayCard] Wrong state: {FightManager.Instance.CurrentState}");
+            return;
+        }
+
+        if (cardIndex < 0 || cardIndex >= playerHand.Count)
+        {
+            Debug.Log($"[CmdPlayCard] Invalid card index {cardIndex}! Hand size: {playerHand.Count}");
+            return;
+        }
+
+        if (playerHand[cardIndex] != cardId)
+        {
+            Debug.Log($"[CmdPlayCard] Card mismatch! Expected {playerHand[cardIndex]}, got {cardId}");
+            return;
+        }
+
         if (dataGame == null) return;
         if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
         if (currentLight < card.lightCost) return;
-        if (cardIndex < 0 || cardIndex >= playerHand.Count)
-            return;
 
-        if (playerHand[cardIndex] != cardId)
-            return;
-        // ===== НАХОДИМ ВРАГА ПО netId =====
+        // Находим врага
         NetworkGameEnemy targetEnemy = null;
         foreach (var enemy in NetworkGameEnemy.AllEnemies)
         {
@@ -1583,16 +1598,15 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        // Проверяем, что кубик с таким индексом существует у врага
-        // (можно добавить дополнительную проверку)
-
+        // Тратим Light и удаляем карту
         currentLight -= card.lightCost;
         playerHand.RemoveAt(cardIndex);
+        SyncHandToOwner();
 
-        // Добавляем в очередь вместо прямого вызова
+        // Добавляем эффекты в очередь
         QueueCardEffects(card, targetEnemy);
 
-        SyncHandToOwner();
+        Debug.Log($"[CmdPlayCard] Card {card.cardName} applied to {targetEnemy.EnemyName}. Remaining hand: {playerHand.Count}");
     }
 
     [Command]
