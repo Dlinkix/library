@@ -31,6 +31,11 @@ public class FightManager : NetworkBehaviour
     [SyncVar]
     private int turnNumber = 0;
 
+
+    [SyncVar] // <-- ДОБАВЬ ЭТО
+    private bool isFightActive = false;
+
+
     // ===== Настройки =====
     [Header("Settings")]
     [SerializeField] private float actionDuration = 2f;
@@ -45,8 +50,6 @@ public class FightManager : NetworkBehaviour
 
     private AudioSource audioSource;
 
-    // ===== Состояние =====
-    private bool isFightActive = false;
     private int readyPlayersCount = 0;
     private HashSet<NetworkGamePlayer> readyPlayers = new HashSet<NetworkGamePlayer>();
     private bool isWaitingForReady = false;

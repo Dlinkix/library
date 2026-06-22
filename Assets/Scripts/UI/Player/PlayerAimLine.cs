@@ -115,6 +115,7 @@ public class UIAimLine : MonoBehaviour
     public void SetPlayerDice(DiceRoll dice)
     {
         selectedPlayerDice = dice;
+        Debug.Log($"[UIAimLine.SetPlayerDice] dice slot={dice?.ownerSlotIndex}, ownerDice slot={ownerDice?.ownerSlotIndex}");
     }
 
     public void SetTarget(DiceRoll enemyDice)
@@ -141,10 +142,8 @@ public class UIAimLine : MonoBehaviour
 
     void Start()
     {
-        // Если уже инициализирована через SetOwnerDice - пропускаем
         if (isInitialized) return;
 
-        // Если есть ownerDice - инициализируем
         if (ownerDice != null)
         {
             if (!isLocalPlayer)
@@ -153,12 +152,11 @@ public class UIAimLine : MonoBehaviour
                 return;
             }
             InitializeComponents();
+            Debug.Log($"[UIAimLine.Start] Initialized via ownerDice. Dice slot: {ownerDice.ownerSlotIndex}");
             return;
         }
 
-        // Если линия создана как часть префаба, но еще не настроена - ждем
-        // Не уничтожаем, а просто ждем вызова SetOwnerDice
-        Debug.Log("[UIAimLine] Waiting for SetOwnerDice...");
+        Debug.Log($"[UIAimLine.Start] Waiting for SetOwnerDice... (ownerDice is null)");
     }
 
     private void InitializeComponents()
@@ -196,12 +194,10 @@ public class UIAimLine : MonoBehaviour
     public void SetCardSelected(bool selected)
     {
         isCardSelected = selected;
+        Debug.Log($"[UIAimLine.SetCardSelected] selected={selected}, ownerDice slot={ownerDice?.ownerSlotIndex}");
+
         if (!selected)
         {
-            // НЕ СБРАСЫВАЕМ hasTarget! Пусть цель остаётся
-            // hasTarget = false;  // <-- УБЕРИ ЭТО ЕСЛИ ЕСТЬ
-            // isTargetSelected = false;  // <-- УБЕРИ ЭТО ЕСЛИ ЕСТЬ
-
             if (lineContainer != null) lineContainer.SetActive(false);
             if (endIconObject != null) endIconObject.SetActive(false);
         }
@@ -312,13 +308,24 @@ public class UIAimLine : MonoBehaviour
         if (!isLocalPlayer) return;
 
         bool canDraw = false;
-        if (FightManager.Instance != null && FightManager.Instance.IsFightActive)
+        if (FightManager.Instance != null)
         {
             canDraw = (FightManager.Instance.CurrentState == FightState.Rolling);
         }
 
+        // ===== ДОБАВЬ ЭТОТ ЛОГ КАЖДЫЙ КАДР НА ПАРУ СЕКУНД =====
+        if (Time.frameCount % 60 == 0 && ownerDice != null) // Раз в секунду
+        {
+            Debug.Log($"[UIAimLine.Update] canDraw={canDraw}, state={FightManager.Instance?.CurrentState}, isCardSelected={isCardSelected}, ownerDice slot={ownerDice.ownerSlotIndex}, lineContainer active={lineContainer?.activeSelf}");
+        }
+
         if (!canDraw)
         {
+            // ЛОГИРУЕМ КОГДА СКРЫВАЕМ
+            if (isCardSelected && ownerDice != null)
+            {
+                Debug.LogWarning($"[UIAimLine.Update] HIDING line because canDraw=false! State={FightManager.Instance?.CurrentState}");
+            }
             isCardSelected = false;
             isTargetSelected = false;
             if (lineContainer != null) lineContainer.SetActive(false);
@@ -326,29 +333,35 @@ public class UIAimLine : MonoBehaviour
             return;
         }
 
-        // Если есть ownerDice - используем его для определения активной линии
         if (ownerDice != null)
         {
-            // Показываем линию только если этот кубик выбран
-            DiceRoll selectedDice = DiceSelectionManager.Instance.GetSelectedPlayerDice();
-            bool isThisDiceSelected = (selectedDice == ownerDice);
-
-            if (isCardSelected && isThisDiceSelected)
+            if (isCardSelected)
             {
                 animationOffset += Time.deltaTime * animationSpeed;
                 UpdateLine();
-                if (lineContainer != null) lineContainer.SetActive(true);
-                if (endIconObject != null) endIconObject.SetActive(true);
+
+                if (lineContainer != null && !lineContainer.activeSelf)
+                {
+                    lineContainer.SetActive(true);
+                    Debug.Log($"[UIAimLine.Update]  lineContainer ACTIVATED for dice {ownerDice.ownerSlotIndex}");
+                }
+                if (endIconObject != null && !endIconObject.activeSelf)
+                {
+                    endIconObject.SetActive(true);
+                }
             }
             else
             {
-                if (lineContainer != null && lineContainer.activeSelf) lineContainer.SetActive(false);
-                if (endIconObject != null && endIconObject.activeSelf) endIconObject.SetActive(false);
+                if (lineContainer != null && lineContainer.activeSelf)
+                {
+                    lineContainer.SetActive(false);
+                    Debug.Log($"[UIAimLine.Update]  lineContainer DEACTIVATED. isCardSelected=false");
+                }
             }
             return;
         }
 
-        // Старая логика для одной линии на UI
+        // ===== СТАРАЯ ЛОГИКА (для линии без ownerDice) =====
         if (Input.GetMouseButtonDown(0))
         {
             if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject())

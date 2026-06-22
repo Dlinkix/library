@@ -35,6 +35,7 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
     void Start()
     {
         UpdateUI();
+        Debug.Log($"[DiceRoll.Start] Dice {ownerSlotIndex} started. isEnemyDice: {isEnemyDice}, has AimLine: {aimLine != null}");
     }
 
     public void SetOwner(NetworkGamePlayer player, int slotIndex)

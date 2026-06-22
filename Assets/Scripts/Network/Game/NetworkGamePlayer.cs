@@ -423,7 +423,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        // Удаляем старые кубики
         foreach (Transform child in gridTransform)
             Destroy(child.gameObject);
 
@@ -433,7 +432,8 @@ public class NetworkGamePlayer : NetworkBehaviour
             Debug.LogWarning("DiceRoll prefab not found!");
             return;
         }
-        Debug.Log($"Creating dice {DiceRollAmount} for {PlayerName}");
+
+        Debug.Log($"[CreateDiceUI] Creating {DiceRollAmount} dice for {PlayerName}. isLocalPlayer: {isLocalPlayer}, slotIndex: {slotIndex}");
 
         for (int i = 0; i < DiceRollAmount; i++)
         {
@@ -441,19 +441,24 @@ public class NetworkGamePlayer : NetworkBehaviour
             DiceRoll dice = diceObj.GetComponent<DiceRoll>();
             dice.SetOwner(this, i);
 
-            // ===== ДОБАВЬ ЭТО: Инициализируем UIAimLine =====
             UIAimLine aimLine = diceObj.GetComponent<UIAimLine>();
-            if (aimLine != null && isLocalPlayer)
+            if (aimLine != null)
             {
-                aimLine.SetOwnerDice(dice);
-                dice.SetAimLine(aimLine);
-                Debug.Log($"[CreateDiceUI] UIAimLine initialized for dice {i}");
+                if (isLocalPlayer)
+                {
+                    aimLine.SetOwnerDice(dice);
+                    dice.SetAimLine(aimLine);
+                    Debug.Log($"[CreateDiceUI] UIAimLine initialized for local player dice {i}. aimLine initialized: {aimLine.isActiveAndEnabled}");
+                }
+                else
+                {
+                    Destroy(aimLine);
+                    Debug.Log($"[CreateDiceUI] UIAimLine destroyed for non-local player dice {i}");
+                }
             }
-            else if (aimLine != null && !isLocalPlayer)
+            else
             {
-                // Удаляем UIAimLine для чужих игроков
-                Destroy(aimLine);
-                Debug.Log($"[CreateDiceUI] UIAimLine destroyed for non-local player dice {i}");
+                Debug.LogWarning($"[CreateDiceUI] UIAimLine component NOT FOUND on dice prefab for dice {i}!");
             }
         }
     }
