@@ -57,7 +57,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     private readonly List<int> playerHand = new List<int>();
     private readonly List<int> localHandCardIds = new List<int>();
     private DataGame.PlayerData activePlayerData;
-    
+
     private GameObject uiObject;
     private RectTransform uiRect;
     private bool uiCreated;
@@ -76,6 +76,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     private Queue<Action> pendingActions = new Queue<Action>();
     private float actionTimer = 0f;
     private bool isExecutingActions = false;
+    private Vector3 originalUIPosition;
     public GameObject UIObject => uiObject;
     public List<int> PlayerHand => playerHand;
     public DataGame DataGame => dataGame;
@@ -98,12 +99,12 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     public override void OnStartClient()
     {
-        Debug.Log($"[DEBUG][NetworkGamePlayer] OnStartClient: {PlayerName}, NetId: {netId}, SlotIndex: {slotIndex}, IsLocalPlayer: {isLocalPlayer}, IsServer: {isServer}");
+        if (!AllPlayers.Contains(this))
+            AllPlayers.Add(this);
 
         CreateUI();
-
         ApplyUIPositionBySlot();
-       
+
         if (!isLocalPlayer)
         {
             UIAimLine[] aimLines = FindObjectsByType<UIAimLine>(FindObjectsSortMode.None);
@@ -119,7 +120,6 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
     public override void OnStartLocalPlayer()
     {
-        Debug.Log("[OnStartLocalPlayer] Started!");
         SetupUIForLocalOrRemotePlayer();
         UpdateReadyText();
         StartCoroutine(WaitForReadyAndInitialize());
@@ -135,7 +135,6 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private IEnumerator WaitForReadyAndInitialize()
     {
-        // Ждём пока slotIndex установится сервером (не -1)
         float timeout = 5f;
         float timer = 0f;
 
@@ -147,36 +146,25 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (slotIndex < 0)
         {
-            Debug.LogError("[WaitForReadyAndInitialize] Timeout waiting for slot index!");
             yield break;
         }
 
-        Debug.Log($"[WaitForReadyAndInitialize] Slot index received: {slotIndex}");
-
-        // Ждём ещё кадр для уверенности
         yield return null;
 
-        // Теперь создаём UI
         EnsureLocalHandUI();
 
-        // Ждём пока UI точно создастся
         yield return null;
 
-        // Обновляем руку
         QueueLocalHandRefresh();
         CmdRequestInitialHandSync();
 
-        // Обновляем диапазоны кубиков
         Invoke(nameof(UpdateAllDiceRange), 0.5f);
 
-        // Если уже есть выбранный кубик - показываем руку
         if (DiceSelectionManager.Instance != null &&
             DiceSelectionManager.Instance.GetSelectedPlayerDice() != null)
         {
             UpdateHandVisibility();
         }
-
-        Debug.Log("[WaitForReadyAndInitialize] Local player initialization complete!");
     }
     private IEnumerator RefreshHandAfterUIReady()
     {
@@ -199,12 +187,16 @@ public class NetworkGamePlayer : NetworkBehaviour
 
             yield return null;
         }
-
-        Debug.LogWarning("Hand UI was not ready after waiting");
+    }
+    public void ResetUIPosition()
+    {
+        if (uiRect != null)
+        {
+            uiRect.localPosition = Vector3.zero;
+        }
     }
     private void DebugHand()
     {
-        Debug.Log($"HAND COUNT = {localHandCardIds.Count}");
     }
     public bool IsCardInLocalHand(int cardId, int cardIndex)
     {
@@ -215,8 +207,6 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void OnSlotIndexChanged(int oldValue, int newValue)
     {
-        Debug.Log($"[SlotChanged] {PlayerName} slot {newValue}");
-
         if (!uiCreated)
         {
             CreateUI();
@@ -229,7 +219,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             UpdateAllDiceRange();
         }
 
-        // Для локального игрока
         if (isLocalPlayer)
         {
             EnsureLocalHandUI();
@@ -250,8 +239,6 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
     private void OnDiceRollAmountChanged(int oldValue, int newValue)
     {
-        Debug.Log($"Dice amount changed {oldValue} -> {newValue}");
-
         if (uiObject != null)
         {
             CreateDiceUI();
@@ -289,13 +276,11 @@ public class NetworkGamePlayer : NetworkBehaviour
         GameObject uiPrefab = Resources.Load<GameObject>("UI/PlayerUI");
         if (uiPrefab == null)
         {
-            Debug.LogWarning("PlayerUI prefab was not found in Resources/UI.");
             return;
         }
 
         if (slotIndex < 0)
         {
-            Debug.LogWarning($"Slot index not set for {PlayerName}, waiting...");
             return;
         }
 
@@ -312,7 +297,6 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (targetAnchor == null)
         {
-            Debug.LogWarning($"PlayerUIAnchor with slot {slotIndex} not found for {PlayerName}");
             return;
         }
         uiObject = Instantiate(uiPrefab, targetAnchor.transform);
@@ -331,24 +315,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         {
             CreateDiceUI();
         }
-        // ===== УБИРАЕМ СОЗДАНИЕ ЛИНИИ НА UI =====
-        // if (isLocalPlayer)
-        // {
-        //     UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
-        //     if (aimLine == null)
-        //     {
-        //         aimLine = uiObject.AddComponent<UIAimLine>();
-        //     }
-        //     aimLine.SetOwner(this, targetAnchor.GetComponent<RectTransform>());
-        // }
-        // else
-        // {
-        //     UIAimLine aimLine = uiObject.GetComponent<UIAimLine>();
-        //     if (aimLine != null)
-        //     {
-        //         aimLine.SetOwner(this);
-        //     }
-        // }
 
         Transform gridTransform = uiObject.transform.Find("GridDice");
         Transform imageDice = gridTransform?.Find("DiceRoll");
@@ -382,24 +348,23 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
 
         uiCreated = true;
-
+        
         SetupUIForLocalOrRemotePlayer();
         UpdateHpView();
         UpdateReadyText();
         ApplyUIPositionBySlot();
+        originalUIPosition = uiRect.position;
     }
     public void UpdateHandVisibility()
     {
         if (!isLocalPlayer)
         {
-            Debug.Log("[UpdateHandVisibility] Not local player, skipping");
             return;
         }
 
         EnsureLocalHandUI();
         if (localHandRoot == null)
         {
-            Debug.LogWarning("[UpdateHandVisibility] localHandRoot is null after EnsureLocalHandUI!");
             return;
         }
 
@@ -407,7 +372,6 @@ public class NetworkGamePlayer : NetworkBehaviour
                                DiceSelectionManager.Instance.GetSelectedPlayerDice() != null;
 
         localHandRoot.gameObject.SetActive(hasSelectedDice);
-        Debug.Log($"[UpdateHandVisibility] Hand visibility set to {hasSelectedDice}, card count: {localHandCardIds.Count}");
 
         if (hasSelectedDice && localHandCardIds.Count > 0)
         {
@@ -419,7 +383,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         Transform gridTransform = uiObject.transform.Find("GridDice");
         if (gridTransform == null)
         {
-            Debug.LogWarning("GridDice not found in UI!");
             return;
         }
 
@@ -429,11 +392,8 @@ public class NetworkGamePlayer : NetworkBehaviour
         GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
         if (dicePrefab == null)
         {
-            Debug.LogWarning("DiceRoll prefab not found!");
             return;
         }
-
-        Debug.Log($"[CreateDiceUI] Creating {DiceRollAmount} dice for {PlayerName}. isLocalPlayer: {isLocalPlayer}, slotIndex: {slotIndex}");
 
         for (int i = 0; i < DiceRollAmount; i++)
         {
@@ -448,17 +408,11 @@ public class NetworkGamePlayer : NetworkBehaviour
                 {
                     aimLine.SetOwnerDice(dice);
                     dice.SetAimLine(aimLine);
-                    Debug.Log($"[CreateDiceUI] UIAimLine initialized for local player dice {i}. aimLine initialized: {aimLine.isActiveAndEnabled}");
                 }
                 else
                 {
                     Destroy(aimLine);
-                    Debug.Log($"[CreateDiceUI] UIAimLine destroyed for non-local player dice {i}");
                 }
-            }
-            else
-            {
-                Debug.LogWarning($"[CreateDiceUI] UIAimLine component NOT FOUND on dice prefab for dice {i}!");
             }
         }
     }
@@ -481,13 +435,10 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void ApplyUIPositionBySlot()
     {
-        // Если UI создан как дочерний Anchor, позиция уже правильная
         if (uiCreated && uiObject != null && uiObject.transform.parent != null)
         {
-            // Проверяем, что родитель - PlayerUIAnchor
             if (uiObject.transform.parent.GetComponent<PlayerUIAnchor>() != null)
             {
-                // Убеждаемся что локальная позиция нулевая
                 uiObject.transform.localPosition = Vector3.zero;
                 uiObject.transform.localRotation = Quaternion.identity;
                 uiObject.transform.localScale = Vector3.one;
@@ -495,7 +446,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
         }
 
-        // Старая логика на случай, если UI не привязан к Anchor
         if (!uiCreated || uiObject == null || slotIndex < 0)
         {
             return;
@@ -524,7 +474,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             return;
         }
 
-        // Если UI не дочерний - устанавливаем позицию
         uiObject.transform.position = anchorRect.position + new Vector3(uiOffset.x, uiOffset.y, 0f);
     }
 
@@ -590,7 +539,6 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void Update()
     {
-        // Клиентская часть
         if (isLocalPlayer)
         {
             if (Input.GetKeyDown(KeyCode.Space) && !isReady)
@@ -599,7 +547,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
         }
 
-        // Серверная часть
         if (isServer)
         {
             ProcessActionQueue();
@@ -840,7 +787,6 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (activePlayerData == null)
         {
-            Debug.LogWarning($"Player data is missing in DataGame for {name}. Using current stat defaults.");
             hp = Maxhp;
             stagger = Maxstagger;
             return;
@@ -906,19 +852,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         return UnityEngine.Random.Range(minSpeed, maxSpeed + 1);
     }
-    private NetworkGameEnemy FindEnemyByDice(DiceRoll dice)
-    {
-        if (dice == null) return null;
 
-        foreach (var enemy in NetworkGameEnemy.AllEnemies)
-        {
-            if (enemy != null && enemy.netId == dice.ownerNetId)
-            {
-                return enemy;
-            }
-        }
-        return null;
-    }
     public override void OnStopClient()
     {
         if (uiObject != null)
@@ -932,35 +866,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
 
         uiCreated = false;
-    }
-    private DiceRoll FindDiceByNetId(uint netId)
-    {
-        // Ищем среди кубиков игроков
-        foreach (var player in NetworkGamePlayer.AllPlayers)
-        {
-            if (player == null) continue;
-            // Найти все DiceRoll на UI игрока
-            DiceRoll[] dices = player.GetComponentsInChildren<DiceRoll>();
-            foreach (var dice in dices)
-            {
-                if (dice != null && dice.netId == netId)
-                    return dice;
-            }
-        }
-
-        // Ищем среди кубиков врагов
-        foreach (var enemy in NetworkGameEnemy.AllEnemies)
-        {
-            if (enemy == null) continue;
-            DiceRoll[] dices = enemy.GetComponentsInChildren<DiceRoll>();
-            foreach (var dice in dices)
-            {
-                if (dice != null && dice.netId == netId)
-                    return dice;
-            }
-        }
-
-        return null;
     }
 
     public override void OnStopServer()
@@ -977,158 +882,16 @@ public class NetworkGamePlayer : NetworkBehaviour
     {
         yield return null;
         yield return null;
-
-        //ServerCreateDiceUI();
     }
-    [Server]
-    private void ApplyCardFromDice(NetworkGamePlayer player, DiceRoll dice)
-    {
-        if (player == null || dice == null || !dice.hasSelection)
-        {
-            Debug.Log($"[ApplyCardFromDice] Skip: player={player != null}, dice={dice != null}, hasSelection={dice?.hasSelection}");
-            return;
-        }
-
-        Debug.Log($"[ApplyCardFromDice] Processing dice {dice.ownerSlotIndex}: cardId={dice.selectedCardId}, cardIndex={dice.selectedCardIndex}, target={dice.selectedTargetEnemyNetId}");
-
-        // ===== ПРОВЕРЯЕМ, ЧТО ИНДЕКС КАРТЫ ВАЛИДНЫЙ =====
-        if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
-        {
-            Debug.Log($"[ApplyCardFromDice] Invalid card index {dice.selectedCardIndex}! Hand size: {player.PlayerHand.Count}");
-            dice.ClearSelection();
-            return;
-        }
-
-        // ===== ПРОВЕРЯЕМ, ЧТО ПО ИНДЕКСУ ЛЕЖИТ ТА ЖЕ КАРТА =====
-        if (player.PlayerHand[dice.selectedCardIndex] != dice.selectedCardId)
-        {
-            Debug.Log($"[ApplyCardFromDice] Card at index {dice.selectedCardIndex} is {player.PlayerHand[dice.selectedCardIndex]}, expected {dice.selectedCardId}!");
-            dice.ClearSelection();
-            return;
-        }
-
-        // Находим врага по цели
-        NetworkGameEnemy targetEnemy = null;
-        foreach (var enemy in NetworkGameEnemy.AllEnemies)
-        {
-            if (enemy != null && enemy.netId == dice.selectedTargetEnemyNetId)
-            {
-                targetEnemy = enemy;
-                break;
-            }
-        }
-
-        if (targetEnemy == null)
-        {
-            Debug.LogWarning($"[ApplyCardFromDice] Target enemy not found for dice {dice.ownerSlotIndex}");
-            dice.ClearSelection();
-            return;
-        }
-
-        // Получаем карту
-        if (!dataGame.TryGetCardById(dice.selectedCardId, out CardData card))
-        {
-            Debug.LogWarning($"[ApplyCardFromDice] Card {dice.selectedCardId} not found");
-            dice.ClearSelection();
-            return;
-        }
-
-        // Проверяем Light
-        if (player.currentLight < card.lightCost)
-        {
-            Debug.Log($"[ApplyCardFromDice] Not enough Light! Need {card.lightCost}, have {player.currentLight}");
-            dice.ClearSelection();
-            return;
-        }
-
-        // ===== ЕЩЕ РАЗ ПРОВЕРЯЕМ ПЕРЕД УДАЛЕНИЕМ =====
-        if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
-        {
-            Debug.Log($"[ApplyCardFromDice] Card index {dice.selectedCardIndex} became invalid before removal!");
-            dice.ClearSelection();
-            return;
-        }
-
-        if (player.PlayerHand[dice.selectedCardIndex] != dice.selectedCardId)
-        {
-            Debug.Log($"[ApplyCardFromDice] Card at index {dice.selectedCardIndex} changed before removal!");
-            dice.ClearSelection();
-            return;
-        }
-
-        // Тратим Light
-        player.currentLight -= card.lightCost;
-
-        // ===== УДАЛЯЕМ КАРТУ ПО ИНДЕКСУ =====
-        player.PlayerHand.RemoveAt(dice.selectedCardIndex);
-        player.SyncHandToOwner();
-
-        // Применяем эффекты
-        player.QueueCardEffects(card, targetEnemy);
-
-        Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
-    }
-
-    //[Server]
-    //public void ServerCreateDiceUI()
-    //{
-    //    if (uiObject == null)
-    //    {
-    //        Debug.Log($"[ServerCreateDiceUI] No UI yet for {PlayerName}");
-    //        return;
-    //    }
-
-    //    Transform gridTransform = uiObject.transform.Find("GridDice");
-    //    if (gridTransform == null)
-    //    {
-    //        Debug.LogWarning("GridDice not found in UI!");
-    //        return;
-    //    }
-
-    //    foreach (Transform child in gridTransform)
-    //        Destroy(child.gameObject);
-
-    //    GameObject dicePrefab = Resources.Load<GameObject>("UI/DiceRoll");
-    //    if (dicePrefab == null)
-    //    {
-    //        Debug.LogWarning("DiceRoll prefab not found!");
-    //        return;
-    //    }
-
-    //    for (int i = 0; i < DiceRollAmount; i++)
-    //    {
-    //        GameObject diceObj = Instantiate(dicePrefab, gridTransform);
-    //        DiceRoll dice = diceObj.GetComponent<DiceRoll>();
-    //        dice.SetOwner(this, i);
-
-    //        // ===== НАХОДИМ UIAimLine НА ПРЕФАБЕ =====
-    //        UIAimLine aimLine = diceObj.GetComponent<UIAimLine>();
-    //        if (aimLine != null)
-    //        {
-    //            aimLine.SetOwnerDice(dice);
-    //            dice.SetAimLine(aimLine);
-    //            // Линия будет скрыта по умолчанию
-    //        }
-    //        else
-    //        {
-    //            Debug.LogWarning($"[ServerCreateDiceUI] UIAimLine not found on dice {i}!");
-    //        }
-
-    //        NetworkServer.Spawn(diceObj);
-    //    }
-    //}
-    // Добавьте этот метод в NetworkGamePlayer:
 
     [Server]
     public void RollAllDice()
     {
         if (uiObject == null)
         {
-            Debug.LogWarning($"[RollAllDice] uiObject is null for {PlayerName}");
             return;
         }
 
-        // Ищем кубики в uiObject, а не в this
         DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
         List<int> values = new List<int>();
 
@@ -1142,8 +905,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             }
         }
 
-        Debug.Log($"[RollAllDice] Player {PlayerName} rolled {values.Count} dice. Values: {string.Join(", ", values)}");
-
         RpcUpdateDiceValues(values.ToArray());
     }
 
@@ -1154,20 +915,15 @@ public class NetworkGamePlayer : NetworkBehaviour
         if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
         if (targetEnemy == null) return;
 
-        // Тратим Light
         currentLight -= card.lightCost;
 
-        // Удаляем карту из руки
         if (playerHand.Contains(cardId))
         {
             playerHand.Remove(cardId);
             SyncHandToOwner();
         }
 
-        // Добавляем эффекты в очередь
         QueueCardEffects(card, targetEnemy);
-
-        Debug.Log($"[QueueCardForTarget] Card {card.cardName} queued for {targetEnemy.EnemyName}");
     }
 
 
@@ -1182,8 +938,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         actionTimer += Time.deltaTime;
 
-        // Увеличь задержку чтобы анимация успела проиграться
-        float totalDelay = attackDelay + 1.2f; // 0.5 + 0.7 анимация + пуза
+        float totalDelay = attackDelay + 1.2f;
 
         if (actionTimer >= totalDelay)
         {
@@ -1194,7 +949,6 @@ public class NetworkGamePlayer : NetworkBehaviour
             if (pendingActions.Count == 0)
             {
                 isExecutingActions = false;
-                Debug.Log("[ProcessActionQueue] All actions completed");
             }
         }
     }
@@ -1203,8 +957,6 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Server]
     public void QueueCardEffects(DataGame.CardData card, NetworkGameEnemy targetEnemy)
     {
-        Debug.Log($"[QueueCardEffects] Card: {card.cardName}, Attacks: {card.attacks?.Length ?? 0}");
-
         if (card.attacks != null)
         {
             foreach (var attack in card.attacks)
@@ -1214,67 +966,18 @@ public class NetworkGamePlayer : NetworkBehaviour
                     ApplyAttack(attack, targetEnemy);
                 });
             }
+            
         }
 
         if (card.passiveActions != null)
         {
             foreach (var passive in card.passiveActions)
-            {
                 pendingActions.Enqueue(() => ApplyPassiveEffect(passive));
-            }
         }
 
-        // ===== ВАЖНО! ВКЛЮЧАЕМ ОБРАБОТКУ ОЧЕРЕДИ =====
-        if (!isExecutingActions)
-        {
-            isExecutingActions = true;
-            actionTimer = 0f;
-            Debug.Log("[QueueCardEffects] Started executing actions");
-        }
+        if (!isExecutingActions) { isExecutingActions = true; actionTimer = 0f; }
     }
 
-
-    //[Server]
-    //public void ApplyCardToEnemy(int cardId, NetworkGameEnemy targetEnemy)
-    //{
-    //    if (dataGame == null) return;
-    //    if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
-
-    //    // Тратим Light
-    //    currentLight -= card.lightCost;
-
-    //    // Применяем эффекты
-    //    ApplyCardEffects(card, targetEnemy);
-
-    //    // Удаляем карту из руки
-    //    if (playerHand.Contains(cardId))
-    //    {
-    //        playerHand.Remove(cardId);
-    //        SyncHandToOwner();
-    //    }
-    //}
-
-    [Server]
-    private void ApplyCardEffects(DataGame.CardData card, NetworkGameEnemy targetEnemy)
-    {
-        // Применяем атаки
-        if (card.attacks != null)
-        {
-            foreach (var attack in card.attacks)
-            {
-                ApplyAttack(attack, targetEnemy);
-            }
-        }
-
-        // Применяем пассивные эффекты
-        if (card.passiveActions != null)
-        {
-            foreach (var passive in card.passiveActions)
-            {
-                ApplyPassiveEffect(passive);
-            }
-        }
-    }
 
     [Server]
     private void ApplyAttack(DataGame.AttackData attack, NetworkGameEnemy target)
@@ -1288,25 +991,19 @@ public class NetworkGamePlayer : NetworkBehaviour
             case DataGame.AttackData.Type.Damage:
                 target.hp -= roll;
                 if (target.hp < 0) target.hp = 0;
-                Debug.Log($"[DEBUG][ApplyAttack] {PlayerName} нанес {roll} урона {target.EnemyName}");
-
-                // ===== ВЫЗЫВАЕМ ОДИН РАЗ! =====
                 target.PushEnemyUI(this);
                 break;
 
             case DataGame.AttackData.Type.Block:
-                Debug.Log($"{PlayerName} использовал Block");
                 break;
 
             case DataGame.AttackData.Type.Escape:
-                Debug.Log($"{PlayerName} использовал Escape");
                 break;
         }
 
         if (attack.staggerDamage > 0)
         {
             target.stagger += attack.staggerDamage;
-            Debug.Log($"{PlayerName} нанес {attack.staggerDamage} стагера {target.EnemyName}");
         }
     }
 
@@ -1319,22 +1016,15 @@ public class NetworkGamePlayer : NetworkBehaviour
         {
             case DataGame.PassiveEffectType.DrawCard:
                 DrawCardFromDeck(passive.value);
-                Debug.Log($"{PlayerName} нарисовал {passive.value} карт(ы)");
                 break;
 
             case DataGame.PassiveEffectType.GainLight:
                 currentLight += passive.value;
-                Debug.Log($"{PlayerName} получил {passive.value} света");
                 break;
 
             case DataGame.PassiveEffectType.HealPlayer:
                 hp += passive.value;
                 if (hp > Maxhp) hp = Maxhp;
-                Debug.Log($"{PlayerName} вылечил {passive.value} HP");
-                break;
-
-            default:
-                Debug.Log($"Passive effect {passive.effectType} not implemented yet");
                 break;
         }
     }
@@ -1365,14 +1055,12 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (dataGame == null)
         {
-            Debug.LogWarning($"DataGame is missing on {name}. Cards will not initialize.");
             SyncHandToOwner();
             return;
         }
 
         if (activePlayerData == null)
         {
-            Debug.LogWarning($"Player data is missing in DataGame for {name}. Cards will not initialize.");
             SyncHandToOwner();
             return;
         }
@@ -1380,7 +1068,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         List<int> configuredCardIds = dataGame.GetPlayerCardIds();
         if (configuredCardIds.Count == 0)
         {
-            Debug.LogWarning($"Player data for {name} does not contain any valid cards. Cards will not initialize.");
             SyncHandToOwner();
             return;
         }
@@ -1388,7 +1075,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         int deckLimit = Mathf.Max(0, activePlayerData.dekaPlayer);
         if (configuredCardIds.Count > deckLimit && deckLimit > 0)
         {
-            Debug.LogWarning($"Player data for {name} contains more cards ({configuredCardIds.Count}) than dekaPlayer ({deckLimit}). Extra cards will be ignored.");
         }
 
         int cardsToUse = deckLimit > 0 ? Mathf.Min(configuredCardIds.Count, deckLimit) : 0;
@@ -1416,7 +1102,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         int cardId = dataGame.GetRandomAllCardId();
         if (cardId <= 0)
         {
-            Debug.LogWarning($"AllCards does not contain a valid random card for {name}.");
             return;
         }
 
@@ -1548,20 +1233,15 @@ public class NetworkGamePlayer : NetworkBehaviour
     [ClientRpc]
     public void RpcUpdateDiceValues(int[] values)
     {
-        Debug.Log($"[RpcUpdateDiceValues] Received for {PlayerName}: {values?.Length ?? 0} values");
-
         if (values == null || values.Length == 0) return;
         if (uiObject == null) return;
 
-        // Ищем кубики в uiObject
         DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
-        Debug.Log($"[RpcUpdateDiceValues] Found {dices.Length} dice on {PlayerName}");
 
         for (int i = 0; i < dices.Length && i < values.Length; i++)
         {
             if (dices[i] != null)
             {
-                Debug.Log($"[RpcUpdateDiceValues] Setting dice {i} to {values[i]}");
                 dices[i].SetDiceValue(values[i]);
             }
         }
@@ -1592,7 +1272,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
 
 
-    
+
 
     [ClientRpc]
     public void RpcShowRollResult(int roll, string playerName)
@@ -1605,9 +1285,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         isShowingRollResult = true;
         rollText.text = $"{roll}";
         nametext.text = $"{playerName}";
-
-        //CancelInvoke(nameof(ClearRollText));
-        //Invoke(nameof(ClearRollText), 3f);
     }
 
 
@@ -1618,12 +1295,9 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Command]
     public void CmdSyncDiceSelection(int diceSlotIndex, int cardId, int cardIndex, uint enemyNetId, int enemyDiceIndex)
     {
-        Debug.Log($"[CmdSyncDiceSelection] Dice {diceSlotIndex}: cardId={cardId}, cardIndex={cardIndex}, enemyNetId={enemyNetId}, enemyDiceIndex={enemyDiceIndex}");
-
         if (FightManager.Instance == null || FightManager.Instance.CurrentState != FightState.Rolling)
             return;
 
-        // Находим кубик на сервере
         DiceRoll[] serverDices = uiObject.GetComponentsInChildren<DiceRoll>();
         DiceRoll serverDice = null;
 
@@ -1638,47 +1312,36 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (serverDice == null)
         {
-            Debug.LogWarning($"[CmdSyncDiceSelection] Server dice {diceSlotIndex} not found!");
             return;
         }
 
-        // Проверяем валидность карты
         if (cardIndex < 0 || cardIndex >= playerHand.Count) return;
         if (playerHand[cardIndex] != cardId) return;
 
-        // Сохраняем выбор на серверном кубике
         serverDice.SelectCard(cardId, cardIndex);
         serverDice.SelectTarget(enemyNetId, enemyDiceIndex);
-
-        Debug.Log($"[CmdSyncDiceSelection] Server dice {diceSlotIndex} synced. hasSelection: {serverDice.hasSelection}");
     }
 
     [Command]
     public void CmdPlayCard(int cardId, int cardIndex, uint enemyNetId)
     {
-        Debug.Log($"[CmdPlayCard] Called! Player: {PlayerName}, Card: {cardId}, CardIndex: {cardIndex}, EnemyNetId: {enemyNetId}");
-
         if (FightManager.Instance == null || !FightManager.Instance.IsFightActive)
         {
-            Debug.Log("[CmdPlayCard] Fight not active!");
             return;
         }
 
         if (FightManager.Instance.CurrentState != FightState.Rolling)
         {
-            Debug.Log($"[CmdPlayCard] Wrong state: {FightManager.Instance.CurrentState}");
             return;
         }
 
         if (cardIndex < 0 || cardIndex >= playerHand.Count)
         {
-            Debug.Log($"[CmdPlayCard] Invalid card index {cardIndex}! Hand size: {playerHand.Count}");
             return;
         }
 
         if (playerHand[cardIndex] != cardId)
         {
-            Debug.Log($"[CmdPlayCard] Card mismatch! Expected {playerHand[cardIndex]}, got {cardId}");
             return;
         }
 
@@ -1686,7 +1349,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
         if (currentLight < card.lightCost) return;
 
-        // Находим врага
         NetworkGameEnemy targetEnemy = null;
         foreach (var enemy in NetworkGameEnemy.AllEnemies)
         {
@@ -1699,54 +1361,38 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (targetEnemy == null)
         {
-            Debug.Log($"[CmdPlayCard] Enemy with netId {enemyNetId} not found!");
             return;
         }
 
-        // Тратим Light и удаляем карту
         currentLight -= card.lightCost;
         playerHand.RemoveAt(cardIndex);
         SyncHandToOwner();
 
-        // Добавляем эффекты в очередь
         QueueCardEffects(card, targetEnemy);
-
-        Debug.Log($"[CmdPlayCard] Card {card.cardName} applied to {targetEnemy.EnemyName}. Remaining hand: {playerHand.Count}");
     }
 
     [Command]
     private void CmdSetPlayerReady()
     {
-        // Проверяем, не готов ли уже игрок
         if (isReady)
         {
-            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is already ready!");
             return;
         }
 
-        // Проверяем, активен ли бой
         if (FightManager.Instance != null && FightManager.Instance.IsFightActive)
         {
-            // Проверяем, можно ли сейчас готовиться (только Waiting и Rolling)
             if (!FightManager.Instance.CanPlayerReady())
             {
-                Debug.LogWarning($"[CmdSetPlayerReady] Cannot ready in state: {FightManager.Instance.CurrentState}");
                 return;
             }
 
-            // Устанавливаем готовность
             isReady = true;
 
-            // Уведомляем FightManager о готовности игрока
             FightManager.Instance.PlayerReady(this);
-
-            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in fight! ({FightManager.Instance.GetReadyPlayersCount()}/{FightManager.Instance.GetTotalPlayersCount()})");
         }
         else
         {
-            // Старая логика для лобби (до начала боя)
             SetReady(true);
-            Debug.Log($"[CmdSetPlayerReady] Player {PlayerName} is ready in lobby!");
         }
     }
 

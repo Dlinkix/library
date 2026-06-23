@@ -385,26 +385,22 @@ public class FightManager : NetworkBehaviour
     [Server]
     private void ChangeState(FightState newState)
     {
-        if (currentState == newState) return; // Не меняем если тот же
+        if (currentState == newState) return;
 
         FightState oldState = currentState;
         currentState = newState;
-
-        Debug.Log($"[FightManager] State changed from {oldState} to: {newState}");
-        OnFightStateChanged?.Invoke(newState);
 
         if (newState == FightState.Rolling)
         {
             RpcPlayRollingSound();
         }
 
-        // ===== Очищаем ТОЛЬКО при входе в Waiting =====
         if (newState == FightState.Waiting)
         {
-            Debug.Log("[FightManager] Entering Waiting state - clearing all selections");
             ClearAllDiceSelections();
             RpcClearAllAimLines();
             RpcClearAllSelections();
+            RpcResetAllUIPositions(); 
         }
 
         RpcUpdateDiceUI(newState);
@@ -638,6 +634,16 @@ public class FightManager : NetworkBehaviour
 
     #region Client Methods
 
+
+    [ClientRpc]
+    private void RpcResetAllUIPositions()
+    {
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+            if (player != null) player.ResetUIPosition();
+
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+            if (enemy != null) enemy.ResetUIPosition();
+    }
 
     [ClientRpc]
     private void RpcClearAllSelections()
