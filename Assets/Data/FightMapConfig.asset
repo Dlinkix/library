@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dff70558e5ee5cb43b73da72c5560863, type: 3}
+  m_Name: FightMapConfig
+  m_EditorClassIdentifier: Assembly-CSharp::FightMapConfig
+  roomsPerLane: 10
+  leftLane:
+    mob: 5
+    shop: 1
+    randomEvent: 1
+    anomaly: 1
+    eliteMob: 1
+    chest: 1
+  middleLane:
+    mob: 5
+    shop: 1
+    randomEvent: 1
+    anomaly: 1
+    eliteMob: 1
+    chest: 1
+  rightLane:
+    mob: 5
+    shop: 1
+    randomEvent: 1
+    anomaly: 1
+    eliteMob: 1
+    chest: 1
