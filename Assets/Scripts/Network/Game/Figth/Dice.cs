@@ -54,6 +54,14 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
         isEnemyDice = true;
     }
 
+    public void SetImageVisible(bool visible)
+    {
+        if (diceImage != null)
+        {
+            diceImage.enabled = visible;
+        }
+    }
+
     public void ShowDiceRange(int minValue, int maxValue)
     {
         if (valueText != null)
@@ -100,6 +108,11 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
         UpdateUI();
     }
 
+    public void SetUIVisible(bool visible)
+    {
+        if (diceImage != null) diceImage.enabled = visible;
+        if (valueText != null) valueText.enabled = visible;
+    }
     public void ResetDice()
     {
         isReady = false;

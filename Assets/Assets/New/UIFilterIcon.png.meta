@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 368e7368d1491fb44bcaa584c05619d1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5797045029463250643
+    second: UIFilterIcon_0
+  - first:
+      213: 4253713120819956233
+    second: UIFilterIcon_1
+  - first:
+      213: 139947134171528468
+    second: UIFilterIcon_2
+  - first:
+      213: 6691187870719369572
+    second: UIFilterIcon_3
+  - first:
+      213: -7352221792088321447
+    second: UIFilterIcon_4
+  - first:
+      213: -4416814252868141635
+    second: UIFilterIcon_5
+  - first:
+      213: -3899931009676675164
+    second: UIFilterIcon_6
+  - first:
+      213: 3301078352636104562
+    second: UIFilterIcon_7
+  - first:
+      213: 1678473779052427766
+    second: UIFilterIcon_8
+  - first:
+      213: 445896066497937360
+    second: UIFilterIcon_9
+  - first:
+      213: -1952891012802305238
+    second: UIFilterIcon_10
+  - first:
+      213: -3872689432004472240
+    second: UIFilterIcon_11
+  - first:
+      213: -5771376578156541759
+    second: UIFilterIcon_12
+  - first:
+      213: -9083979806720374694
+    second: UIFilterIcon_13
+  - first:
+      213: 1918528892307123585
+    second: UIFilterIcon_14
+  - first:
+      213: -1278199009864418247
+    second: UIFilterIcon_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: UIFilterIcon_0
+      rect:
+        serializedVersion: 2
+        x: 105
+        y: 826
+        width: 45
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2926ef7242cc8fa0800000000000000
+      internalID: -5797045029463250643
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_1
+      rect:
+        serializedVersion: 2
+        x: 340
+        y: 826
+        width: 86
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90a44e6db89380b30800000000000000
+      internalID: 4253713120819956233
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_2
+      rect:
+        serializedVersion: 2
+        x: 597
+        y: 809
+        width: 85
+        height: 175
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 41db0a35d2131f100800000000000000
+      internalID: 139947134171528468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_3
+      rect:
+        serializedVersion: 2
+        x: 844
+        y: 826
+        width: 103
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46161afbaefdbdc50800000000000000
+      internalID: 6691187870719369572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_4
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 553
+        width: 78
+        height: 175
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95290bcdb39a7f990800000000000000
+      internalID: -7352221792088321447
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_5
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 569
+        width: 103
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dbd79ea96d254b2c0800000000000000
+      internalID: -4416814252868141635
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_6
+      rect:
+        serializedVersion: 2
+        x: 600
+        y: 567
+        width: 79
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4a7f0bfc869a0e9c0800000000000000
+      internalID: -3899931009676675164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_7
+      rect:
+        serializedVersion: 2
+        x: 849
+        y: 570
+        width: 93
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 27f4b989549cfcd20800000000000000
+      internalID: 3301078352636104562
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_8
+      rect:
+        serializedVersion: 2
+        x: 76
+        y: 313
+        width: 103
+        height: 142
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6f93a3552032b4710800000000000000
+      internalID: 1678473779052427766
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_9
+      rect:
+        serializedVersion: 2
+        x: 332
+        y: 314
+        width: 103
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0df7a5a2c14203600800000000000000
+      internalID: 445896066497937360
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_10
+      rect:
+        serializedVersion: 2
+        x: 530
+        y: 275
+        width: 218
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a23add088ffe5e4e0800000000000000
+      internalID: -1952891012802305238
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_11
+      rect:
+        serializedVersion: 2
+        x: 786
+        y: 276
+        width: 218
+        height: 217
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 052d6ffda71714ac0800000000000000
+      internalID: -3872689432004472240
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_12
+      rect:
+        serializedVersion: 2
+        x: 21
+        y: 40
+        width: 213
+        height: 180
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c848f98493f7efa0800000000000000
+      internalID: -5771376578156541759
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_13
+      rect:
+        serializedVersion: 2
+        x: 273
+        y: 64
+        width: 221
+        height: 129
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a584c99ae783fe180800000000000000
+      internalID: -9083979806720374694
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_14
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 39
+        width: 181
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 18d2a4ddcdbff9a10800000000000000
+      internalID: 1918528892307123585
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UIFilterIcon_15
+      rect:
+        serializedVersion: 2
+        x: 805
+        y: 39
+        width: 181
+        height: 178
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 93c76c0d5cce24ee0800000000000000
+      internalID: -1278199009864418247
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      UIFilterIcon_0: -5797045029463250643
+      UIFilterIcon_1: 4253713120819956233
+      UIFilterIcon_10: -1952891012802305238
+      UIFilterIcon_11: -3872689432004472240
+      UIFilterIcon_12: -5771376578156541759
+      UIFilterIcon_13: -9083979806720374694
+      UIFilterIcon_14: 1918528892307123585
+      UIFilterIcon_15: -1278199009864418247
+      UIFilterIcon_2: 139947134171528468
+      UIFilterIcon_3: 6691187870719369572
+      UIFilterIcon_4: -7352221792088321447
+      UIFilterIcon_5: -4416814252868141635
+      UIFilterIcon_6: -3899931009676675164
+      UIFilterIcon_7: 3301078352636104562
+      UIFilterIcon_8: 1678473779052427766
+      UIFilterIcon_9: 445896066497937360
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

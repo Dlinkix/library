@@ -162,12 +162,15 @@ public class FightManager : NetworkBehaviour
                 {
                     if (dice != null)
                     {
-                        dice.ClearSelection(); // Очищает ВСЕ данные выбора
+                        dice.ClearSelection();
                         Debug.Log($"[ClearAllDiceSelections] Cleared dice {dice.ownerSlotIndex}");
                     }
                 }
             }
         }
+
+        // ===== ВЫЗЫВАЕМ ОДИН РАЗ ПОСЛЕ ЦИКЛА! =====
+        RpcHideCardView();
     }
 
     [Server]
@@ -327,13 +330,11 @@ public class FightManager : NetworkBehaviour
         player.PlayerHand.RemoveAt(indexToRemove);
         player.SyncHandToOwner();
 
-        // ===== ОБНОВЛЯЕМ ИНДЕКСЫ У ВСЕХ КУБИКОВ ЭТОГО ИГРОКА =====
         UpdateDiceCardIndices(player, indexToRemove);
 
-        // Применяем эффекты
-        player.QueueCardEffects(card, targetEnemy);
+        // ===== ПЕРЕДАЕМ cardIndex =====
+        player.QueueCardEffects(card, indexToRemove, targetEnemy); 
 
-        // Сбрасываем выбор кубика после применения
         dice.ClearSelection();
 
         Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
@@ -400,9 +401,14 @@ public class FightManager : NetworkBehaviour
             ClearAllDiceSelections();
             RpcClearAllAimLines();
             RpcClearAllSelections();
-            RpcResetAllUIPositions(); 
+            RpcResetAllUIPositions();
         }
 
+        // ===== УБРАТЬ ЭТИ ВЫЗОВЫ =====
+        // if (newState == FightState.Waiting) RpcSetAllDiceImagesVisible(true);
+        // if (newState == FightState.Action) RpcSetAllDiceImagesVisible(false);
+
+        // ===== ВСЁ УПРАВЛЕНИЕ В RpcUpdateDiceUI =====
         RpcUpdateDiceUI(newState);
     }
 
@@ -634,6 +640,20 @@ public class FightManager : NetworkBehaviour
 
     #region Client Methods
 
+     [ClientRpc]
+    public void RpcHideCardView()
+    {
+        // Находим локального игрока и скрываем CardView
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.isLocalPlayer)
+            {
+                player.HideCardView();
+                break;
+            }
+        }
+    }
+   
 
     [ClientRpc]
     private void RpcResetAllUIPositions()
@@ -727,6 +747,31 @@ public class FightManager : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateDiceUI(FightState state)
     {
+        bool showDiceUI = (state == FightState.Waiting || state == FightState.Rolling);
+
+        // Скрываем/показываем UI кубиков у всех игроков и врагов
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.UIObject != null)
+            {
+                foreach (var dice in player.UIObject.GetComponentsInChildren<DiceRoll>())
+                {
+                    dice?.SetUIVisible(showDiceUI);
+                }
+            }
+        }
+
+        //foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        //{
+        //    if (enemy != null && enemy.UIObject != null)
+        //    {
+        //        foreach (var dice in enemy.UIObject.GetComponentsInChildren<DiceRoll>())
+        //        {
+        //            dice?.SetUIVisible(showDiceUI);
+        //        }
+        //    }
+        //}
+
         switch (state)
         {
             case FightState.Waiting:
@@ -775,6 +820,7 @@ public class FightManager : NetworkBehaviour
                 break;
         }
     }
+
     [Client]
     public FightState GetCurrentState()
     {

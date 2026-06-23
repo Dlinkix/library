@@ -90,7 +90,7 @@ public class DataGame : ScriptableObject
         public int staggerDamage;
         public float attackDuration = 1f;
         public StatusEffect[] onHitEffects;
-        public AudioClip attackSound;
+      //  public AudioClip attackSound;
         public Type type; 
         public enum Type
             {Damage,

@@ -133,6 +133,7 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         {
             Debug.Log($"[LocalHandCardView] Deselecting card at index {cardIndex}");
             activeDice.ClearSelection();
+            player.HideCardView(); 
             UpdateAllCards();
             return;
         }

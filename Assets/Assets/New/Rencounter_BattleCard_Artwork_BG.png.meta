@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: c5203f9dbc7441d439220688f1302c75
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 3709332804112064990
+    second: Rencounter_BattleCard_Artwork_BG_0
+  - first:
+      213: 6164185100658747644
+    second: Rencounter_BattleCard_Artwork_BG_1
+  - first:
+      213: 3955697389856890722
+    second: Rencounter_BattleCard_Artwork_BG_2
+  - first:
+      213: -4975664803745544760
+    second: Rencounter_BattleCard_Artwork_BG_3
+  - first:
+      213: -598358000855546304
+    second: Rencounter_BattleCard_Artwork_BG_4
+  - first:
+      213: 2618193463798426337
+    second: Rencounter_BattleCard_Artwork_BG_5
+  - first:
+      213: -1333879351115130433
+    second: Rencounter_BattleCard_Artwork_BG_6
+  - first:
+      213: 1282964746405979883
+    second: Rencounter_BattleCard_Artwork_BG_7
+  - first:
+      213: 1190051935991334420
+    second: Rencounter_BattleCard_Artwork_BG_8
+  - first:
+      213: -4938734238342914783
+    second: Rencounter_BattleCard_Artwork_BG_9
+  - first:
+      213: -2409132087026127392
+    second: Rencounter_BattleCard_Artwork_BG_10
+  - first:
+      213: -3924456004589074468
+    second: Rencounter_BattleCard_Artwork_BG_11
+  - first:
+      213: 9123883655248938484
+    second: Rencounter_BattleCard_Artwork_BG_12
+  - first:
+      213: 7035277213615560721
+    second: Rencounter_BattleCard_Artwork_BG_13
+  - first:
+      213: 6531104180301466099
+    second: Rencounter_BattleCard_Artwork_BG_14
+  - first:
+      213: -8130936948013912649
+    second: Rencounter_BattleCard_Artwork_BG_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_0
+      rect:
+        serializedVersion: 2
+        x: 1109
+        y: 1144
+        width: 6
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ed1adce48823a7330800000000000000
+      internalID: 3709332804112064990
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_1
+      rect:
+        serializedVersion: 2
+        x: 1116
+        y: 1150
+        width: 7
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cf8258690b59b8550800000000000000
+      internalID: 6164185100658747644
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_2
+      rect:
+        serializedVersion: 2
+        x: 1126
+        y: 1141
+        width: 9
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 26f1c5161d575e630800000000000000
+      internalID: 3955697389856890722
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_3
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 798
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8c545532933e2fab0800000000000000
+      internalID: -4975664803745544760
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_4
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 65
+        width: 1205
+        height: 1062
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0460e76819432b7f0800000000000000
+      internalID: -598358000855546304
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_5
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 766
+        width: 11
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1ea64f26511b55420800000000000000
+      internalID: 2618193463798426337
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_6
+      rect:
+        serializedVersion: 2
+        x: 145
+        y: 744
+        width: 22
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb9dd8f1ccb1d7de0800000000000000
+      internalID: -1333879351115130433
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_7
+      rect:
+        serializedVersion: 2
+        x: 125
+        y: 738
+        width: 24
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be6a0e0b3a10ec110800000000000000
+      internalID: 1282964746405979883
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_8
+      rect:
+        serializedVersion: 2
+        x: 101
+        y: 609
+        width: 20
+        height: 23
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 416870d3ee9e38010800000000000000
+      internalID: 1190051935991334420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_9
+      rect:
+        serializedVersion: 2
+        x: 123
+        y: 619
+        width: 12
+        height: 14
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 12dd2837067167bb0800000000000000
+      internalID: -4938734238342914783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_10
+      rect:
+        serializedVersion: 2
+        x: 121
+        y: 540
+        width: 17
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0edefc7812b019ed0800000000000000
+      internalID: -2409132087026127392
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_11
+      rect:
+        serializedVersion: 2
+        x: 1345
+        y: 528
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cd7c1d57e088989c0800000000000000
+      internalID: -3924456004589074468
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_12
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 492
+        width: 18
+        height: 21
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f50b1318db8e9e70800000000000000
+      internalID: 9123883655248938484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_13
+      rect:
+        serializedVersion: 2
+        x: 348
+        y: 44
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 11894fde95352a160800000000000000
+      internalID: 7035277213615560721
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_14
+      rect:
+        serializedVersion: 2
+        x: 365
+        y: 35
+        width: 8
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3f900f116a423aa50800000000000000
+      internalID: 6531104180301466099
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rencounter_BattleCard_Artwork_BG_15
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 35
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7bd2882eceb192f80800000000000000
+      internalID: -8130936948013912649
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Rencounter_BattleCard_Artwork_BG_0: 3709332804112064990
+      Rencounter_BattleCard_Artwork_BG_1: 6164185100658747644
+      Rencounter_BattleCard_Artwork_BG_10: -2409132087026127392
+      Rencounter_BattleCard_Artwork_BG_11: -3924456004589074468
+      Rencounter_BattleCard_Artwork_BG_12: 9123883655248938484
+      Rencounter_BattleCard_Artwork_BG_13: 7035277213615560721
+      Rencounter_BattleCard_Artwork_BG_14: 6531104180301466099
+      Rencounter_BattleCard_Artwork_BG_15: -8130936948013912649
+      Rencounter_BattleCard_Artwork_BG_2: 3955697389856890722
+      Rencounter_BattleCard_Artwork_BG_3: -4975664803745544760
+      Rencounter_BattleCard_Artwork_BG_4: -598358000855546304
+      Rencounter_BattleCard_Artwork_BG_5: 2618193463798426337
+      Rencounter_BattleCard_Artwork_BG_6: -1333879351115130433
+      Rencounter_BattleCard_Artwork_BG_7: 1282964746405979883
+      Rencounter_BattleCard_Artwork_BG_8: 1190051935991334420
+      Rencounter_BattleCard_Artwork_BG_9: -4938734238342914783
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
