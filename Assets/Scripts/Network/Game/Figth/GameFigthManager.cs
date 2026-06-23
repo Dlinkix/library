@@ -162,12 +162,15 @@ public class FightManager : NetworkBehaviour
                 {
                     if (dice != null)
                     {
-                        dice.ClearSelection(); // Очищает ВСЕ данные выбора
+                        dice.ClearSelection();
                         Debug.Log($"[ClearAllDiceSelections] Cleared dice {dice.ownerSlotIndex}");
                     }
                 }
             }
         }
+
+        // ===== ВЫЗЫВАЕМ ОДИН РАЗ ПОСЛЕ ЦИКЛА! =====
+        RpcHideCardView();
     }
 
     [Server]
@@ -634,6 +637,19 @@ public class FightManager : NetworkBehaviour
 
     #region Client Methods
 
+     [ClientRpc]
+    public void RpcHideCardView()
+    {
+        // Находим локального игрока и скрываем CardView
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.isLocalPlayer)
+            {
+                player.HideCardView();
+                break;
+            }
+        }
+    }
 
     [ClientRpc]
     private void RpcResetAllUIPositions()

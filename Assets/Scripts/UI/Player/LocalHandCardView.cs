@@ -133,6 +133,7 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         {
             Debug.Log($"[LocalHandCardView] Deselecting card at index {cardIndex}");
             activeDice.ClearSelection();
+            player.HideCardView(); 
             UpdateAllCards();
             return;
         }
@@ -166,6 +167,9 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
         // Сохраняем выбор карты в активном кубике
         activeDice.SelectCard(cardId, cardIndex);
+
+        // ===== ПОКАЗЫВАЕМ CARDVIEW С КАРТОЙ =====
+        player.ShowCardView(card);
 
         // Если враг уже выбран - синхронизируем с сервером
         DiceRoll enemyDice = DiceSelectionManager.Instance.GetSelectedEnemyDice();

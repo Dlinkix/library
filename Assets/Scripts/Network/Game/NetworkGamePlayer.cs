@@ -52,6 +52,11 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Header("Setting")]
     [SerializeField] private float attackDelay = 0.5f;
 
+    [Header("Card View")]
+    [SerializeField] private CardView cardViewPrefab;
+    private CardView currentCardView;
+    private bool isCardViewCreated = false;
+
     private readonly List<int> playerPool = new List<int>();
     private readonly List<int> playerDeck = new List<int>();
     private readonly List<int> playerHand = new List<int>();
@@ -81,6 +86,8 @@ public class NetworkGamePlayer : NetworkBehaviour
     public List<int> PlayerHand => playerHand;
     public DataGame DataGame => dataGame;
     public bool IsExecutingActions => isExecutingActions;
+
+
 
     #region other
     public override void OnStartServer()
@@ -346,14 +353,21 @@ public class NetworkGamePlayer : NetworkBehaviour
             readyButton.onClick.RemoveAllListeners();
             readyButton.onClick.AddListener(OnReadyButtonClick);
         }
+        // ===== СОЗДАЕМ CARDVIEW ДЛЯ ЛОКАЛЬНОГО ИГРОКА =====
+        if (isLocalPlayer)
+        {
+            CreateCardView();
+        }
 
         uiCreated = true;
-        
+
         SetupUIForLocalOrRemotePlayer();
         UpdateHpView();
         UpdateReadyText();
         ApplyUIPositionBySlot();
         originalUIPosition = uiRect.position;
+
+        
     }
     public void UpdateHandVisibility()
     {
@@ -938,7 +952,8 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         actionTimer += Time.deltaTime;
 
-        float totalDelay = attackDelay + 1.2f;
+        // Увеличиваем задержку между действиями
+        float totalDelay = attackDelay + 0.5f; // 0.5 секунды между действиями
 
         if (actionTimer >= totalDelay)
         {
@@ -957,16 +972,47 @@ public class NetworkGamePlayer : NetworkBehaviour
     [Server]
     public void QueueCardEffects(DataGame.CardData card, NetworkGameEnemy targetEnemy)
     {
+        // ===== ПЕРЕДАЕМ ТОЛЬКО ID! =====
+        RpcShowCardView(card.cardId); 
+
+        List<int> rollValues = new List<int>();
         if (card.attacks != null)
         {
+            // Генерируем ВСЕ значения
             foreach (var attack in card.attacks)
             {
+                int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
+                rollValues.Add(roll);
+            }
+
+            // Отправляем ВСЕ значения на клиенты
+            RpcUpdateAttackRolls(card.cardId, rollValues.ToArray());
+
+            // Создаем очередь выполнения
+            int attackIndex = 0;
+            foreach (var attack in card.attacks)
+            {
+                int roll = rollValues[attackIndex];
+                int currentIndex = attackIndex;
+
+                // ДЕЙСТВИЕ 1: Переместить кубик в плейсхолдер
+                pendingActions.Enqueue(() => {
+                    RpcMoveDiceToPlaceholder(card.cardId, currentIndex);
+                });
+
+                // ДЕЙСТВИЕ 2: Применить атаку (с задержкой)
                 pendingActions.Enqueue(() => {
                     targetEnemy.PushEnemyUI(this);
-                    ApplyAttack(attack, targetEnemy);
+                    ApplyAttack(attack, targetEnemy, roll);
                 });
+
+                // ДЕЙСТВИЕ 3: Вернуть кубик в грид (с задержкой)
+                pendingActions.Enqueue(() => {
+                    RpcReturnDiceToGrid(card.cardId);
+                });
+
+                attackIndex++;
             }
-            
         }
 
         if (card.passiveActions != null)
@@ -977,21 +1023,33 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (!isExecutingActions) { isExecutingActions = true; actionTimer = 0f; }
     }
+    [ClientRpc]
+    public void RpcMoveDiceToPlaceholder(int cardId, int attackIndex)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.MoveDiceToPlaceholder(attackIndex);
+        }
+    }
 
-
+    [ClientRpc]
+    public void RpcReturnDiceToGrid(int cardId)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.ReturnDiceToGrid();
+        }
+    }
     [Server]
-    private void ApplyAttack(DataGame.AttackData attack, NetworkGameEnemy target)
+    private void ApplyAttack(DataGame.AttackData attack, NetworkGameEnemy target, int roll)
     {
         if (target == null) return;
-
-        int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
 
         switch (attack.type)
         {
             case DataGame.AttackData.Type.Damage:
                 target.hp -= roll;
                 if (target.hp < 0) target.hp = 0;
-                target.PushEnemyUI(this);
                 break;
 
             case DataGame.AttackData.Type.Block:
@@ -1194,6 +1252,107 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     #region Client
+
+
+    [ClientRpc]
+    public void RpcShowCardView(int cardId) 
+    {
+        DataGame.CardData cardData = GetCardData(cardId);
+        if (cardData != null)
+        {
+            ShowCardView(cardData);
+        }
+    }
+
+
+    [ClientRpc]
+    public void RpcDisableAttackDice(int cardId, int attackIndex)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.DisableAttackDice(attackIndex);
+        }
+    }
+
+    [Client]
+    private void CreateCardView()
+    {
+        if (cardViewPrefab == null)
+        {
+            cardViewPrefab = Resources.Load<CardView>("UI/CardView");
+            if (cardViewPrefab == null)
+            {
+                Debug.LogError("[NetworkGamePlayer] CardView prefab not found in Resources/UI/CardView!");
+                return;
+            }
+        }
+
+        // Используем uiObject как родителя
+        if (uiObject == null)
+        {
+            Debug.LogError("[NetworkGamePlayer] uiObject is null, cannot create CardView!");
+            return;
+        }
+
+        // Создаем CardView как дочерний объект UI игрока
+        GameObject cardViewObj = Instantiate(cardViewPrefab.gameObject, uiObject.transform);
+        currentCardView = cardViewObj.GetComponent<CardView>();
+
+        if (currentCardView != null)
+        {
+            // Настраиваем позицию
+            RectTransform rect = cardViewObj.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = new Vector2(50f, 90f); // Смещение вверх
+                rect.sizeDelta = new Vector2(400f, 300f);
+            }
+
+            currentCardView.gameObject.SetActive(false);
+            isCardViewCreated = true;
+            Debug.Log("[NetworkGamePlayer] CardView created as child of UI");
+        }
+    }
+
+
+    [Client]
+    public void ShowCardView(DataGame.CardData cardData)
+    {
+        // Создаем CardView если его еще нет
+        if (!isCardViewCreated)
+            CreateCardView();
+
+        if (currentCardView == null) return;
+
+        currentCardView.SetupCard(cardData);
+        currentCardView.ShowCardView();
+        Debug.Log($"[NetworkGamePlayer] Showing CardView for card: {cardData.cardName}");
+    }
+
+
+    [Client]
+    public void HideCardView()
+    {
+        if (currentCardView != null)
+        {
+            currentCardView.HideCardView();
+            Debug.Log("[NetworkGamePlayer] CardView hidden");
+        }
+    }
+
+    // RPC для обновления значений атак (сервер -> все клиенты)
+    [ClientRpc]
+    public void RpcUpdateAttackRolls(int cardId, int[] rollValues)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.UpdateAttackDiceValues(rollValues);
+        }
+    }
+
 
     [Client]
     public void UpdateAllDiceRange()

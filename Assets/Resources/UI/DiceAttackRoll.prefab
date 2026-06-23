@@ -223,6 +223,7 @@ GameObject:
   - component: {fileID: 4004215681354518105}
   - component: {fileID: 6948743367858059053}
   - component: {fileID: 5851161325934041811}
+  - component: {fileID: 3408023939397327945}
   m_Layer: 5
   m_Name: DiceAttackRoll
   m_TagString: Untagged
@@ -290,6 +291,26 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &3408023939397327945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7308589043635884484}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bf178d54d947074ba1a6fe5d6ae2c76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DiceAttackRoll
+  valueText: {fileID: 4669275935004372578}
+  valueTextRoll: {fileID: 7292026778408860697}
+  diceImage: {fileID: 5851161325934041811}
+  typeIcon: {fileID: 2078775407651375671}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  blockColor: {r: 0, g: 0, b: 1, a: 1}
+  escapeColor: {r: 0, g: 1, b: 0, a: 1}
+  defaultColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
 --- !u!1 &9183567498814604586
 GameObject:
   m_ObjectHideFlags: 0
