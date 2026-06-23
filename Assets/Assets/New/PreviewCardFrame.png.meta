@@ -1,0 +1,507 @@
+fileFormatVersion: 2
+guid: 7732f8245e3e5c34697970f035f691f1
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -4637939749528177827
+    second: PreviewCardFrame_0
+  - first:
+      213: -7185106590767230506
+    second: PreviewCardFrame_1
+  - first:
+      213: 1164332910648608998
+    second: PreviewCardFrame_2
+  - first:
+      213: 8281984260161821781
+    second: PreviewCardFrame_3
+  - first:
+      213: -5132276125220942171
+    second: PreviewCardFrame_4
+  - first:
+      213: -2827912027080929254
+    second: PreviewCardFrame_5
+  - first:
+      213: 4241705410213327854
+    second: PreviewCardFrame_6
+  - first:
+      213: -7170955603941605326
+    second: PreviewCardFrame_7
+  - first:
+      213: -158459095710050485
+    second: PreviewCardFrame_8
+  - first:
+      213: 9046014142784616699
+    second: PreviewCardFrame_9
+  - first:
+      213: 3190932955426626042
+    second: PreviewCardFrame_10
+  - first:
+      213: -8197283980177712890
+    second: PreviewCardFrame_11
+  - first:
+      213: -3520928255620943232
+    second: PreviewCardFrame_12
+  - first:
+      213: -3500110169532039587
+    second: PreviewCardFrame_13
+  - first:
+      213: 6973830563706577998
+    second: PreviewCardFrame_14
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: PreviewCardFrame_0
+      rect:
+        serializedVersion: 2
+        x: 118
+        y: 12
+        width: 886
+        height: 500
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5375b3ee5ab2afb0800000000000000
+      internalID: -4637939749528177827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_1
+      rect:
+        serializedVersion: 2
+        x: 885
+        y: 495
+        width: 6
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6d15000cf9f594c90800000000000000
+      internalID: -7185106590767230506
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_2
+      rect:
+        serializedVersion: 2
+        x: 124
+        y: 452
+        width: 14
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e8c1830d9a882010800000000000000
+      internalID: 1164332910648608998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_3
+      rect:
+        serializedVersion: 2
+        x: 138
+        y: 260
+        width: 9
+        height: 10
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55c52560ec48fe270800000000000000
+      internalID: 8281984260161821781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_4
+      rect:
+        serializedVersion: 2
+        x: 142
+        y: 269
+        width: 14
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5aeccfa5e0e76c8b0800000000000000
+      internalID: -5132276125220942171
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_5
+      rect:
+        serializedVersion: 2
+        x: 141
+        y: 255
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a1059c98efc31c8d0800000000000000
+      internalID: -2827912027080929254
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_6
+      rect:
+        serializedVersion: 2
+        x: 111
+        y: 126
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ee33e99d8909dda30800000000000000
+      internalID: 4241705410213327854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_7
+      rect:
+        serializedVersion: 2
+        x: 114
+        y: 131
+        width: 8
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 230c6fe1fd5ab7c90800000000000000
+      internalID: -7170955603941605326
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_8
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 119
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b47d5c0ca4a0dcdf0800000000000000
+      internalID: -158459095710050485
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_9
+      rect:
+        serializedVersion: 2
+        x: 68
+        y: 103
+        width: 19
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bf836dd5fe5e98d70800000000000000
+      internalID: 9046014142784616699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_10
+      rect:
+        serializedVersion: 2
+        x: 135
+        y: 39
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: af99a4edd98784c20800000000000000
+      internalID: 3190932955426626042
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_11
+      rect:
+        serializedVersion: 2
+        x: 184
+        y: 33
+        width: 10
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 609d18ea6a56d3e80800000000000000
+      internalID: -8197283980177712890
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_12
+      rect:
+        serializedVersion: 2
+        x: 223
+        y: 31
+        width: 16
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 082f31cf766232fc0800000000000000
+      internalID: -3520928255620943232
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_13
+      rect:
+        serializedVersion: 2
+        x: 237
+        y: 25
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5e7f4e585c1d6fc0800000000000000
+      internalID: -3500110169532039587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: PreviewCardFrame_14
+      rect:
+        serializedVersion: 2
+        x: 246
+        y: 8
+        width: 14
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e442e71e2f508c060800000000000000
+      internalID: 6973830563706577998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      PreviewCardFrame_0: -4637939749528177827
+      PreviewCardFrame_1: -7185106590767230506
+      PreviewCardFrame_10: 3190932955426626042
+      PreviewCardFrame_11: -8197283980177712890
+      PreviewCardFrame_12: -3520928255620943232
+      PreviewCardFrame_13: -3500110169532039587
+      PreviewCardFrame_14: 6973830563706577998
+      PreviewCardFrame_2: 1164332910648608998
+      PreviewCardFrame_3: 8281984260161821781
+      PreviewCardFrame_4: -5132276125220942171
+      PreviewCardFrame_5: -2827912027080929254
+      PreviewCardFrame_6: 4241705410213327854
+      PreviewCardFrame_7: -7170955603941605326
+      PreviewCardFrame_8: -158459095710050485
+      PreviewCardFrame_9: 9046014142784616699
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
