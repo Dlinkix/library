@@ -401,9 +401,14 @@ public class FightManager : NetworkBehaviour
             ClearAllDiceSelections();
             RpcClearAllAimLines();
             RpcClearAllSelections();
-            RpcResetAllUIPositions(); 
+            RpcResetAllUIPositions();
         }
 
+        // ===== УБРАТЬ ЭТИ ВЫЗОВЫ =====
+        // if (newState == FightState.Waiting) RpcSetAllDiceImagesVisible(true);
+        // if (newState == FightState.Action) RpcSetAllDiceImagesVisible(false);
+
+        // ===== ВСЁ УПРАВЛЕНИЕ В RpcUpdateDiceUI =====
         RpcUpdateDiceUI(newState);
     }
 
@@ -648,6 +653,7 @@ public class FightManager : NetworkBehaviour
             }
         }
     }
+   
 
     [ClientRpc]
     private void RpcResetAllUIPositions()
@@ -741,6 +747,31 @@ public class FightManager : NetworkBehaviour
     [ClientRpc]
     private void RpcUpdateDiceUI(FightState state)
     {
+        bool showDiceUI = (state == FightState.Waiting || state == FightState.Rolling);
+
+        // Скрываем/показываем UI кубиков у всех игроков и врагов
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.UIObject != null)
+            {
+                foreach (var dice in player.UIObject.GetComponentsInChildren<DiceRoll>())
+                {
+                    dice?.SetUIVisible(showDiceUI);
+                }
+            }
+        }
+
+        //foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        //{
+        //    if (enemy != null && enemy.UIObject != null)
+        //    {
+        //        foreach (var dice in enemy.UIObject.GetComponentsInChildren<DiceRoll>())
+        //        {
+        //            dice?.SetUIVisible(showDiceUI);
+        //        }
+        //    }
+        //}
+
         switch (state)
         {
             case FightState.Waiting:
@@ -789,6 +820,7 @@ public class FightManager : NetworkBehaviour
                 break;
         }
     }
+
     [Client]
     public FightState GetCurrentState()
     {

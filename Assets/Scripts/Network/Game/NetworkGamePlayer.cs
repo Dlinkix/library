@@ -1265,7 +1265,6 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
 
 
-
     [ClientRpc]
     public void RpcDisableAttackDice(int cardId, int attackIndex)
     {
