@@ -51,7 +51,7 @@ public class CardView : MonoBehaviour
         }
     }
 
-    public void SetupCard(DataGame.CardData data)
+    public void SetupCard(DataGame.CardData data, int cardIndex)
     {
         if (data == null)
         {
@@ -61,7 +61,9 @@ public class CardView : MonoBehaviour
 
         cardData = data;
         cardId = data.cardId;
+        currentCardIndex = cardIndex;
         currentActiveDiceIndex = -1;
+
 
         if (cardNameText != null) cardNameText.text = data.cardName;
         if (costText != null) costText.text = $"Light: {data.lightCost}";
@@ -117,8 +119,10 @@ public class CardView : MonoBehaviour
         }
     }
 
-    public void UpdateAttackDiceValues(int[] rollValues)
+    public void UpdateAttackDiceValues(int cardIndex, int[] rollValues)
     {
+        if (currentCardIndex != cardIndex) return;
+
         int count = Mathf.Min(rollValues.Length, activeDiceCount);
         for (int i = 0; i < count; i++)
         {
@@ -130,8 +134,9 @@ public class CardView : MonoBehaviour
     }
 
     // ===== œ≈–≈Ã≈Ÿ¿≈Ã  ”¡»  ¬ œÀ≈…—’ŒÀƒ≈– =====
-    public void MoveDiceToPlaceholder(int attackIndex)
+    public void MoveDiceToPlaceholder(int cardIndex, int attackIndex)
     {
+        if (currentCardIndex != cardIndex) return; 
         if (attackIndex < 0 || attackIndex >= attackDices.Count) return;
         if (dicePlaceholder == null)
         {
@@ -162,8 +167,9 @@ public class CardView : MonoBehaviour
     }
 
     // ===== ¬Œ«¬–¿Ÿ¿≈Ã  ”¡»  »« œÀ≈…—’ŒÀƒ≈–¿ ¬ √–»ƒ =====
-    public void ReturnDiceToGrid()
+    public void ReturnDiceToGrid(int cardIndex)
     {
+        if (currentCardIndex != cardIndex) return;
         if (currentActiveDiceIndex < 0 || currentActiveDiceIndex >= attackDices.Count) return;
 
         DiceAttackRoll dice = attackDices[currentActiveDiceIndex];

@@ -923,7 +923,7 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
 
     [Server]
-    public void QueueCardForTarget(int cardId, NetworkGameEnemy targetEnemy)
+    public void QueueCardForTarget(int cardId, int cardIndex, NetworkGameEnemy targetEnemy) 
     {
         if (dataGame == null) return;
         if (!dataGame.TryGetCardById(cardId, out CardData card)) return;
@@ -931,13 +931,15 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         currentLight -= card.lightCost;
 
-        if (playerHand.Contains(cardId))
-        {
-            playerHand.Remove(cardId);
-            SyncHandToOwner();
-        }
+        // Проверяем, что карта все еще в руке по индексу
+        if (cardIndex < 0 || cardIndex >= playerHand.Count) return;
+        if (playerHand[cardIndex] != cardId) return;
 
-        QueueCardEffects(card, targetEnemy);
+        // Удаляем по индексу
+        playerHand.RemoveAt(cardIndex);
+        SyncHandToOwner();
+
+        QueueCardEffects(card, cardIndex, targetEnemy); 
     }
 
 
@@ -970,45 +972,41 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     [Server]
-    public void QueueCardEffects(DataGame.CardData card, NetworkGameEnemy targetEnemy)
+    public void QueueCardEffects(DataGame.CardData card, int cardIndex, NetworkGameEnemy targetEnemy)
     {
-        // ===== ПЕРЕДАЕМ ТОЛЬКО ID! =====
-        RpcShowCardView(card.cardId); 
+        // Показываем CardView с ID и индексом
+        RpcShowCardView(card.cardId, cardIndex);
 
         List<int> rollValues = new List<int>();
+
         if (card.attacks != null)
         {
-            // Генерируем ВСЕ значения
             foreach (var attack in card.attacks)
             {
                 int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
                 rollValues.Add(roll);
             }
 
-            // Отправляем ВСЕ значения на клиенты
-            RpcUpdateAttackRolls(card.cardId, rollValues.ToArray());
+            // Отправляем с cardIndex
+            RpcUpdateAttackRolls(cardIndex, rollValues.ToArray());
 
-            // Создаем очередь выполнения
             int attackIndex = 0;
             foreach (var attack in card.attacks)
             {
                 int roll = rollValues[attackIndex];
                 int currentIndex = attackIndex;
 
-                // ДЕЙСТВИЕ 1: Переместить кубик в плейсхолдер
                 pendingActions.Enqueue(() => {
-                    RpcMoveDiceToPlaceholder(card.cardId, currentIndex);
+                    RpcMoveDiceToPlaceholder(cardIndex, currentIndex);
                 });
 
-                // ДЕЙСТВИЕ 2: Применить атаку (с задержкой)
                 pendingActions.Enqueue(() => {
                     targetEnemy.PushEnemyUI(this);
                     ApplyAttack(attack, targetEnemy, roll);
                 });
 
-                // ДЕЙСТВИЕ 3: Вернуть кубик в грид (с задержкой)
                 pendingActions.Enqueue(() => {
-                    RpcReturnDiceToGrid(card.cardId);
+                    RpcReturnDiceToGrid(cardIndex);
                 });
 
                 attackIndex++;
@@ -1023,21 +1021,23 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (!isExecutingActions) { isExecutingActions = true; actionTimer = 0f; }
     }
+
+
     [ClientRpc]
-    public void RpcMoveDiceToPlaceholder(int cardId, int attackIndex)
+    public void RpcMoveDiceToPlaceholder(int cardIndex, int attackIndex)
     {
         if (currentCardView != null && currentCardView.gameObject.activeSelf)
         {
-            currentCardView.MoveDiceToPlaceholder(attackIndex);
+            currentCardView.MoveDiceToPlaceholder(cardIndex, attackIndex);
         }
     }
 
     [ClientRpc]
-    public void RpcReturnDiceToGrid(int cardId)
+    public void RpcReturnDiceToGrid(int cardIndex)
     {
         if (currentCardView != null && currentCardView.gameObject.activeSelf)
         {
-            currentCardView.ReturnDiceToGrid();
+            currentCardView.ReturnDiceToGrid(cardIndex);
         }
     }
     [Server]
@@ -1255,14 +1255,15 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     [ClientRpc]
-    public void RpcShowCardView(int cardId) 
+    public void RpcShowCardView(int cardId, int cardIndex)
     {
         DataGame.CardData cardData = GetCardData(cardId);
         if (cardData != null)
         {
-            ShowCardView(cardData);
+            ShowCardView(cardData, cardIndex);
         }
     }
+
 
 
     [ClientRpc]
@@ -1319,17 +1320,16 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     [Client]
-    public void ShowCardView(DataGame.CardData cardData)
+    public void ShowCardView(DataGame.CardData cardData, int cardIndex)
     {
-        // Создаем CardView если его еще нет
         if (!isCardViewCreated)
             CreateCardView();
 
         if (currentCardView == null) return;
 
-        currentCardView.SetupCard(cardData);
+        currentCardView.SetupCard(cardData, cardIndex); 
         currentCardView.ShowCardView();
-        Debug.Log($"[NetworkGamePlayer] Showing CardView for card: {cardData.cardName}");
+        Debug.Log($"[NetworkGamePlayer] Showing CardView for card: {cardData.cardName} (index: {cardIndex})");
     }
 
 
@@ -1344,12 +1344,13 @@ public class NetworkGamePlayer : NetworkBehaviour
     }
 
     // RPC для обновления значений атак (сервер -> все клиенты)
+    // Обновляем значения атак
     [ClientRpc]
-    public void RpcUpdateAttackRolls(int cardId, int[] rollValues)
+    public void RpcUpdateAttackRolls(int cardIndex, int[] rollValues)
     {
         if (currentCardView != null && currentCardView.gameObject.activeSelf)
         {
-            currentCardView.UpdateAttackDiceValues(rollValues);
+            currentCardView.UpdateAttackDiceValues(cardIndex, rollValues);
         }
     }
 
@@ -1527,7 +1528,7 @@ public class NetworkGamePlayer : NetworkBehaviour
         playerHand.RemoveAt(cardIndex);
         SyncHandToOwner();
 
-        QueueCardEffects(card, targetEnemy);
+        QueueCardEffects(card, cardIndex, targetEnemy);
     }
 
     [Command]

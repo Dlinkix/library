@@ -168,9 +168,6 @@ public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerEx
         // Сохраняем выбор карты в активном кубике
         activeDice.SelectCard(cardId, cardIndex);
 
-        // ===== ПОКАЗЫВАЕМ CARDVIEW С КАРТОЙ =====
-        player.ShowCardView(card);
-
         // Если враг уже выбран - синхронизируем с сервером
         DiceRoll enemyDice = DiceSelectionManager.Instance.GetSelectedEnemyDice();
         if (enemyDice != null)

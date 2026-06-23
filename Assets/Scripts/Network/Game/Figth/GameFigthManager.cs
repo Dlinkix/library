@@ -330,13 +330,11 @@ public class FightManager : NetworkBehaviour
         player.PlayerHand.RemoveAt(indexToRemove);
         player.SyncHandToOwner();
 
-        // ===== ОБНОВЛЯЕМ ИНДЕКСЫ У ВСЕХ КУБИКОВ ЭТОГО ИГРОКА =====
         UpdateDiceCardIndices(player, indexToRemove);
 
-        // Применяем эффекты
-        player.QueueCardEffects(card, targetEnemy);
+        // ===== ПЕРЕДАЕМ cardIndex =====
+        player.QueueCardEffects(card, indexToRemove, targetEnemy); 
 
-        // Сбрасываем выбор кубика после применения
         dice.ClearSelection();
 
         Debug.Log($"[ApplyCardFromDice] Applied card {card.cardName} from dice {dice.ownerSlotIndex} to {targetEnemy.EnemyName}");
