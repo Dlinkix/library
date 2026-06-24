@@ -47,6 +47,14 @@ public class NetworkGameEnemy : NetworkBehaviour
 
     [Header("UI Animation")]
     [SerializeField] private float pushDistance = 300f;
+
+
+    [Header("Card View")]
+    [SerializeField] private CardView cardViewPrefab;
+    private CardView currentCardView;
+    private bool isCardViewCreated = false;
+
+
     private Vector3 originalPosition;
     private readonly List<int> enemyDeck = new List<int>();
     public readonly List<int> enemyHand = new List<int>();
@@ -71,6 +79,10 @@ public class NetworkGameEnemy : NetworkBehaviour
     public DataGame DataGame => dataGame;
     public static List<NetworkGameEnemy> AllEnemies { get; } = new List<NetworkGameEnemy>();
     public GameObject UIObject => uiObject;
+
+    private Queue<System.Action> pendingActions = new Queue<System.Action>();
+    private float actionTimer = 0f;
+    private bool isExecutingActions = false;
 
     public override void OnStartServer()
     {
@@ -402,7 +414,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (hpSlider != null) { hpSlider.minValue = 0f; hpSlider.maxValue = 100f; hpSlider.wholeNumbers = true; }
         if (staggerSlider != null) { staggerSlider.minValue = 0f; staggerSlider.maxValue = 100f; staggerSlider.wholeNumbers = true; }
         if (readyButton != null) { readyButton.gameObject.SetActive(false); readyButton.interactable = false; }
-
+        CreateCardView();
         uiCreated = true;
         UpdateHpView();
         UpdateStatusText();
@@ -651,20 +663,18 @@ public class NetworkGameEnemy : NetworkBehaviour
             return;
         }
 
-        // ===== СОЗДАЕМ КОПИЮ ДЛЯ ОТСЛЕЖИВАНИЯ ДОСТУПНЫХ КАРТ =====
         List<int> availableHand = new List<int>(enemyHand);
-        List<AISelectionData> selections = new List<AISelectionData>();
+        int syncedCount = 0;
 
+        // ===== ПРОХОДИМ ПО КАЖДОМУ КУБИКУ =====
         foreach (var dice in dices)
         {
             if (dice == null) continue;
             dice.ClearSelection();
 
-            int selectedCardIndex = -1;
             int selectedCardId = -1;
-            int originalIndex = -1;  // ← ИНДЕКС В ОРИГИНАЛЬНОЙ РУКЕ
+            int originalIndex = -1;
 
-            // Ищем карту в копии
             for (int i = 0; i < availableHand.Count; i++)
             {
                 int cardId = availableHand[i];
@@ -673,9 +683,6 @@ public class NetworkGameEnemy : NetworkBehaviour
                 if (card != null && currentLight >= card.lightCost)
                 {
                     selectedCardId = cardId;
-                    selectedCardIndex = i;  // Индекс в копии
-
-                    // ===== НАХОДИМ ОРИГИНАЛЬНЫЙ ИНДЕКС В enemyHand =====
                     originalIndex = enemyHand.IndexOf(cardId);
                     break;
                 }
@@ -689,21 +696,11 @@ public class NetworkGameEnemy : NetworkBehaviour
                     currentLight -= selectedCard.lightCost;
                     int randomDiceIndex = Random.Range(0, playerDices.Length);
 
-                    // ===== ИСПОЛЬЗУЕМ ОРИГИНАЛЬНЫЙ ИНДЕКС ДЛЯ СИНХРОНИЗАЦИИ =====
-                    selections.Add(new AISelectionData
-                    {
-                        diceSlot = dice.ownerSlotIndex,
-                        cardId = selectedCardId,
-                        cardIndex = originalIndex,  // ← ОРИГИНАЛЬНЫЙ ИНДЕКС!
-                        targetNetId = targetPlayer.netId,
-                        targetDiceIndex = randomDiceIndex
-                    });
-
-                    // Сохраняем на клиентском кубике
+                    // Сохраняем на кубике
                     dice.SelectTarget(targetPlayer.netId, randomDiceIndex);
-                    dice.SelectCard(selectedCardId, originalIndex);  // ← ИСПРАВЛЕНО!
+                    dice.SelectCard(selectedCardId, originalIndex);
 
-                    availableHand.RemoveAt(selectedCardIndex);  // Удаляем из копии
+                    availableHand.RemoveAt(availableHand.IndexOf(selectedCardId));
 
                     Debug.Log($"[AI] Enemy selected card {selectedCardId} for dice {dice.ownerSlotIndex} (original index: {originalIndex})");
                 }
@@ -714,34 +711,129 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        // Синхронизируем выборы
-        if (selections.Count > 0)
+        // ===== СИНХРОНИЗИРУЕМ КАЖДЫЙ КУБИК ОТДЕЛЬНО =====
+        foreach (var dice in dices)
         {
-            Debug.Log($"[AI] Syncing {selections.Count} selections...");
-            CmdSyncAllAIDiceSelections();
+            if (dice != null && dice.hasSelection)
+            {
+                syncedCount++;
+                CmdAISyncDiceSelection(
+                    dice.ownerSlotIndex,
+                    dice.selectedCardId,
+                    -1,
+                    dice.selectedTargetEnemyNetId,
+                    dice.selectedTargetDiceIndex
+                );
+            }
         }
 
-        CmdSetEnemyReady();
+        // ===== ТОЛЬКО ПОСЛЕ ВСЕХ СИНХРОНИЗАЦИЙ СТАВИМ READY =====
+        if (syncedCount > 0)
+        {
+            Debug.Log($"[AI] Synced {syncedCount} dices, enemy ready!");
+            CmdSetEnemyReady();
+        }
+        else
+        {
+            Debug.Log($"[AI] No dices synced, enemy ready anyway!");
+            CmdSetEnemyReady();
+        }
     }
 
+    [Server]
+    private DataGame.CardData GetCardData(int cardId)
+    {
+        EnsureDataGameReference();
+        if (dataGame == null) return null;
+        dataGame.TryGetCardById(cardId, out DataGame.CardData card);
+        return card;
+    }
 
     [Server]
     public void QueueCardEffects(CardData card, int cardIndex, NetworkGamePlayer targetPlayer)
     {
-        Debug.Log($"[QueueCardEffects] Applying card {card.cardName} (ID: ) to player {targetPlayer.PlayerName}");
+        Debug.Log($"[QueueCardEffects] Applying card {card.cardName} (ID: {card.cardId}) to player {targetPlayer.PlayerName}");
 
-        if (card.attacks != null)
+        RpcShowCardView(card.cardId, cardIndex);
+
+        List<int> rollValues = new List<int>();
+
+        if (card.attacks != null && card.attacks.Length > 0)
         {
             foreach (var attack in card.attacks)
             {
                 int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
-                Debug.Log($"[QueueCardEffects] Attack type: {attack.type}, roll: {roll}, damage: ");
-                ApplyAttackToPlayer(attack, targetPlayer, roll);
+                rollValues.Add(roll);
             }
+
+            RpcUpdateAttackRolls(cardIndex, rollValues.ToArray());
+
+            int attackIndex = 0;
+            foreach (var attack in card.attacks)
+            {
+                int roll = rollValues[attackIndex];
+                int currentIndex = attackIndex;
+
+                // ===== 1. АНИМАЦИЯ: ПЕРЕМЕЩАЕМ КУБИК В ПЛЕЙСХОЛДЕР =====
+                pendingActions.Enqueue(() => {
+                    RpcMoveDiceToPlaceholder(cardIndex, currentIndex);
+                });
+
+                // ===== 2. ЗАДЕРЖКА ПЕРЕД АТАКОЙ (ЧТОБЫ УВИДЕТЬ АНИМАЦИЮ) =====
+                pendingActions.Enqueue(() => {
+                    Debug.Log($"[QueueCardEffects] Waiting before attack...");
+                });
+
+                // ===== 3. ПРИМЕНЯЕМ АТАКУ С ЗАДЕРЖКОЙ =====
+                pendingActions.Enqueue(() => {
+                    targetPlayer.PushPlayerUI(this);
+                    ApplyAttackToPlayer(attack, targetPlayer, roll);
+                });
+
+                // ===== 4. АНИМАЦИЯ: ВОЗВРАЩАЕМ КУБИК В ГРИД =====
+                pendingActions.Enqueue(() => {
+                    RpcReturnDiceToGrid(cardIndex);
+                });
+
+                attackIndex++;
+            }
+        }
+
+        if (card.passiveActions != null)
+        {
+            foreach (var passive in card.passiveActions)
+                pendingActions.Enqueue(() => ApplyPassiveEffect(passive));
+        }
+
+        if (!isExecutingActions)
+        {
+            isExecutingActions = true;
+            StartCoroutine(ProcessActionQueue());
         }
     }
 
+    [Server]
+    private IEnumerator ProcessActionQueue()
+    {
+        float totalDelay = 0.5f; // Уменьшил задержку
 
+        while (pendingActions.Count > 0)
+        {
+            yield return new WaitForSeconds(totalDelay);
+
+            var action = pendingActions.Dequeue();
+            action?.Invoke();
+        }
+
+        isExecutingActions = false;
+
+    
+
+        Debug.Log("[NetworkGameEnemy] All sync actions completed");
+    }
+
+
+    [Server]
     private void ApplyAttackToPlayer(AttackData attack, NetworkGamePlayer target, int roll)
     {
         if (target == null) return;
@@ -751,10 +843,44 @@ public class NetworkGameEnemy : NetworkBehaviour
         switch (attack.type)
         {
             case AttackData.Type.Damage:
-                int damage = roll; // Или используйте roll
+                int damage = roll;
                 target.hp -= damage;
-                Debug.Log($"[ApplyAttackToPlayer] Dealt {damage} damage to {target.PlayerName}. HP: {target.hp}");
                 if (target.hp < 0) target.hp = 0;
+                Debug.Log($"[ApplyAttackToPlayer] Dealt {damage} damage to {target.PlayerName}. HP: {target.hp}");
+                break;
+
+            case AttackData.Type.Block:
+                // Логика блока
+                break;
+
+            case AttackData.Type.Escape:
+                // Логика побега
+                break;
+        }
+
+        if (attack.staggerDamage > 0)
+        {
+            target.stagger += attack.staggerDamage;
+        }
+    }
+    [Server]
+    private void ApplyPassiveEffect(DataGame.PassiveAction passive)
+    {
+        if (passive == null) return;
+
+        switch (passive.effectType)
+        {
+            case DataGame.PassiveEffectType.DrawCard:
+                DrawCardFromDeck(passive.value);
+                break;
+
+            case DataGame.PassiveEffectType.GainLight:
+                currentLight += passive.value;
+                break;
+
+            case DataGame.PassiveEffectType.HealPlayer:
+                hp += passive.value;
+                if (hp > Maxhp) hp = Maxhp;
                 break;
         }
     }
@@ -807,14 +933,121 @@ public class NetworkGameEnemy : NetworkBehaviour
         return alivePlayers[Random.Range(0, alivePlayers.Count)];
     }
 
-    [Server]
-    private DataGame.CardData GetCardData(int cardId)
+    [Client]
+    private void CreateCardView()
     {
-        EnsureDataGameReference();
-        if (dataGame == null) return null;
-        dataGame.TryGetCardById(cardId, out DataGame.CardData card);
-        return card;
+        if (cardViewPrefab == null)
+        {
+            cardViewPrefab = Resources.Load<CardView>("UI/CardView");
+            if (cardViewPrefab == null)
+            {
+                Debug.LogError("[NetworkGameEnemy] CardView prefab not found in Resources/UI/CardView!");
+                return;
+            }
+        }
+
+        if (uiObject == null)
+        {
+            Debug.LogError("[NetworkGameEnemy] uiObject is null, cannot create CardView!");
+            return;
+        }
+
+        GameObject cardViewObj = Instantiate(cardViewPrefab.gameObject, uiObject.transform);
+        currentCardView = cardViewObj.GetComponent<CardView>();
+
+        if (currentCardView != null)
+        {
+            RectTransform rect = cardViewObj.GetComponent<RectTransform>();
+            if (rect != null)
+            {
+                rect.anchorMin = new Vector2(0.5f, 0.5f);
+                rect.anchorMax = new Vector2(0.5f, 0.5f);
+                rect.pivot = new Vector2(0.5f, 0.5f);
+                rect.anchoredPosition = new Vector2(0f, 90f); // Центр врага
+                rect.sizeDelta = new Vector2(400f, 300f);
+            }
+
+            currentCardView.gameObject.SetActive(false);
+            isCardViewCreated = true;
+            Debug.Log("[NetworkGameEnemy] CardView created");
+        }
     }
+
+    [Client]
+    public void ShowCardView(DataGame.CardData cardData, int cardIndex)
+    {
+        if (!isCardViewCreated)
+            CreateCardView();
+
+        if (currentCardView == null) return;
+
+        currentCardView.SetupCard(cardData, cardIndex);
+        currentCardView.ShowCardView();
+        Debug.Log($"[NetworkGameEnemy] Showing CardView for card: {cardData.cardName} (index: {cardIndex})");
+    }
+
+    [Client]
+    public void HideCardView()
+    {
+        if (currentCardView != null)
+        {
+            currentCardView.HideCardView();
+            Debug.Log("[NetworkGameEnemy] CardView hidden");
+        }
+    }
+
+    [ClientRpc]
+    public void RpcShowCardView(int cardId, int cardIndex)
+    {
+        DataGame.CardData cardData = GetCardData(cardId);
+        if (cardData != null)
+        {
+            ShowCardView(cardData, cardIndex);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcHideCardView()
+    {
+        HideCardView();
+    }
+
+    [ClientRpc]
+    public void RpcMoveDiceToPlaceholder(int cardIndex, int attackIndex)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.MoveDiceToPlaceholder(cardIndex, attackIndex);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcReturnDiceToGrid(int cardIndex)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.ReturnDiceToGrid(cardIndex);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcUpdateAttackRolls(int cardIndex, int[] rollValues)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.UpdateAttackDiceValues(cardIndex, rollValues);
+        }
+    }
+
+    [ClientRpc]
+    public void RpcDisableAttackDice(int cardId, int attackIndex)
+    {
+        if (currentCardView != null && currentCardView.gameObject.activeSelf)
+        {
+            currentCardView.DisableAttackDice(attackIndex);
+        }
+    }
+
     [Server]
     private void ApplyEnemyStatsFromData()
     {

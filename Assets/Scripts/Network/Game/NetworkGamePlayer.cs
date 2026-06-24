@@ -58,6 +58,13 @@ public class NetworkGamePlayer : NetworkBehaviour
     private CardView currentCardView;
     private bool isCardViewCreated = false;
 
+
+    [Header("UI Animation")]
+    [SerializeField] private float pushDistance = 300f;
+    private Vector3 _attackerOriginalPos;
+    private Vector3 _playerOriginalPos;
+    private bool isUIMoving = false;
+
     private readonly List<int> playerPool = new List<int>();
     private readonly List<int> playerDeck = new List<int>();
     private readonly List<int> playerHand = new List<int>();
@@ -103,6 +110,7 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         StartCoroutine(ServerCreateDiceDelayed());
     }
+
 
 
     public override void OnStartClient()
@@ -204,6 +212,13 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
     }
 
+    private NetworkGameEnemy FindAttackerEnemy(uint netId)
+    {
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+            if (enemy != null && enemy.netId == netId) return enemy;
+
+        return null;
+    }
     public void SetCombatPresentationActive(bool isVisible)
     {
         if (uiObject != null)
@@ -902,6 +917,70 @@ public class NetworkGamePlayer : NetworkBehaviour
         return UnityEngine.Random.Range(minSpeed, maxSpeed + 1);
     }
 
+    private IEnumerator AnimatePlayerPush(NetworkGameEnemy attacker)
+    {
+        if (isUIMoving) yield break;
+        isUIMoving = true;
+
+        RectTransform attackerRect = attacker.UIObject.GetComponent<RectTransform>();
+        if (attackerRect == null || uiRect == null)
+        {
+            isUIMoving = false;
+            yield break;
+        }
+
+        Vector3 attackerStartPos = attackerRect.position;
+        Vector3 playerStartPos = uiRect.position;
+
+        // ===== ФАЗА 1: ВРАГ ПРИБЛИЖАЕТСЯ К ИГРОКУ =====
+        Vector3 direction = (playerStartPos - attackerStartPos).normalized;
+        if (direction.magnitude < 0.1f) direction = Vector3.right;
+
+        // Точка, куда враг будет двигаться (95% расстояния до игрока)
+        Vector3 approachTarget = attackerStartPos + direction * (Vector3.Distance(attackerStartPos, playerStartPos) * 0.95f);
+
+        float elapsed = 0f;
+        float approachDuration = 0.3f;
+
+        while (elapsed < approachDuration)
+        {
+            float t = elapsed / approachDuration;
+            // Используем smoothstep для плавности
+            float smoothT = t * t * (3f - 2f * t);
+            attackerRect.position = Vector3.Lerp(attackerStartPos, approachTarget, smoothT);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        attackerRect.position = approachTarget;
+
+        // ===== ФАЗА 2: ИГРОК ОТОДВИГАЕТСЯ НАЗАД =====
+        Vector3 pushDirection = (playerStartPos - attackerStartPos).normalized;
+        if (pushDirection.magnitude < 0.1f) pushDirection = Vector3.right;
+
+        // Точка, куда отодвинется игрок
+        float pushDistance = 300f; // Можно сделать настраиваемым
+        Vector3 pushTarget = playerStartPos + pushDirection * pushDistance;
+
+        elapsed = 0f;
+        float pushDuration = 0.2f;
+
+        while (elapsed < pushDuration)
+        {
+            float t = elapsed / pushDuration;
+            float smoothT = t * t * (3f - 2f * t);
+            uiRect.position = Vector3.Lerp(playerStartPos, pushTarget, smoothT);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+        uiRect.position = pushTarget;
+
+        isUIMoving = false;
+
+        // Сохраняем позиции для возврата
+        _attackerOriginalPos = approachTarget;
+        _playerOriginalPos = pushTarget;
+    }
+
     public override void OnStopClient()
     {
         if (uiObject != null)
@@ -925,6 +1004,12 @@ public class NetworkGamePlayer : NetworkBehaviour
     #endregion
 
     #region Server
+
+    [Server]
+    public void PushPlayerUI(NetworkGameEnemy attacker)
+    {
+        RpcPushPlayerUI(attacker.netId);
+    }
 
     [Server]
     private IEnumerator ServerCreateDiceDelayed()
@@ -1301,6 +1386,17 @@ public class NetworkGamePlayer : NetworkBehaviour
 
 
     #region Client
+
+    [ClientRpc]
+    private void RpcPushPlayerUI(uint attackerNetId)
+    {
+        NetworkGameEnemy attacker = FindAttackerEnemy(attackerNetId);
+        if (attacker == null || uiRect == null) return;
+
+        // Аналогичная анимация отталкивания для игрока
+        StartCoroutine(AnimatePlayerPush(attacker));
+    }
+
 
 
     [ClientRpc]

@@ -364,7 +364,8 @@ public class FightManager : NetworkBehaviour
     [Server]
     private void ApplyCardFromPlayer(NetworkGamePlayer player, DiceRoll dice)
     {
-        // Проверяем индекс карты
+        Debug.Log($"[ApplyCardFromPlayer] START: dice={dice.ownerSlotIndex}, cardId={dice.selectedCardId}, cardIndex={dice.selectedCardIndex}, handSize={player.PlayerHand.Count}");
+        Debug.Log($"[ApplyCardFromPlayer] Hand: {string.Join(", ", player.PlayerHand)}");
         if (dice.selectedCardIndex < 0 || dice.selectedCardIndex >= player.PlayerHand.Count)
         {
             Debug.Log($"[ApplyCardFromPlayer] Invalid card index {dice.selectedCardIndex}! Hand size: {player.PlayerHand.Count}");
