@@ -70,7 +70,8 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             valueText.color = Color.gray;
         }
 
-        if (diceImage != null && !isSelected)
+
+        if (diceImage != null && !isSelected && !isEnemyDice)
         {
             diceImage.color = waitingColor;
         }
@@ -95,7 +96,7 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             valueText.color = Color.green;
         }
 
-        if (diceImage != null && !isSelected)
+        if (diceImage != null && !isSelected && !isEnemyDice)
         {
             diceImage.color = readyColor;
         }
@@ -326,12 +327,16 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             }
             else if (hasSelection)
             {
-                // Если есть выбор карты и цели - показываем специальный цвет
                 diceImage.color = hasCardColor;
             }
             else
             {
-                diceImage.color = isReady ? readyColor : waitingColor;
+                // ===== ДЛЯ ВРАГА НЕ МЕНЯЕМ ЦВЕТ =====
+                if (!isEnemyDice)
+                {
+                    diceImage.color = isReady ? readyColor : waitingColor;
+                }
+                // Для врага цвет не меняем
             }
         }
     }

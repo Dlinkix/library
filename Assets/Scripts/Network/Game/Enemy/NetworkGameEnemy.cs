@@ -60,6 +60,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     private Vector3 enemyOriginalPos;
 
     public static List<NetworkGameEnemy> AllEnemies { get; } = new List<NetworkGameEnemy>();
+    public GameObject UIObject => uiObject;
 
     public override void OnStartServer()
     {
@@ -117,9 +118,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         NetworkGamePlayer attacker = FindAttacker(attackerNetId);
         if (attacker == null || uiRect == null) return;
 
-        attackerOriginalPos = attacker.UIObject
-     .GetComponent<RectTransform>().position;
-
+        attackerOriginalPos = attacker.UIObject.GetComponent<RectTransform>().position;
         enemyOriginalPos = uiRect.position;
 
         isInCombat = true;
@@ -145,7 +144,6 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         return null;
     }
-    // Â NetworkGameEnemy:
 
     public void ResetUIPosition()
     {
@@ -164,6 +162,76 @@ public class NetworkGameEnemy : NetworkBehaviour
         {
             uiObject.SetActive(isVisible);
         }
+
+        SetAllDiceUIVisible(isVisible);
+    }
+
+    // ===== ОБНОВЛЕННЫЙ МЕТОД: Управление видимостью UI кубиков =====
+    public void SetAllDiceUIVisible(bool visible)
+    {
+        if (uiObject == null) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        foreach (var dice in dices)
+        {
+            if (dice != null)
+            {
+                dice.SetUIVisible(visible);
+            }
+        }
+    }
+
+    // ===== НОВЫЙ МЕТОД: Обновление диапазонов кубиков =====
+    public void UpdateAllDiceRange()
+    {
+        if (uiObject == null) return;
+
+        DataGame.EnemyData enemyData = GetActiveEnemyData();
+        if (enemyData == null) return;
+
+        int minSpeed = enemyData.baseSpeedMin;
+        int maxSpeed = dataGame != null ? dataGame.GetEnemyBaseSpeedMax(enemyDataIndex) : 0;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        foreach (var dice in dices)
+        {
+            if (dice != null)
+            {
+                dice.ShowDiceRange(minSpeed, maxSpeed);
+            }
+        }
+    }
+
+    // ===== НОВЫЙ МЕТОД: Обновление результатов кубиков =====
+    public void UpdateAllDiceResult()
+    {
+        if (uiObject == null) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        foreach (var dice in dices)
+        {
+            if (dice != null && dice.isReady)
+            {
+                dice.ShowDiceResult(dice.diceValue);
+            }
+        }
+    }
+
+    // ===== НОВЫЙ МЕТОД: Обновление значений кубиков =====
+    public void UpdateDiceValues(int[] values)
+    {
+        if (values == null || values.Length == 0) return;
+        if (uiObject == null) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+
+        for (int i = 0; i < dices.Length && i < values.Length; i++)
+        {
+            if (dices[i] != null)
+            {
+                dices[i].SetDiceValue(values[i]);
+            }
+        }
     }
 
     private IEnumerator AnimatePush(NetworkGamePlayer attacker)
@@ -179,7 +247,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         Vector3 direction = (enemyPos - attackerPos).normalized;
         if (direction.magnitude < 0.1f) direction = Vector3.right;
 
-        // ÏÎÄÕÎÄ
         Vector3 approachTarget = attackerPos + direction * (Vector3.Distance(attackerPos, enemyPos) * 0.95f);
         float elapsed = 0f;
         while (elapsed < 0.3f)
@@ -191,7 +258,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
         attackerRect.position = approachTarget;
 
-        // ÓÄÀÐ
         Vector3 enemyPushPos = enemyPos + direction * pushDistance;
         elapsed = 0f;
         while (elapsed < 0.2f)
@@ -208,7 +274,6 @@ public class NetworkGameEnemy : NetworkBehaviour
 
     private IEnumerator AnimateReturn()
     {
-        // Íàõîäèì àòàêóþùåãî ïî ñîõðàí¸ííîé ïîçèöèè
         NetworkGamePlayer attacker = null;
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
@@ -330,7 +395,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         {
             RunFlowManager.Instance.RefreshClientVisuals();
         }
-
     }
 
     private void CreateDiceUI()
@@ -417,10 +481,39 @@ public class NetworkGameEnemy : NetworkBehaviour
     [Server]
     public void RollAllDice()
     {
-        DiceRoll[] dices = GetComponentsInChildren<DiceRoll>();
+        if (uiObject == null) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        List<int> values = new List<int>();
+
         foreach (var dice in dices)
         {
-            if (dice != null) { int roll = GetRollValue(); dice.RollDice(roll, roll); }
+            if (dice != null)
+            {
+                int roll = GetRollValue();
+                dice.RollDice(roll, roll);
+                values.Add(roll);
+            }
+        }
+
+        // Отправляем значения клиентам для обновления UI
+        RpcUpdateDiceValues(values.ToArray());
+    }
+
+    [ClientRpc]
+    public void RpcUpdateDiceValues(int[] values)
+    {
+        if (values == null || values.Length == 0) return;
+        if (uiObject == null) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+
+        for (int i = 0; i < dices.Length && i < values.Length; i++)
+        {
+            if (dices[i] != null)
+            {
+                dices[i].SetDiceValue(values[i]);
+            }
         }
     }
 
