@@ -111,6 +111,7 @@ public class RunFlowManager : MonoBehaviour
 
     private void Start()
     {
+
         InitializeClientView();
     }
 
@@ -156,6 +157,8 @@ public class RunFlowManager : MonoBehaviour
         mapGenerator.InitializeRuntimeNodes();
         mapGenerator.SetNodeSelectionHandler(HandleLocalNodeSelected);
         sceneRoad = FindFirstObjectByType<Road25D>(FindObjectsInactive.Include);
+
+        Debug.Log($"ROAD25D FOUND = {sceneRoad}");
         battlePresentationRoot = FindBattlePresentationRoot();
 
         uiCanvas = mapGenerator.GetComponentInParent<Canvas>();
@@ -180,6 +183,18 @@ public class RunFlowManager : MonoBehaviour
         else
         {
             ApplyVisualPhase(currentClientPhase);
+        }
+    }
+
+    public void RefreshBattleRoot()
+    {
+        battlePresentationRoot = GameObject.Find("UI");
+        Debug.Log($"Battle root refreshed: {battlePresentationRoot != null}");
+
+        if (battlePresentationRoot != null && clientInitialized)
+        {
+            // Применяем текущую фазу к новому UI
+            SetBattlePresentationRootVisible(currentClientPhase == RunPhase.Battle);
         }
     }
 
@@ -678,86 +693,77 @@ public class RunFlowManager : MonoBehaviour
 
     private void ApplyVisualPhase(RunPhase phase)
     {
-        bool mapVisible = phase == RunPhase.Map || phase == RunPhase.RoomPopup;
-        bool popupVisible = phase == RunPhase.RoomPopup;
-        bool battleButtonVisible = phase == RunPhase.Battle;
-        bool showSceneRoad = ShouldShowSceneRoad(phase);
-
-        mapGenerator.SetMapVisible(mapVisible);
-        SetBattlePresentationRootVisible(phase == RunPhase.Battle);
+        bool battle = phase == RunPhase.Battle;
 
         if (sceneRoad != null)
         {
-            bool wasActive = sceneRoad.gameObject.activeSelf;
-            sceneRoad.gameObject.SetActive(showSceneRoad);
-
-            if (showSceneRoad && !wasActive)
+            sceneRoad.gameObject.SetActive(battle);
+            if (battle)
             {
                 sceneRoad.RestartSplashSequence();
             }
         }
 
         if (popupRoot != null)
-        {
-            popupRoot.gameObject.SetActive(popupVisible);
-        }
+            popupRoot.gameObject.SetActive(phase == RunPhase.RoomPopup);
 
         if (battleBackButton != null)
-        {
-            battleBackButton.gameObject.SetActive(battleButtonVisible);
-        }
-
-        SetCombatUIVisible(phase == RunPhase.Battle);
+            battleBackButton.gameObject.SetActive(battle);
     }
+
 
     private GameObject FindBattlePresentationRoot()
     {
-        Canvas[] canvases = FindObjectsByType<Canvas>(FindObjectsInactive.Include, FindObjectsSortMode.None);
-        for (int canvasIndex = 0; canvasIndex < canvases.Length; canvasIndex++)
+        var ui = GameObject.Find("UI");
+        if (ui != null)
         {
-            Canvas canvas = canvases[canvasIndex];
-            if (canvas == null)
-            {
-                continue;
-            }
-
-            RectTransform[] rects = canvas.GetComponentsInChildren<RectTransform>(true);
-            for (int rectIndex = 0; rectIndex < rects.Length; rectIndex++)
-            {
-                RectTransform rect = rects[rectIndex];
-                if (rect == null || rect.name != "UI")
-                {
-                    continue;
-                }
-
-                if (rect.GetComponentsInChildren<PlayerUIAnchor>(true).Length > 0 ||
-                    rect.GetComponentsInChildren<EnemySpawnPoint>(true).Length > 0)
-                {
-                    return rect.gameObject;
-                }
-            }
+            Debug.Log($"UI FOUND = {ui.name}, active: {ui.activeSelf}");
+            return ui;
         }
-
+        Debug.LogWarning("UI object not found in scene");
         return null;
     }
 
+
     private void SetBattlePresentationRootVisible(bool visible)
     {
+        if (battlePresentationRoot == null)
+        {
+            battlePresentationRoot = FindBattlePresentationRoot();
+        }
+
         if (battlePresentationRoot != null)
         {
             battlePresentationRoot.SetActive(visible);
+            Debug.Log($"BattlePresentationRoot visibility set to: {visible}");
         }
     }
 
     private bool ShouldShowSceneRoad(RunPhase phase)
     {
+        // Проверяем, что мы в фазе битвы и есть выбранная комната
         if (phase != RunPhase.Battle || pendingNodeId == FightMapNodeView.InvalidNodeId)
         {
             return false;
         }
 
+        // Проверяем тип комнаты
         if (!nodeStates.TryGetValue(pendingNodeId, out NodeRuntimeState nodeState))
         {
+            // Если нет в словаре, пробуем получить из mapGenerator
+            if (mapGenerator != null)
+            {
+                FightMapNodeView[] nodes = mapGenerator.GetRuntimeNodes();
+                for (int i = 0; i < nodes.Length; i++)
+                {
+                    if (nodes[i] != null && nodes[i].NodeId == pendingNodeId)
+                    {
+                        return nodes[i].RoomType == MapRoomType.Mob ||
+                               nodes[i].RoomType == MapRoomType.EliteMob ||
+                               nodes[i].RoomType == MapRoomType.Boss;
+                    }
+                }
+            }
             return false;
         }
 
@@ -768,6 +774,7 @@ public class RunFlowManager : MonoBehaviour
 
     private void SetCombatUIVisible(bool visible)
     {
+        // Управляем видимостью UI игроков
         for (int i = 0; i < NetworkGamePlayer.AllPlayers.Count; i++)
         {
             NetworkGamePlayer player = NetworkGamePlayer.AllPlayers[i];
@@ -777,6 +784,7 @@ public class RunFlowManager : MonoBehaviour
             }
         }
 
+        // Управляем видимостью UI врагов
         for (int i = 0; i < NetworkGameEnemy.AllEnemies.Count; i++)
         {
             NetworkGameEnemy enemy = NetworkGameEnemy.AllEnemies[i];

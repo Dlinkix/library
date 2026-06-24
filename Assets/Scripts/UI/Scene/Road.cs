@@ -44,6 +44,10 @@ public class Road25D : MonoBehaviour
 
     void Start()
     {
+        if (splashImage != null)
+        {
+            splashStartPos = splashImage.anchoredPosition;
+        }
         CacheLayerState();
         RestartSplashSequence();
     }
@@ -78,10 +82,14 @@ public class Road25D : MonoBehaviour
     {
         if (splashImage != null)
         {
-            splashStartPos = splashImage.anchoredPosition;
-            splashImage.SetAsLastSibling();
-            splashImage.anchoredPosition = splashStartPos;
+            // Принудительно активируем перед установкой позиции
             splashImage.gameObject.SetActive(true);
+
+            // Возвращаем на стартовую позицию
+            splashImage.anchoredPosition = Vector2.zero;
+
+            // Убеждаемся что он поверх всего
+            splashImage.SetAsLastSibling();
         }
 
         splashState = SplashState.Showing;

@@ -398,6 +398,11 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         uiCreated = true;
 
+        if (RunFlowManager.Instance != null)
+        {
+            RunFlowManager.Instance.RefreshBattleRoot();
+        }
+
         SetupUIForLocalOrRemotePlayer();
         UpdateHpView();
         UpdateReadyText();
