@@ -968,17 +968,23 @@ public class FightManager : NetworkBehaviour
     [ClientRpc]
     public void RpcHideCardView()
     {
-        // Íàõîäèì ëîêàëüíîãî èãðîêà è ñêðûâàåì CardView
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
-            if (player != null && player.isLocalPlayer)
+            if (player != null)
             {
                 player.HideCardView();
-                break;
+            }
+        }
+
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy != null)
+            {
+                enemy.HideCardView();
             }
         }
     }
-   
+
 
     [ClientRpc]
     private void RpcResetAllUIPositions()
@@ -1074,7 +1080,7 @@ public class FightManager : NetworkBehaviour
     {
         bool showDiceUI = (state == FightState.Waiting || state == FightState.Rolling);
 
-        // Ñêðûâàåì/ïîêàçûâàåì UI êóáèêîâ ó âñåõ èãðîêîâ è âðàãîâ
+        // Скрываем/показываем UI кубиков у всех игроков и врагов
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
             if (player != null && player.UIObject != null)
@@ -1100,12 +1106,29 @@ public class FightManager : NetworkBehaviour
         switch (state)
         {
             case FightState.Waiting:
-                // Î÷èùàåì âñå âûáîðû êóáèêîâ ëîêàëüíîãî èãðîêà
+                // Скрываем все CardView у всех
+                foreach (var player in NetworkGamePlayer.AllPlayers)
+                {
+                    if (player != null)
+                    {
+                        player.HideCardView();
+                    }
+                }
+
+                foreach (var enemy in NetworkGameEnemy.AllEnemies)
+                {
+                    if (enemy != null)
+                    {
+                        enemy.HideCardView();
+                    }
+                }
+
+                // Очищаем все выборы кубиков локального игрока
                 foreach (var player in NetworkGamePlayer.AllPlayers)
                 {
                     if (player != null && player.isLocalPlayer && player.UIObject != null)
                     {
-                        // Î÷èùàåì âûáîðû êóáèêîâ
+                        // Очищаем выборы кубиков
                         DiceRoll[] dices = player.UIObject.GetComponentsInChildren<DiceRoll>();
                         foreach (var dice in dices)
                         {
@@ -1115,18 +1138,18 @@ public class FightManager : NetworkBehaviour
                             }
                         }
 
-                        // Îáíîâëÿåì äèàïàçîíû êóáèêîâ
+                        // Обновляем диапазоны кубиков
                         player.UpdateAllDiceRange();
                     }
                 }
 
-                // Î÷èùàåì ãëîáàëüíûé âûáîð
+                // Очищаем глобальный выбор
                 if (DiceSelectionManager.Instance != null)
                 {
                     DiceSelectionManager.Instance.ClearAllSelections();
                 }
 
-                // Îáíîâëÿåì âñå êàðòû â ðóêå
+                // Обновляем все карты в руке
                 LocalHandCardView[] cards = FindObjectsByType<LocalHandCardView>(FindObjectsSortMode.None);
                 foreach (var card in cards)
                 {

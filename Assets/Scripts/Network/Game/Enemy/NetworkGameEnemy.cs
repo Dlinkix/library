@@ -274,7 +274,9 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         Vector3 attackerPos = attackerRect.position;
         Vector3 enemyPos = uiRect.position;
-        Vector3 direction = (enemyPos - attackerPos).normalized;
+        float dirX = enemyPos.x > attackerPos.x ? 1f : -1f;
+        Vector3 direction = new Vector3(dirX, 0f, 0f);
+
         if (direction.magnitude < 0.1f) direction = Vector3.right;
 
         Vector3 approachTarget = attackerPos + direction * (Vector3.Distance(attackerPos, enemyPos) * 0.95f);

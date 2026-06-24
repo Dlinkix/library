@@ -936,8 +936,8 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         Vector3 attackerStartPos = attackerRect.position;
         Vector3 playerStartPos = uiRect.position;
-
-        Vector3 direction = (playerStartPos - attackerStartPos).normalized;
+        float dirX = playerStartPos.x > attackerStartPos.x ? 1f : -1f;
+        Vector3 direction = new Vector3(dirX, 0f, 0f);
         if (direction.magnitude < 0.1f) direction = Vector3.right;
 
         // Фаза 1: враг приближается
