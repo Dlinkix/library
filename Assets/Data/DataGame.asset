@@ -282,7 +282,14 @@ MonoBehaviour:
     cardName: Library Echo
     lightCost: 0
     cardSprite: {fileID: -7418382926054524929, guid: 8702263a578bdef4baf4a039adc21a38, type: 3}
-    attacks: []
+    attacks:
+    - attackName: 
+      RollMin: 3
+      RollMax: 4
+      staggerDamage: 0
+      attackDuration: 1
+      onHitEffects: []
+      type: 0
     passiveActions:
     - effectType: 2
       value: 1
@@ -302,7 +309,21 @@ MonoBehaviour:
     cardName: Pale Wall
     lightCost: 1
     cardSprite: {fileID: -2984177655028594761, guid: 525018fdc4aded54895dbbb29d12b21f, type: 3}
-    attacks: []
+    attacks:
+    - attackName: 
+      RollMin: 3
+      RollMax: 5
+      staggerDamage: 0
+      attackDuration: 1
+      onHitEffects: []
+      type: 0
+    - attackName: 
+      RollMin: 1
+      RollMax: 3
+      staggerDamage: 0
+      attackDuration: 1
+      onHitEffects: []
+      type: 0
     passiveActions:
     - effectType: 11
       value: 2
