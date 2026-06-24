@@ -31,7 +31,7 @@ MonoBehaviour:
     baseSpeedMaxn: 4
     dekaPlayer: 10
     baseStartLight: 3
-    cardEnemyIds:
+    cardEnemyIds: 
     color: {r: 0, g: 0, b: 0, a: 0}
     diceRollEnemy: 3
   - enemyName: Elite Guard
@@ -41,7 +41,7 @@ MonoBehaviour:
     baseSpeedMaxn: 5
     dekaPlayer: 10
     baseStartLight: 3
-    cardEnemyIds:
+    cardEnemyIds: 
     color: {r: 0.8226415, g: 0.55386466, b: 0.16851744, a: 1}
     diceRollEnemy: 3
   - enemyName: Big Brute
@@ -51,7 +51,7 @@ MonoBehaviour:
     baseSpeedMaxn: 3
     dekaPlayer: 10
     baseStartLight: 4
-    cardEnemyIds:
+    cardEnemyIds: 
     color: {r: 0.6014151, g: 0.18095998, b: 0.18095998, a: 1}
     diceRollEnemy: 4
   enemyCount: 5
@@ -80,7 +80,6 @@ MonoBehaviour:
       staggerDamage: 1
       attackDuration: 1
       onHitEffects: []
-      attackSound: {fileID: 0}
       type: 0
     - attackName: Ember Slash
       RollMin: 1
@@ -88,7 +87,6 @@ MonoBehaviour:
       staggerDamage: 1
       attackDuration: 1
       onHitEffects: []
-      attackSound: {fileID: 0}
       type: 0
     - attackName: Ember Slash
       RollMin: 1
@@ -96,7 +94,6 @@ MonoBehaviour:
       staggerDamage: 1
       attackDuration: 1
       onHitEffects: []
-      attackSound: {fileID: 0}
       type: 0
     passiveActions:
     - effectType: 14
@@ -129,7 +126,6 @@ MonoBehaviour:
         duration: 1
         canStack: 1
         maxStack: 3
-      attackSound: {fileID: 0}
       type: 0
     passiveActions: []
     endOfTurnEffects: []
@@ -145,7 +141,6 @@ MonoBehaviour:
       staggerDamage: 0
       attackDuration: 1
       onHitEffects: []
-      attackSound: {fileID: 0}
       type: 0
     passiveActions:
     - effectType: 4
@@ -173,7 +168,6 @@ MonoBehaviour:
       staggerDamage: 3
       attackDuration: 1
       onHitEffects: []
-      attackSound: {fileID: 0}
       type: 0
     passiveActions:
     - effectType: 10
@@ -194,7 +188,14 @@ MonoBehaviour:
     cardName: Lantern Mend
     lightCost: 2
     cardSprite: {fileID: -8155942866807174169, guid: dbf97f5da493c1846826c4c305b846e3, type: 3}
-    attacks: []
+    attacks:
+    - attackName: bam
+      RollMin: 1
+      RollMax: 3
+      staggerDamage: 0
+      attackDuration: 1
+      onHitEffects: []
+      type: 0
     passiveActions:
     - effectType: 6
       value: 4
@@ -226,7 +227,6 @@ MonoBehaviour:
         duration: 1
         canStack: 1
         maxStack: 3
-      attackSound: {fileID: 0}
       type: 0
     passiveActions: []
     endOfTurnEffects: []
@@ -247,7 +247,6 @@ MonoBehaviour:
         duration: 2
         canStack: 1
         maxStack: 3
-      attackSound: {fileID: 0}
       type: 0
     passiveActions: []
     endOfTurnEffects: []
@@ -263,7 +262,6 @@ MonoBehaviour:
       staggerDamage: 2
       attackDuration: 1
       onHitEffects: []
-      attackSound: {fileID: 0}
       type: 0
     passiveActions:
     - effectType: 5

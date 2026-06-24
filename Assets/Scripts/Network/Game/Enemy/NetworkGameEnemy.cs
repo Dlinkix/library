@@ -1,10 +1,11 @@
 ﻿using Mirror;
 using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static DataGame;
 
 public class NetworkGameEnemy : NetworkBehaviour
 {
@@ -29,6 +30,15 @@ public class NetworkGameEnemy : NetworkBehaviour
     [SyncVar(hook = nameof(OnDiceRollAmountChanged))]
     private int DiceRollAmount;
 
+    [SyncVar(hook = nameof(OnReadyChanged))]
+    public bool isReady;
+
+    [SyncVar]
+    public int currentLight = 0;
+
+    [SyncVar]
+    public int maxLight = 0;
+
     [Header("UI")]
     [SerializeField] private Vector2 uiOffset = Vector2.zero;
     [SerializeField] private DataGame dataGame;
@@ -39,7 +49,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     [SerializeField] private float pushDistance = 300f;
     private Vector3 originalPosition;
     private readonly List<int> enemyDeck = new List<int>();
-    private readonly List<int> enemyHand = new List<int>();
+    public readonly List<int> enemyHand = new List<int>();
     private DataGame.EnemyData activeEnemyData;
     private int enemyDataIndex = -1;
     private GameObject uiObject;
@@ -58,7 +68,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     private bool isInCombat = false;
     private Vector3 attackerOriginalPos;
     private Vector3 enemyOriginalPos;
-
+    public DataGame DataGame => dataGame;
     public static List<NetworkGameEnemy> AllEnemies { get; } = new List<NetworkGameEnemy>();
     public GameObject UIObject => uiObject;
 
@@ -66,7 +76,15 @@ public class NetworkGameEnemy : NetworkBehaviour
     {
         if (!AllEnemies.Contains(this)) AllEnemies.Add(this);
     }
-
+    [System.Serializable]
+    public class AISelectionData
+    {
+        public int diceSlot;
+        public int cardId;
+        public int cardIndex;
+        public uint targetNetId;
+        public int targetDiceIndex;
+    }
     public override void OnStartClient()
     {
         if (!AllEnemies.Contains(this))
@@ -418,7 +436,10 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
     }
-
+    private void OnReadyChanged(bool oldValue, bool newValue)
+    {
+        // Можно обновить UI если нужно
+    }
     private void ApplyUIPositionBySpawnIndex()
     {
         if (!uiCreated || uiObject == null || spawnIndex < 0) return;
@@ -517,6 +538,283 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
     }
 
+    [Command(requiresAuthority = false)]
+    public void CmdAISyncDiceSelection(int diceSlotIndex, int cardId, int cardIndex, uint targetNetId, int targetDiceIndex)
+    {
+        Debug.Log($"[CmdAISyncDiceSelection] START: diceSlot={diceSlotIndex}, cardId={cardId}, cardIndex={cardIndex}, target={targetNetId}");
+
+        if (FightManager.Instance == null || uiObject == null)
+        {
+            Debug.Log("[CmdAISyncDiceSelection] FightManager or uiObject is null!");
+            return;
+        }
+
+        DiceRoll[] serverDices = uiObject.GetComponentsInChildren<DiceRoll>();
+        DiceRoll serverDice = null;
+
+        foreach (var dice in serverDices)
+        {
+            if (dice.ownerSlotIndex == diceSlotIndex)
+            {
+                serverDice = dice;
+                break;
+            }
+        }
+
+        if (serverDice == null)
+        {
+            Debug.Log($"[CmdAISyncDiceSelection] Dice {diceSlotIndex} not found!");
+            return;
+        }
+
+        // ===== НАХОДИМ КАРТУ ПО ID, А НЕ ПО ИНДЕКСУ =====
+        int actualIndex = -1;
+        for (int i = 0; i < enemyHand.Count; i++)
+        {
+            if (enemyHand[i] == cardId)
+            {
+                actualIndex = i;
+                break;
+            }
+        }
+
+        if (actualIndex == -1)
+        {
+            Debug.Log($"[CmdAISyncDiceSelection] Card {cardId} not found in enemy hand!");
+            return;
+        }
+
+        // ===== ИСПОЛЬЗУЕМ АКТУАЛЬНЫЙ ИНДЕКС =====
+        serverDice.SelectTarget(targetNetId, targetDiceIndex);
+        serverDice.SelectCard(cardId, actualIndex);
+
+        Debug.Log($"[CmdAISyncDiceSelection] SUCCESS: Synced dice {diceSlotIndex}: card {cardId} at index {actualIndex}, target {targetNetId}");
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdSetEnemyReady()
+    {
+        if (FightManager.Instance == null || !FightManager.Instance.IsFightActive)
+            return;
+
+        isReady = true;
+
+        // Проверяем всех игроков и врагов
+        bool allPlayersReady = true;
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && !player.isReady)
+            {
+                allPlayersReady = false;
+                break;
+            }
+        }
+
+        bool allEnemiesReady = true;
+        foreach (var enemy in NetworkGameEnemy.AllEnemies)
+        {
+            if (enemy != null && !enemy.isReady)
+            {
+                allEnemiesReady = false;
+                break;
+            }
+        }
+
+        if (allPlayersReady && allEnemiesReady)
+        {
+            Debug.Log("[FightManager] All players and enemies are ready!");
+      
+            FightManager.OnAllPlayersReady?.Invoke(); 
+        }
+    }
+
+    [Server]
+    public void ProcessAITurn()
+    {
+        if (uiObject == null) return;
+        if (FightManager.Instance == null || FightManager.Instance.CurrentState != FightState.Rolling) return;
+
+        DiceRoll[] dices = uiObject.GetComponentsInChildren<DiceRoll>();
+        int currentLight = GetActiveEnemyData()?.baseStartLight ?? 3;
+
+        NetworkGamePlayer targetPlayer = GetRandomPlayerTarget();
+        if (targetPlayer == null)
+        {
+            Debug.Log("[AI] No target player found!");
+            return;
+        }
+
+        DiceRoll[] playerDices = targetPlayer.UIObject.GetComponentsInChildren<DiceRoll>();
+        if (playerDices.Length == 0)
+        {
+            Debug.Log("[AI] Target player has no dices!");
+            return;
+        }
+
+        // ===== СОЗДАЕМ КОПИЮ ДЛЯ ОТСЛЕЖИВАНИЯ ДОСТУПНЫХ КАРТ =====
+        List<int> availableHand = new List<int>(enemyHand);
+        List<AISelectionData> selections = new List<AISelectionData>();
+
+        foreach (var dice in dices)
+        {
+            if (dice == null) continue;
+            dice.ClearSelection();
+
+            int selectedCardIndex = -1;
+            int selectedCardId = -1;
+            int originalIndex = -1;  // ← ИНДЕКС В ОРИГИНАЛЬНОЙ РУКЕ
+
+            // Ищем карту в копии
+            for (int i = 0; i < availableHand.Count; i++)
+            {
+                int cardId = availableHand[i];
+                DataGame.CardData card = GetCardData(cardId);
+
+                if (card != null && currentLight >= card.lightCost)
+                {
+                    selectedCardId = cardId;
+                    selectedCardIndex = i;  // Индекс в копии
+
+                    // ===== НАХОДИМ ОРИГИНАЛЬНЫЙ ИНДЕКС В enemyHand =====
+                    originalIndex = enemyHand.IndexOf(cardId);
+                    break;
+                }
+            }
+
+            if (selectedCardId != -1)
+            {
+                DataGame.CardData selectedCard = GetCardData(selectedCardId);
+                if (selectedCard != null)
+                {
+                    currentLight -= selectedCard.lightCost;
+                    int randomDiceIndex = Random.Range(0, playerDices.Length);
+
+                    // ===== ИСПОЛЬЗУЕМ ОРИГИНАЛЬНЫЙ ИНДЕКС ДЛЯ СИНХРОНИЗАЦИИ =====
+                    selections.Add(new AISelectionData
+                    {
+                        diceSlot = dice.ownerSlotIndex,
+                        cardId = selectedCardId,
+                        cardIndex = originalIndex,  // ← ОРИГИНАЛЬНЫЙ ИНДЕКС!
+                        targetNetId = targetPlayer.netId,
+                        targetDiceIndex = randomDiceIndex
+                    });
+
+                    // Сохраняем на клиентском кубике
+                    dice.SelectTarget(targetPlayer.netId, randomDiceIndex);
+                    dice.SelectCard(selectedCardId, originalIndex);  // ← ИСПРАВЛЕНО!
+
+                    availableHand.RemoveAt(selectedCardIndex);  // Удаляем из копии
+
+                    Debug.Log($"[AI] Enemy selected card {selectedCardId} for dice {dice.ownerSlotIndex} (original index: {originalIndex})");
+                }
+            }
+            else
+            {
+                Debug.Log($"[AI] No affordable card for dice {dice.ownerSlotIndex}");
+            }
+        }
+
+        // Синхронизируем выборы
+        if (selections.Count > 0)
+        {
+            Debug.Log($"[AI] Syncing {selections.Count} selections...");
+            CmdSyncAllAIDiceSelections();
+        }
+
+        CmdSetEnemyReady();
+    }
+
+
+    [Server]
+    public void QueueCardEffects(CardData card, int cardIndex, NetworkGamePlayer targetPlayer)
+    {
+        Debug.Log($"[QueueCardEffects] Applying card {card.cardName} (ID: ) to player {targetPlayer.PlayerName}");
+
+        if (card.attacks != null)
+        {
+            foreach (var attack in card.attacks)
+            {
+                int roll = UnityEngine.Random.Range(attack.RollMin, attack.RollMax + 1);
+                Debug.Log($"[QueueCardEffects] Attack type: {attack.type}, roll: {roll}, damage: ");
+                ApplyAttackToPlayer(attack, targetPlayer, roll);
+            }
+        }
+    }
+
+
+    private void ApplyAttackToPlayer(AttackData attack, NetworkGamePlayer target, int roll)
+    {
+        if (target == null) return;
+
+        Debug.Log($"[ApplyAttackToPlayer] Applying attack to {target.PlayerName}. Type: {attack.type}, Roll: {roll}");
+
+        switch (attack.type)
+        {
+            case AttackData.Type.Damage:
+                int damage = roll; // Или используйте roll
+                target.hp -= damage;
+                Debug.Log($"[ApplyAttackToPlayer] Dealt {damage} damage to {target.PlayerName}. HP: {target.hp}");
+                if (target.hp < 0) target.hp = 0;
+                break;
+        }
+    }
+
+    [Command(requiresAuthority = false)]
+    public void CmdSyncAllAIDiceSelections()
+    {
+        if (FightManager.Instance == null || uiObject == null) return;
+
+        DiceRoll[] serverDices = uiObject.GetComponentsInChildren<DiceRoll>();
+        Debug.Log($"[CmdSyncAllAIDiceSelections] Found {serverDices.Length} dices");
+
+        int syncedCount = 0;
+        foreach (var dice in serverDices)
+        {
+            if (dice != null && dice.hasSelection)
+            {
+                // ===== ПЕРЕДАЕМ ТОЛЬКО ID КАРТЫ, ИНДЕКС БУДЕТ НАЙДЕН НА СЕРВЕРЕ =====
+                CmdAISyncDiceSelection(
+                    dice.ownerSlotIndex,
+                    dice.selectedCardId,
+                    -1, 
+                    dice.selectedTargetEnemyNetId,
+                    dice.selectedTargetDiceIndex
+                );
+                syncedCount++;
+            }
+        }
+
+        Debug.Log($"[CmdSyncAllAIDiceSelections] Synced {syncedCount} dices");
+    }
+    [Server]
+    private NetworkGamePlayer GetRandomPlayerTarget()
+    {
+        List<NetworkGamePlayer> alivePlayers = new List<NetworkGamePlayer>();
+        foreach (var player in NetworkGamePlayer.AllPlayers)
+        {
+            if (player != null && player.hp > 0)
+            {
+                alivePlayers.Add(player);
+            }
+        }
+
+        if (alivePlayers.Count == 0)
+        {
+            Debug.LogWarning("[GetRandomPlayerTarget] No alive players found!");
+            return null;
+        }
+
+        return alivePlayers[Random.Range(0, alivePlayers.Count)];
+    }
+
+    [Server]
+    private DataGame.CardData GetCardData(int cardId)
+    {
+        EnsureDataGameReference();
+        if (dataGame == null) return null;
+        dataGame.TryGetCardById(cardId, out DataGame.CardData card);
+        return card;
+    }
     [Server]
     private void ApplyEnemyStatsFromData()
     {
@@ -527,6 +825,8 @@ public class NetworkGameEnemy : NetworkBehaviour
         Maxhp = activeEnemyData.maxHealth; Maxstagger = activeEnemyData.maxStagger;
         hp = Maxhp; stagger = Maxstagger;
         DiceRollAmount = activeEnemyData.diceRollEnemy;
+        maxLight = activeEnemyData.baseStartLight;
+        currentLight = maxLight;
     }
 
     private DataGame.EnemyData GetActiveEnemyData()

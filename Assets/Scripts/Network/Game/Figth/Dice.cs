@@ -156,19 +156,36 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
     }
     public void SelectCard(int cardId, int cardIndex)
     {
-        // ===== ИСПРАВЛЕНО: проверяем через localHandCardIds для клиента =====
-        if (ownerPlayer != null)
+        Debug.Log($"[DiceRoll.SelectCard] START: ownerEnemy={ownerEnemy != null}, isEnemyDice={isEnemyDice}, cardId={cardId}, cardIndex={cardIndex}");
+
+        // ===== ПРОВЕРКА ДЛЯ ВРАГА =====
+        if (ownerEnemy != null)
         {
+            // Для врага проверяем через enemyHand
+            if (cardIndex < 0 || cardIndex >= ownerEnemy.enemyHand.Count)
+            {
+                Debug.Log($"[DiceRoll] Card at index {cardIndex} is out of range for enemy hand!");
+                return;
+            }
+            if (ownerEnemy.enemyHand[cardIndex] != cardId)
+            {
+                Debug.Log($"[DiceRoll] Card at index {cardIndex} is not {cardId} in enemy hand!");
+                return;
+            }
+
+            Debug.Log($"[DiceRoll.SelectCard] Enemy validation PASSED! cardId={cardId}, cardIndex={cardIndex}");
+        }
+        else if (ownerPlayer != null)
+        {
+            // Существующая проверка для игрока
             bool cardValid = false;
 
-            // Если это локальный игрок - проверяем localHandCardIds
             if (ownerPlayer.isLocalPlayer)
             {
                 cardValid = ownerPlayer.IsCardInLocalHand(cardId, cardIndex);
             }
             else
             {
-                // Для сервера - проверяем playerHand
                 cardValid = (cardIndex >= 0 && cardIndex < ownerPlayer.PlayerHand.Count &&
                             ownerPlayer.PlayerHand[cardIndex] == cardId);
             }
@@ -192,7 +209,7 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             }
         }
 
-        // Проверяем, не занята ли карта другим кубиком
+        // Проверяем, не занята ли карта другим кубиком (только для игрока)
         if (ownerPlayer != null)
         {
             DiceRoll[] dices = ownerPlayer.UIObject.GetComponentsInChildren<DiceRoll>(true);
@@ -236,50 +253,95 @@ public class DiceRoll : NetworkBehaviour, IPointerClickHandler
             }
         }
 
-        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} selected card: {cardId} at index {cardIndex}, target saved: {selectedTargetEnemyNetId != 0}");
+        Debug.Log($"[DiceRoll] Dice {ownerSlotIndex} selected card: {cardId} at index {cardIndex}, target saved: {selectedTargetEnemyNetId != 0}, isEnemyDice: {isEnemyDice}, hasSelection: {hasSelection}");
     }
 
 
-    public void SelectTarget(uint enemyNetId, int diceIndex)
+    public void SelectTarget(uint targetNetId, int diceIndex)
     {
-        selectedTargetEnemyNetId = enemyNetId;
+        selectedTargetEnemyNetId = targetNetId;
         selectedTargetDiceIndex = diceIndex;
         UpdateUI();
 
-        Debug.Log($"[DiceRoll.SelectTarget] Dice {ownerSlotIndex}: saved EnemyNetId={enemyNetId}, DiceIndex={diceIndex}");
-        Debug.Log($"[DiceRoll.SelectTarget] OwnerEnemy NetId check: ownerEnemy?.netId={ownerEnemy?.netId}");
+        Debug.Log($"[DiceRoll.SelectTarget] Dice {ownerSlotIndex}: saved EnemyNetId={targetNetId}, DiceIndex={diceIndex}");
 
-        // ===== ОБНОВЛЯЕМ UIAimLine для ЭТОГО кубика =====
-        if (aimLine != null)
+        DiceRoll targetDice = null; //
+
+        if (isEnemyDice)
         {
-            aimLine.SetPlayerDice(this);
-
-            bool foundTarget = false;
-            foreach (var enemy in NetworkGameEnemy.AllEnemies)
+            // Ищем игрока
+            NetworkGamePlayer targetPlayer = null;
+            foreach (var player in NetworkGamePlayer.AllPlayers)
             {
-                if (enemy != null && enemy.netId == enemyNetId)
+                if (player != null && player.netId == targetNetId)
                 {
-                    DiceRoll[] enemyDices = enemy.GetComponentsInChildren<DiceRoll>();
-                    Debug.Log($"[DiceRoll.SelectTarget] Found enemy: {enemy.EnemyName}, dices: {enemyDices.Length}");
-
-                    if (enemyDices != null && diceIndex < enemyDices.Length)
-                    {
-                        aimLine.SetTarget(enemyDices[diceIndex]);
-                        aimLine.SetCardSelected(true);
-                        foundTarget = true;
-                        Debug.Log($"[DiceRoll.SelectTarget] AimLine target set to enemy dice {diceIndex}");
-                        break;
-                    }
+                    targetPlayer = player;
+                    break;
                 }
             }
 
-            if (!foundTarget)
+            if (targetPlayer == null || targetPlayer.UIObject == null)
             {
-                Debug.LogWarning($"[DiceRoll.SelectTarget] Could not find enemy dice for NetId={enemyNetId}, Index={diceIndex}");
+                Debug.LogWarning($"[DiceRoll.SelectTarget] Player {targetNetId} not found");
+                return;
+            }
+
+            // Ищем кубик игрока
+            DiceRoll[] playerDices = targetPlayer.UIObject.GetComponentsInChildren<DiceRoll>();
+            foreach (var d in playerDices)
+            {
+                if (d != null && d.ownerSlotIndex == diceIndex)
+                {
+                    targetDice = d;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            // Ищем врага
+            NetworkGameEnemy targetEnemy = null;
+            foreach (var enemy in NetworkGameEnemy.AllEnemies)
+            {
+                if (enemy != null && enemy.netId == targetNetId)
+                {
+                    targetEnemy = enemy;
+                    break;
+                }
+            }
+
+            if (targetEnemy == null || targetEnemy.UIObject == null)
+            {
+                Debug.LogWarning($"[DiceRoll.SelectTarget] Enemy {targetNetId} not found");
+                return;
+            }
+
+            // Ищем кубик врага
+            DiceRoll[] enemyDices = targetEnemy.UIObject.GetComponentsInChildren<DiceRoll>();
+            foreach (var d in enemyDices)
+            {
+                if (d != null && d.ownerSlotIndex == diceIndex)
+                {
+                    targetDice = d;
+                    break;
+                }
             }
         }
 
-        Debug.Log($"[DiceRoll.SelectTarget] hasSelection={hasSelection}");
+        if (targetDice == null)
+        {
+            Debug.LogWarning($"[DiceRoll.SelectTarget] Could not find target dice for NetId={targetNetId}, Index={diceIndex}");
+            return;
+        }
+
+        // Сохраняем цель для AimLine
+        if (aimLine != null)
+        {
+            aimLine.SetTarget(targetDice);
+            aimLine.SetCardSelected(true);
+        }
+
+        Debug.Log($"[DiceRoll.SelectTarget] Dice {ownerSlotIndex} selected target dice {diceIndex} (NetId: {targetNetId})");
     }
 
     public void ClearSelection()
