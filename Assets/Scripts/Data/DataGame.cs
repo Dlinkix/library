@@ -38,6 +38,20 @@ public class DataGame : ScriptableObject
         public int diceRollEnemy;
     }
 
+    [System.Serializable]
+    public class EncounterEnemyEntry
+    {
+        [Min(0)] public int enemyDataIndex;
+        [Min(1)] public int count = 1;
+    }
+
+    [System.Serializable]
+    public class RoomEncounterConfig
+    {
+        public MapRoomType roomType = MapRoomType.Mob;
+        public List<EncounterEnemyEntry> enemies = new List<EncounterEnemyEntry>();
+    }
+
 
     [System.Serializable]
     public class CardData
@@ -251,6 +265,9 @@ public class DataGame : ScriptableObject
     public List<EnemyData> enemyData = new List<EnemyData>();
     public int enemyCount = 1;
 
+    [Header("Room Encounters")]
+    public List<RoomEncounterConfig> roomEncounters = new List<RoomEncounterConfig>();
+
     [Header("All Cards")]
     public List<CardData> allCards = new List<CardData>();
 
@@ -342,6 +359,49 @@ public class DataGame : ScriptableObject
         return Mathf.Max(0, enemyCount);
     }
 
+    public List<EncounterEnemyEntry> GetEncounterPlan(MapRoomType roomType)
+    {
+        if (roomEncounters != null)
+        {
+            for (int i = 0; i < roomEncounters.Count; i++)
+            {
+                RoomEncounterConfig config = roomEncounters[i];
+                if (config == null || config.roomType != roomType)
+                {
+                    continue;
+                }
+
+                if (config.enemies == null || config.enemies.Count == 0)
+                {
+                    break;
+                }
+
+                List<EncounterEnemyEntry> result = new List<EncounterEnemyEntry>(config.enemies.Count);
+                for (int j = 0; j < config.enemies.Count; j++)
+                {
+                    EncounterEnemyEntry entry = config.enemies[j];
+                    if (entry == null)
+                    {
+                        continue;
+                    }
+
+                    result.Add(new EncounterEnemyEntry
+                    {
+                        enemyDataIndex = Mathf.Max(0, entry.enemyDataIndex),
+                        count = Mathf.Max(1, entry.count),
+                    });
+                }
+
+                if (result.Count > 0)
+                {
+                    return result;
+                }
+            }
+        }
+
+        return BuildFallbackEncounterPlan(roomType);
+    }
+
     public int GetRandomAllCardId()
     {
         List<int> validCardIds = new List<int>();
@@ -382,6 +442,7 @@ public class DataGame : ScriptableObject
     {
         EnsureCardIds();
         BuildLookupIfNeeded(true);
+        EnsureRoomEncounterDefaults();
 
         if ((startPlayerPoolCardIds == null || startPlayerPoolCardIds.Count == 0) && allCards.Count > 0)
         {
@@ -450,5 +511,83 @@ public class DataGame : ScriptableObject
                 cardLookup.Add(card.cardId, card);
             }
         }
+    }
+
+    private void EnsureRoomEncounterDefaults()
+    {
+        if (roomEncounters == null)
+        {
+            roomEncounters = new List<RoomEncounterConfig>();
+        }
+
+        EnsureEncounterConfig(MapRoomType.Mob, 0, Mathf.Max(1, Mathf.Min(3, enemyCount)));
+        EnsureEncounterConfig(MapRoomType.EliteMob, Mathf.Min(1, Mathf.Max(0, enemyData.Count - 1)), 2);
+        EnsureEncounterConfig(MapRoomType.Boss, Mathf.Min(2, Mathf.Max(0, enemyData.Count - 1)), 1);
+    }
+
+    private void EnsureEncounterConfig(MapRoomType roomType, int defaultEnemyIndex, int defaultCount)
+    {
+        for (int i = 0; i < roomEncounters.Count; i++)
+        {
+            RoomEncounterConfig existing = roomEncounters[i];
+            if (existing != null && existing.roomType == roomType)
+            {
+                if (existing.enemies == null)
+                {
+                    existing.enemies = new List<EncounterEnemyEntry>();
+                }
+
+                if (existing.enemies.Count == 0)
+                {
+                    existing.enemies.Add(new EncounterEnemyEntry
+                    {
+                        enemyDataIndex = Mathf.Max(0, defaultEnemyIndex),
+                        count = Mathf.Max(1, defaultCount),
+                    });
+                }
+
+                return;
+            }
+        }
+
+        roomEncounters.Add(new RoomEncounterConfig
+        {
+            roomType = roomType,
+            enemies = new List<EncounterEnemyEntry>
+            {
+                new EncounterEnemyEntry
+                {
+                    enemyDataIndex = Mathf.Max(0, defaultEnemyIndex),
+                    count = Mathf.Max(1, defaultCount),
+                }
+            }
+        });
+    }
+
+    private List<EncounterEnemyEntry> BuildFallbackEncounterPlan(MapRoomType roomType)
+    {
+        int fallbackIndex = 0;
+        int fallbackCount = Mathf.Max(1, enemyCount);
+
+        switch (roomType)
+        {
+            case MapRoomType.EliteMob:
+                fallbackIndex = Mathf.Min(1, Mathf.Max(0, enemyData.Count - 1));
+                fallbackCount = 2;
+                break;
+            case MapRoomType.Boss:
+                fallbackIndex = Mathf.Min(2, Mathf.Max(0, enemyData.Count - 1));
+                fallbackCount = 1;
+                break;
+        }
+
+        return new List<EncounterEnemyEntry>
+        {
+            new EncounterEnemyEntry
+            {
+                enemyDataIndex = fallbackIndex,
+                count = fallbackCount,
+            }
+        };
     }
 }

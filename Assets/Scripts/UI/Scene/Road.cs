@@ -1,4 +1,4 @@
-using UnityEngine;
+п»їusing UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
@@ -44,9 +44,14 @@ public class Road25D : MonoBehaviour
 
     void Start()
     {
+        CacheLayerState();
+        RestartSplashSequence();
+    }
+
+    private void CacheLayerState()
+    {
         if (roadLayers == null || roadLayers.Length == 0) return;
 
-        // Инициализация слоев
         layerStartPositions = new Vector2[roadLayers.Length];
         layerStartScales = new Vector3[roadLayers.Length];
 
@@ -67,26 +72,53 @@ public class Road25D : MonoBehaviour
                 layerStartScales[i] = roadLayers[i].localScale;
             }
         }
+    }
 
-        // Настройка заставки
+    public void RestartSplashSequence()
+    {
         if (splashImage != null)
         {
             splashStartPos = splashImage.anchoredPosition;
             splashImage.SetAsLastSibling();
+            splashImage.anchoredPosition = splashStartPos;
+            splashImage.gameObject.SetActive(true);
         }
 
         splashState = SplashState.Showing;
         splashTimer = 0f;
         isGameStarted = false;
         gameStartTime = 0f;
-
         currentOffset = 0f;
         targetOffset = 0f;
+        isDragging = false;
+
+        if (roadLayers == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < roadLayers.Length; i++)
+        {
+            if (roadLayers[i] == null)
+            {
+                continue;
+            }
+
+            if (layerStartPositions != null && i < layerStartPositions.Length)
+            {
+                roadLayers[i].anchoredPosition = layerStartPositions[i];
+            }
+
+            if (layerStartScales != null && i < layerStartScales.Length)
+            {
+                roadLayers[i].localScale = layerStartScales[i];
+            }
+        }
     }
 
     void Update()
     {
-        // Обработка заставки
+        // ГЋГЎГ°Г ГЎГ®ГІГЄГ  Г§Г Г±ГІГ ГўГЄГЁ
         if (splashState != SplashState.GameReady && splashState != SplashState.Hidden)
         {
             UpdateSplash();
@@ -98,18 +130,18 @@ public class Road25D : MonoBehaviour
             return;
         }
 
-        // Запоминаем время старта игры
+        // Г‡Г ГЇГ®Г¬ГЁГ­Г ГҐГ¬ ГўГ°ГҐГ¬Гї Г±ГІГ Г°ГІГ  ГЁГЈГ°Г»
         if (!isGameStarted)
         {
             isGameStarted = true;
             gameStartTime = Time.time;
         }
 
-        // Плавный старт
+        // ГЏГ«Г ГўГ­Г»Г© Г±ГІГ Г°ГІ
         float timeSinceStart = Time.time - gameStartTime;
         float startFadeIn = Mathf.Clamp01(timeSinceStart / 1.5f);
 
-        // --- УПРАВЛЕНИЕ ---
+        // --- Г“ГЏГђГЂГ‚Г‹Г…ГЌГ€Г… ---
         if (useMouseInput)
         {
             if (Input.GetMouseButtonDown(0))
@@ -139,7 +171,7 @@ public class Road25D : MonoBehaviour
 
         currentOffset = Mathf.Lerp(currentOffset, targetOffset, Time.deltaTime * 3f);
 
-        // --- ОБНОВЛЯЕМ СЛОИ ---
+        // --- ГЋГЃГЌГЋГ‚Г‹ГџГ…ГЊ Г‘Г‹ГЋГ€ ---
         for (int i = 0; i < roadLayers.Length; i++)
         {
             if (roadLayers[i] == null) continue;

@@ -1,7 +1,8 @@
-using Mirror;
+ï»¿using Mirror;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -144,7 +145,7 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         return null;
     }
-    // Â NetworkGameEnemy:
+    // Ã‚ NetworkGameEnemy:
 
     public void ResetUIPosition()
     {
@@ -155,6 +156,14 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         isInCombat = false;
         isUIMoving = false;
+    }
+
+    public void SetCombatPresentationActive(bool isVisible)
+    {
+        if (uiObject != null)
+        {
+            uiObject.SetActive(isVisible);
+        }
     }
 
     private IEnumerator AnimatePush(NetworkGamePlayer attacker)
@@ -170,7 +179,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         Vector3 direction = (enemyPos - attackerPos).normalized;
         if (direction.magnitude < 0.1f) direction = Vector3.right;
 
-        // ÏÎÄÕÎÄ
+        // ÃÃŽÃ„Ã•ÃŽÃ„
         Vector3 approachTarget = attackerPos + direction * (Vector3.Distance(attackerPos, enemyPos) * 0.95f);
         float elapsed = 0f;
         while (elapsed < 0.3f)
@@ -182,7 +191,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
         attackerRect.position = approachTarget;
 
-        // ÓÄÀÐ
+        // Ã“Ã„Ã€Ã
         Vector3 enemyPushPos = enemyPos + direction * pushDistance;
         elapsed = 0f;
         while (elapsed < 0.2f)
@@ -199,7 +208,7 @@ public class NetworkGameEnemy : NetworkBehaviour
 
     private IEnumerator AnimateReturn()
     {
-        // Íàõîäèì àòàêóþùåãî ïî ñîõðàí¸ííîé ïîçèöèè
+        // ÃÃ ÃµÃ®Ã¤Ã¨Ã¬ Ã Ã²Ã ÃªÃ³Ã¾Ã¹Ã¥Ã£Ã® Ã¯Ã® Ã±Ã®ÃµÃ°Ã Ã­Â¸Ã­Ã­Ã®Ã© Ã¯Ã®Ã§Ã¨Ã¶Ã¨Ã¨
         NetworkGamePlayer attacker = null;
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
@@ -277,7 +286,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         GameObject uiPrefab = Resources.Load<GameObject>("UI/PlayerUI");
         if (uiPrefab == null || spawnIndex < 0) return;
 
-        EnemySpawnPoint[] spawnPoints = FindObjectsByType<EnemySpawnPoint>(FindObjectsSortMode.None);
+        EnemySpawnPoint[] spawnPoints = GetSceneSpawnPoints();
         EnemySpawnPoint targetPoint = null;
         for (int i = 0; i < spawnPoints.Length; i++)
             if (spawnPoints[i].SpawnIndex == spawnIndex) { targetPoint = spawnPoints[i]; break; }
@@ -317,6 +326,11 @@ public class NetworkGameEnemy : NetworkBehaviour
         ApplyUIPositionBySpawnIndex();
         originalPosition = uiRect.position;
 
+        if (RunFlowManager.Instance != null)
+        {
+            RunFlowManager.Instance.RefreshClientVisuals();
+        }
+
     }
 
     private void CreateDiceUI()
@@ -347,7 +361,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (uiObject.transform.parent != null && uiObject.transform.parent.GetComponent<EnemySpawnPoint>() != null)
         { uiObject.transform.localPosition = new Vector3(uiOffset.x, uiOffset.y, 0f); return; }
 
-        EnemySpawnPoint[] spawnPoints = FindObjectsByType<EnemySpawnPoint>(FindObjectsSortMode.None);
+        EnemySpawnPoint[] spawnPoints = GetSceneSpawnPoints();
         EnemySpawnPoint targetPoint = null;
         for (int i = 0; i < spawnPoints.Length; i++)
             if (spawnPoints[i].SpawnIndex == spawnIndex) { targetPoint = spawnPoints[i]; break; }
@@ -362,6 +376,13 @@ public class NetworkGameEnemy : NetworkBehaviour
         hpText.text = hp.ToString(); staggerText.text = stagger.ToString();
         if (hpSlider != null && Maxhp > 0) hpSlider.value = (hp / (float)Maxhp) * hpSlider.maxValue;
         if (staggerSlider != null && Maxstagger > 0) staggerSlider.value = (stagger / (float)Maxstagger) * staggerSlider.maxValue;
+    }
+
+    private static EnemySpawnPoint[] GetSceneSpawnPoints()
+    {
+        return Resources.FindObjectsOfTypeAll<EnemySpawnPoint>()
+            .Where(point => point != null && point.gameObject.scene.IsValid())
+            .ToArray();
     }
 
     private void UpdateStatusText()

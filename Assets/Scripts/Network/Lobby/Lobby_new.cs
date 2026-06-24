@@ -93,6 +93,12 @@ public class NetworkManagerLobby : NetworkManager
             RoomPlayers.Remove(player);
             NotifyPlayersOfReadyState();
         }
+
+        if (RunFlowManager.Instance != null)
+        {
+            RunFlowManager.Instance.HandleConnectionDisconnected(conn.connectionId);
+        }
+
         base.OnServerDisconnect(conn);
     }
 
@@ -245,13 +251,46 @@ public class NetworkManagerLobby : NetworkManager
             }
         }
 
-        SpawnEnemiesForFightScene();
-       
+        if (RunFlowManager.Instance != null)
+        {
+            RunFlowManager.Instance.BeginRun();
+        }
+
         playerConnections.Clear();
     }
 
     [Server]
-    private void SpawnEnemiesForFightScene()
+    public void StartBattleEncounter(MapRoomType roomType)
+    {
+        ResetBattleEncounter();
+
+        for (int i = 0; i < NetworkGamePlayer.AllPlayers.Count; i++)
+        {
+            NetworkGamePlayer player = NetworkGamePlayer.AllPlayers[i];
+            if (player != null)
+            {
+                player.PrepareForNewEncounter();
+            }
+        }
+
+        SpawnEnemiesForFightScene(roomType);
+    }
+
+    [Server]
+    public void ResetBattleEncounter()
+    {
+        NetworkGameEnemy[] enemies = FindObjectsByType<NetworkGameEnemy>(FindObjectsSortMode.None);
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            if (enemies[i] != null && enemies[i].gameObject != null)
+            {
+                NetworkServer.Destroy(enemies[i].gameObject);
+            }
+        }
+    }
+
+    [Server]
+    private void SpawnEnemiesForFightScene(MapRoomType roomType)
     {
         GameObject enemyPrefab = Resources.Load<GameObject>("SpawnablePrefabs/Enemy");
         if (enemyPrefab == null)
@@ -273,7 +312,8 @@ public class NetworkManagerLobby : NetworkManager
             return;
         }
 
-        EnemySpawnPoint[] spawnPoints = FindObjectsByType<EnemySpawnPoint>(FindObjectsSortMode.None)
+        EnemySpawnPoint[] spawnPoints = Resources.FindObjectsOfTypeAll<EnemySpawnPoint>()
+            .Where(point => point != null && point.gameObject.scene.IsValid())
             .OrderBy(point => point.SpawnIndex)
             .ToArray();
 
@@ -283,31 +323,59 @@ public class NetworkManagerLobby : NetworkManager
             return;
         }
 
-        int configuredEnemyCount = dataGame.GetEnemyCount();
-        int enemyCount = Mathf.Min(configuredEnemyCount, spawnPoints.Length);
-        if (configuredEnemyCount > spawnPoints.Length)
+        List<DataGame.EncounterEnemyEntry> encounterPlan = dataGame.GetEncounterPlan(roomType);
+        if (encounterPlan == null || encounterPlan.Count == 0)
         {
-            Debug.LogWarning($"Not enough enemy spawn points for all enemies. Spawning {enemyCount} of {configuredEnemyCount}.");
+            Debug.LogWarning($"Encounter plan for room type {roomType} is empty.");
+            return;
         }
 
-        for (int i = 0; i < enemyCount; i++)
+        int requestedEnemyCount = 0;
+        for (int i = 0; i < encounterPlan.Count; i++)
         {
-            EnemySpawnPoint spawnPoint = spawnPoints[i];
-            int enemyDataIndex = i % dataGame.enemyData.Count;
-            Quaternion enemyFacingRightRotation = Quaternion.Euler(0f, 180f, 0f);
-            GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.transform.position, enemyFacingRightRotation);
-            enemyObject.transform.localScale = Vector3.one;
-
-            NetworkGameEnemy networkEnemy = enemyObject.GetComponent<NetworkGameEnemy>();
-            if (networkEnemy == null)
+            if (encounterPlan[i] != null)
             {
-                Destroy(enemyObject);
-                Debug.LogWarning("Enemy prefab does not contain NetworkGameEnemy.");
+                requestedEnemyCount += Mathf.Max(1, encounterPlan[i].count);
+            }
+        }
+
+        int enemyCount = Mathf.Min(requestedEnemyCount, spawnPoints.Length);
+        if (requestedEnemyCount > spawnPoints.Length)
+        {
+            Debug.LogWarning($"Not enough enemy spawn points for room type {roomType}. Spawning {enemyCount} of {requestedEnemyCount}.");
+        }
+
+        int spawnedEnemyCount = 0;
+        for (int planIndex = 0; planIndex < encounterPlan.Count && spawnedEnemyCount < enemyCount; planIndex++)
+        {
+            DataGame.EncounterEnemyEntry encounterEntry = encounterPlan[planIndex];
+            if (encounterEntry == null)
+            {
                 continue;
             }
 
-            networkEnemy.InitializeEnemy(enemyDataIndex, spawnPoint.SpawnIndex);
-            NetworkServer.Spawn(enemyObject);
+            int enemyDataIndex = Mathf.Clamp(encounterEntry.enemyDataIndex, 0, dataGame.enemyData.Count - 1);
+            int countForEntry = Mathf.Max(1, encounterEntry.count);
+
+            for (int entryCount = 0; entryCount < countForEntry && spawnedEnemyCount < enemyCount; entryCount++)
+            {
+                EnemySpawnPoint spawnPoint = spawnPoints[spawnedEnemyCount];
+                Quaternion enemyFacingRightRotation = Quaternion.Euler(0f, 180f, 0f);
+                GameObject enemyObject = Instantiate(enemyPrefab, spawnPoint.transform.position, enemyFacingRightRotation);
+                enemyObject.transform.localScale = Vector3.one;
+
+                NetworkGameEnemy networkEnemy = enemyObject.GetComponent<NetworkGameEnemy>();
+                if (networkEnemy == null)
+                {
+                    Destroy(enemyObject);
+                    Debug.LogWarning("Enemy prefab does not contain NetworkGameEnemy.");
+                    continue;
+                }
+
+                networkEnemy.InitializeEnemy(enemyDataIndex, spawnPoint.SpawnIndex);
+                NetworkServer.Spawn(enemyObject);
+                spawnedEnemyCount++;
+            }
         }
     }
 

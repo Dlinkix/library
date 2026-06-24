@@ -31,10 +31,43 @@ MonoBehaviour:
     baseSpeedMaxn: 4
     dekaPlayer: 10
     baseStartLight: 3
-    cardEnemyIds: 
+    cardEnemyIds:
     color: {r: 0, g: 0, b: 0, a: 0}
     diceRollEnemy: 3
+  - enemyName: Elite Guard
+    maxHealth: 24
+    maxStagger: 8
+    baseSpeedMin: 2
+    baseSpeedMaxn: 5
+    dekaPlayer: 10
+    baseStartLight: 3
+    cardEnemyIds:
+    color: {r: 0.8226415, g: 0.55386466, b: 0.16851744, a: 1}
+    diceRollEnemy: 3
+  - enemyName: Big Brute
+    maxHealth: 80
+    maxStagger: 20
+    baseSpeedMin: 1
+    baseSpeedMaxn: 3
+    dekaPlayer: 10
+    baseStartLight: 4
+    cardEnemyIds:
+    color: {r: 0.6014151, g: 0.18095998, b: 0.18095998, a: 1}
+    diceRollEnemy: 4
   enemyCount: 5
+  roomEncounters:
+  - roomType: 1
+    enemies:
+    - enemyDataIndex: 0
+      count: 3
+  - roomType: 5
+    enemies:
+    - enemyDataIndex: 1
+      count: 2
+  - roomType: 7
+    enemies:
+    - enemyDataIndex: 2
+      count: 1
   allCards:
   - cardId: 1
     cardName: Ember Cut

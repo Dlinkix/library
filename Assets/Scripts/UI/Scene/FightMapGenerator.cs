@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,6 +14,7 @@ public class FightMapGenerator : MonoBehaviour
     [Header("Data")]
     [SerializeField] private FightMapConfig config;
     [SerializeField] private RectTransform mapRoot;
+    [SerializeField] private GameObject[] linkedVisualRoots;
 
     [Header("Layout")]
     [SerializeField] private Vector2 startPosition = new Vector2(-620f, 0f);
@@ -24,6 +27,8 @@ public class FightMapGenerator : MonoBehaviour
 
     [Header("State Colors")]
     [SerializeField] private Color selectedColor = new Color(1f, 0.92f, 0.4f, 1f);
+    [SerializeField] private Color completedColor = new Color(0.44f, 0.86f, 0.58f, 1f);
+    [SerializeField] private Color visitedColor = new Color(0.67f, 0.82f, 1f, 1f);
     [SerializeField] private Color disabledTint = new Color(0.28f, 0.28f, 0.28f, 1f);
     [SerializeField] private Color connectionColor = new Color(1f, 1f, 1f, 0.28f);
 
@@ -31,6 +36,22 @@ public class FightMapGenerator : MonoBehaviour
     private FightMapNodeView currentNode;
     private int nextSelectableColumn = 1;
     private bool pathStarted;
+    private Action<int> nodeSelectionHandler;
+
+    public static int BuildNodeId(int column, int lane, bool isStart, bool isBoss)
+    {
+        if (isStart)
+        {
+            return 0;
+        }
+
+        if (isBoss)
+        {
+            return 9999;
+        }
+
+        return column * 10 + (lane + 1);
+    }
 
     public void BuildMap()
     {
@@ -88,13 +109,13 @@ public class FightMapGenerator : MonoBehaviour
             true);
         CreateConnections(previousColumnNodes, new List<FightMapNodeView> { bossNode }, false);
 
-        BindAllNodes();
+        InitializeRuntimeNodes();
         ResetProgress();
     }
 
     public void ResetProgress()
     {
-        BindAllNodes();
+        InitializeRuntimeNodes();
         currentNode = null;
         pathStarted = false;
         nextSelectableColumn = 1;
@@ -103,6 +124,12 @@ public class FightMapGenerator : MonoBehaviour
 
     public void HandleNodeSelected(FightMapNodeView node)
     {
+        if (node != null && nodeSelectionHandler != null)
+        {
+            nodeSelectionHandler.Invoke(node.NodeId);
+            return;
+        }
+
         if (node == null || !IsSelectable(node))
         {
             return;
@@ -125,7 +152,7 @@ public class FightMapGenerator : MonoBehaviour
 
     private void Awake()
     {
-        BindAllNodes();
+        InitializeRuntimeNodes();
         ResetProgress();
     }
 
@@ -271,9 +298,14 @@ public class FightMapGenerator : MonoBehaviour
         image.raycastTarget = false;
     }
 
-    private void BindAllNodes()
+    public void InitializeRuntimeNodes()
     {
         nodes.Clear();
+
+        if (mapRoot == null)
+        {
+            EnsureMapHierarchy();
+        }
 
         if (mapRoot == null)
         {
@@ -284,8 +316,101 @@ public class FightMapGenerator : MonoBehaviour
         for (int i = 0; i < foundNodes.Length; i++)
         {
             FightMapNodeView node = foundNodes[i];
-            node.Bind(this);
+            int runtimeNodeId = BuildNodeId(node.ColumnIndex, node.LaneIndex, node.IsStart, node.IsBoss);
+            node.Bind(this, runtimeNodeId);
             nodes.Add(node);
+        }
+    }
+
+    public FightMapNodeView[] GetRuntimeNodes()
+    {
+        InitializeRuntimeNodes();
+        return nodes.ToArray();
+    }
+
+    public void SetNodeSelectionHandler(Action<int> handler)
+    {
+        nodeSelectionHandler = handler;
+    }
+
+    public void SetMapVisible(bool visible)
+    {
+        if (mapRoot == null)
+        {
+            InitializeRuntimeNodes();
+        }
+
+        if (mapRoot != null)
+        {
+            mapRoot.gameObject.SetActive(visible);
+        }
+
+        if (linkedVisualRoots == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < linkedVisualRoots.Length; i++)
+        {
+            if (linkedVisualRoots[i] != null)
+            {
+                linkedVisualRoots[i].SetActive(visible);
+            }
+        }
+    }
+
+    public void ApplyNodeMetadata(Array descriptors)
+    {
+        if (descriptors == null)
+        {
+            return;
+        }
+
+        InitializeRuntimeNodes();
+
+        foreach (object descriptor in descriptors)
+        {
+            if (descriptor == null)
+            {
+                continue;
+            }
+
+            Type descriptorType = descriptor.GetType();
+            int nodeId = (int)descriptorType.GetField("nodeId").GetValue(descriptor);
+            int laneIndex = (int)descriptorType.GetField("laneIndex").GetValue(descriptor);
+            int columnIndex = (int)descriptorType.GetField("columnIndex").GetValue(descriptor);
+            MapRoomType roomType = (MapRoomType)(int)descriptorType.GetField("roomType").GetValue(descriptor);
+            bool isStart = (bool)descriptorType.GetField("isStart").GetValue(descriptor);
+            bool isBoss = (bool)descriptorType.GetField("isBoss").GetValue(descriptor);
+
+            FightMapNodeView node = nodes.FirstOrDefault(candidate => candidate.NodeId == nodeId);
+            if (node != null)
+            {
+                node.ApplyMetadata(nodeId, laneIndex, columnIndex, roomType, isStart, isBoss);
+            }
+        }
+    }
+
+    public void ApplyRunState(
+        int currentNodeId,
+        int pendingNodeId,
+        IReadOnlyCollection<int> selectableNodeIds,
+        IReadOnlyCollection<int> completedNodeIds,
+        IReadOnlyCollection<int> visitedNodeIds,
+        IReadOnlyDictionary<int, int> voteCounts,
+        bool interactionEnabled)
+    {
+        InitializeRuntimeNodes();
+
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            FightMapNodeView node = nodes[i];
+            bool selectable = interactionEnabled && selectableNodeIds.Contains(node.NodeId);
+            bool selected = node.NodeId == pendingNodeId;
+            bool completed = completedNodeIds.Contains(node.NodeId);
+            bool visited = visitedNodeIds.Contains(node.NodeId) || node.NodeId == currentNodeId;
+            int votes = voteCounts.TryGetValue(node.NodeId, out int count) ? count : 0;
+            node.SetState(selectable, selected, completed, visited, votes, selectedColor, completedColor, visitedColor, disabledTint);
         }
     }
 
@@ -296,7 +421,7 @@ public class FightMapGenerator : MonoBehaviour
             FightMapNodeView node = nodes[i];
             bool selected = node == currentNode;
             bool selectable = IsSelectable(node);
-            node.SetState(selectable, selected, selectedColor, disabledTint);
+            node.SetState(selectable, selected, false, selected, 0, selectedColor, completedColor, visitedColor, disabledTint);
         }
     }
 
@@ -364,12 +489,12 @@ public class FightMapGenerator : MonoBehaviour
 #if UNITY_EDITOR
             if (!Application.isPlaying)
             {
-                Object.DestroyImmediate(child);
+                UnityEngine.Object.DestroyImmediate(child);
             }
             else
 #endif
             {
-                Object.Destroy(child);
+                UnityEngine.Object.Destroy(child);
             }
         }
     }
