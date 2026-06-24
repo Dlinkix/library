@@ -289,6 +289,27 @@ public class NetworkGameEnemy : NetworkBehaviour
         attackerRect.position = approachTarget;
 
         Vector3 enemyPushPos = enemyPos + direction * pushDistance;
+
+        // Ограничиваем позицию границами Pass
+        GameObject[] passObjects = GameObject.FindGameObjectsWithTag("Pass");
+        foreach (GameObject pass in passObjects)
+        {
+            RectTransform passRect = pass.GetComponent<RectTransform>();
+            if (passRect != null)
+            {
+                Vector3[] corners = new Vector3[4];
+                passRect.GetWorldCorners(corners);
+
+                float minX = corners[0].x;
+                float maxX = corners[2].x;
+                float minY = corners[0].y;
+                float maxY = corners[2].y;
+
+                enemyPushPos.x = Mathf.Clamp(enemyPushPos.x, minX + 50f, maxX - 50f);
+                enemyPushPos.y = Mathf.Clamp(enemyPushPos.y, minY + 50f, maxY - 50f);
+            }
+        }
+
         elapsed = 0f;
         while (elapsed < 0.2f)
         {

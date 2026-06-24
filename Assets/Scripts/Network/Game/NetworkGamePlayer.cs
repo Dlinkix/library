@@ -937,20 +937,16 @@ public class NetworkGamePlayer : NetworkBehaviour
         Vector3 attackerStartPos = attackerRect.position;
         Vector3 playerStartPos = uiRect.position;
 
-        // ===== ФАЗА 1: ВРАГ ПРИБЛИЖАЕТСЯ К ИГРОКУ =====
         Vector3 direction = (playerStartPos - attackerStartPos).normalized;
         if (direction.magnitude < 0.1f) direction = Vector3.right;
 
-        // Точка, куда враг будет двигаться (95% расстояния до игрока)
+        // Фаза 1: враг приближается
         Vector3 approachTarget = attackerStartPos + direction * (Vector3.Distance(attackerStartPos, playerStartPos) * 0.95f);
 
         float elapsed = 0f;
-        float approachDuration = 0.3f;
-
-        while (elapsed < approachDuration)
+        while (elapsed < 0.3f)
         {
-            float t = elapsed / approachDuration;
-            // Используем smoothstep для плавности
+            float t = elapsed / 0.3f;
             float smoothT = t * t * (3f - 2f * t);
             attackerRect.position = Vector3.Lerp(attackerStartPos, approachTarget, smoothT);
             elapsed += Time.deltaTime;
@@ -958,20 +954,33 @@ public class NetworkGamePlayer : NetworkBehaviour
         }
         attackerRect.position = approachTarget;
 
-        // ===== ФАЗА 2: ИГРОК ОТОДВИГАЕТСЯ НАЗАД =====
-        Vector3 pushDirection = (playerStartPos - attackerStartPos).normalized;
-        if (pushDirection.magnitude < 0.1f) pushDirection = Vector3.right;
+        // Фаза 2: игрок отодвигается
+        Vector3 pushTarget = playerStartPos + direction * pushDistance;
 
-        // Точка, куда отодвинется игрок
-        float pushDistance = 300f; // Можно сделать настраиваемым
-        Vector3 pushTarget = playerStartPos + pushDirection * pushDistance;
+        // Ограничиваем позицию границами Pass
+        GameObject[] passObjects = GameObject.FindGameObjectsWithTag("Pass");
+        foreach (GameObject pass in passObjects)
+        {
+            RectTransform passRect = pass.GetComponent<RectTransform>();
+            if (passRect != null)
+            {
+                Vector3[] corners = new Vector3[4];
+                passRect.GetWorldCorners(corners);
+
+                float minX = corners[0].x;
+                float maxX = corners[2].x;
+                float minY = corners[0].y;
+                float maxY = corners[2].y;
+
+                pushTarget.x = Mathf.Clamp(pushTarget.x, minX + 50f, maxX - 50f);
+                pushTarget.y = Mathf.Clamp(pushTarget.y, minY + 50f, maxY - 50f);
+            }
+        }
 
         elapsed = 0f;
-        float pushDuration = 0.2f;
-
-        while (elapsed < pushDuration)
+        while (elapsed < 0.2f)
         {
-            float t = elapsed / pushDuration;
+            float t = elapsed / 0.2f;
             float smoothT = t * t * (3f - 2f * t);
             uiRect.position = Vector3.Lerp(playerStartPos, pushTarget, smoothT);
             elapsed += Time.deltaTime;
@@ -980,8 +989,6 @@ public class NetworkGamePlayer : NetworkBehaviour
         uiRect.position = pushTarget;
 
         isUIMoving = false;
-
-        // Сохраняем позиции для возврата
         _attackerOriginalPos = approachTarget;
         _playerOriginalPos = pushTarget;
     }
