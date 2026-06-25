@@ -83,7 +83,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     private Queue<System.Action> pendingActions = new Queue<System.Action>();
     private float actionTimer = 0f;
     private bool isExecutingActions = false;
-
+    public bool IsExecutingActions => isExecutingActions;
     public override void OnStartServer()
     {
         if (!AllEnemies.Contains(this)) AllEnemies.Add(this);
@@ -634,7 +634,7 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         isReady = true;
 
-        // Проверяем всех игроков и врагов
+        // Проверяем только игроков, враги готовятся отдельно
         bool allPlayersReady = true;
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
@@ -658,8 +658,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (allPlayersReady && allEnemiesReady)
         {
             Debug.Log("[FightManager] All players and enemies are ready!");
-      
-            FightManager.OnAllPlayersReady?.Invoke(); 
+            FightManager.OnAllPlayersReady?.Invoke();
         }
     }
 
@@ -754,13 +753,12 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (syncedCount > 0)
         {
             Debug.Log($"[AI] Synced {syncedCount} dices, enemy ready!");
-            CmdSetEnemyReady();
         }
         else
         {
             Debug.Log($"[AI] No dices synced, enemy ready anyway!");
-            CmdSetEnemyReady();
         }
+        CmdSetEnemyReady();
     }
 
     [Server]

@@ -226,9 +226,22 @@ public class FightManager : NetworkBehaviour
                 }
                 else if (entry.enemy != null)
                 {
-                    // Если у врага есть флаг выполнения действий - ждем
-                    // Если нет - просто даем небольшую паузу
-                    yield return new WaitForSeconds(0.2f);
+                    // Ждем пока враг завершит все действия (как у игрока)
+                    float enemyTimeout = 5f;
+                    float enemyTimer = 0f;
+                    while (entry.enemy.IsExecutingActions && enemyTimer < enemyTimeout)
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                        enemyTimer += 0.1f;
+                    }
+
+                    if (enemyTimer >= enemyTimeout)
+                    {
+                        Debug.LogWarning($"[ExecuteActionPhase] Timeout waiting for enemy {entry.enemy.EnemyName} actions!");
+                    }
+
+                    // Дополнительная пауза между врагами
+                    yield return new WaitForSeconds(0.3f);
                 }
             }
         }

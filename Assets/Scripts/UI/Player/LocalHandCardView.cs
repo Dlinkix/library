@@ -8,9 +8,8 @@ using static DataGame;
 public class LocalHandCardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerClickHandler
 {
     [SerializeField] private RectTransform cardRect;
-
+    [SerializeField] private Vector2 hoverOffset = new Vector2(0f, 40f);
     private Vector2 defaultAnchoredPosition;
-    private readonly Vector2 hoverOffset = new Vector2(0f, 70f);
     private bool initialized;
 
     private int cardId;
