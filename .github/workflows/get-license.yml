@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
       
       - name: Request Unity activation file
-        uses: game-ci/unity-request-activation-file@v3
+        uses: game-ci/unity-request-activation-file@main
         with:
           unityVersion: 6000.3.3f1
         env:
