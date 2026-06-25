@@ -713,48 +713,98 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     private void CreateHandCardView(DataGame.CardData cardData, int cardId, int cardIndex, int totalCards)
     {
-        GameObject cardRootObject = new GameObject($"Card_{cardId}_{cardIndex}", typeof(RectTransform), typeof(UnityEngine.UI.Image), typeof(LayoutElement));
-        RectTransform cardRect = cardRootObject.GetComponent<RectTransform>();
-        cardRect.SetParent(localHandContentRoot, false);
+        GameObject cardPrefab = Resources.Load<GameObject>("UI/Card");
+        if (cardPrefab == null)
+        {
+            Debug.LogError("HandCard prefab not found in Resources/UI/HandCard!");
+            return;
+        }
+
+        GameObject cardObj = Instantiate(cardPrefab, localHandContentRoot);
+        RectTransform cardRect = cardObj.GetComponent<RectTransform>();
         cardRect.anchorMin = new Vector2(0f, 0f);
         cardRect.anchorMax = new Vector2(0f, 0f);
         cardRect.pivot = new Vector2(0f, 0f);
         cardRect.sizeDelta = new Vector2(150f, 180f);
         cardRect.anchoredPosition = GetHandCardPosition(cardIndex, totalCards);
 
-        LayoutElement layoutElement = cardRootObject.GetComponent<LayoutElement>();
-        layoutElement.preferredWidth = 150f;
-        layoutElement.preferredHeight = 180f;
+        LocalHandCardView cardView = cardObj.GetComponent<LocalHandCardView>();
+        if (cardView != null)
+        {
+            // Ищем компоненты в префабе
+            UnityEngine.UI.Image cardBackground = cardObj.GetComponent<UnityEngine.UI.Image>();
+            TMP_Text descText = cardObj.transform.Find("Desc")?.GetComponent<TMP_Text>();
 
-        UnityEngine.UI.Image cardBackground = cardRootObject.GetComponent<UnityEngine.UI.Image>();
-        cardBackground.color = new Color(0.13f, 0.14f, 0.2f, 0.96f);
-        cardBackground.raycastTarget = true;
+            cardView.Setup(cardRect, null, descText, cardBackground, cardId, cardIndex, this);
+        }
 
-        GameObject artObject = new GameObject("Art", typeof(RectTransform), typeof(UnityEngine.UI.Image));
-        RectTransform artRect = artObject.GetComponent<RectTransform>();
-        artRect.SetParent(cardRect, false);
-        artRect.anchorMin = new Vector2(0.5f, 1f);
-        artRect.anchorMax = new Vector2(0.5f, 1f);
-        artRect.pivot = new Vector2(0.5f, 1f);
-        artRect.anchoredPosition = new Vector2(0f, -10f);
-        artRect.sizeDelta = new Vector2(126f, 82f);
+        Transform TopCard = cardObj.transform.Find("TopCard");
+        Transform ImageName = TopCard.transform.Find("ImageName");
+        TMP_Text nameText = ImageName.transform.Find("Name")?.GetComponent<TMP_Text>();
+        if (nameText != null) nameText.text = cardData != null ? cardData.cardName : $"Card {cardId}";
 
-        UnityEngine.UI.Image artImage = artObject.GetComponent<UnityEngine.UI.Image>();
-        artImage.sprite = cardData != null ? cardData.cardSprite : null;
-        artImage.preserveAspect = true;
-        artImage.color = artImage.sprite == null ? new Color(0.18f, 0.19f, 0.26f) : Color.white;
-        artImage.raycastTarget = false;
+        Transform imageCost = TopCard.transform.Find("imageCost");
+        TMP_Text costText = imageCost.transform.Find("Cost")?.GetComponent<TMP_Text>();
+        if (costText != null) costText.text = cardData != null ? $"Light {cardData.lightCost}" : "Light ?";
 
-        CreateCardText(cardRect, "Name", cardData != null ? cardData.cardName : $"Card {cardId}", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -100f), new Vector2(-18f, 28f), 20f, TextAlignmentOptions.Center, out _);
-        CreateCardText(cardRect, "Cost", cardData != null ? $"Light {cardData.lightCost}" : "Light ?", new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(0.5f, 1f), new Vector2(0f, -128f), new Vector2(-18f, 22f), 16f, TextAlignmentOptions.Center, out _);
-        CreateCardText(cardRect, "Desc", cardData != null ? cardData.GetShortDescription() : "No data", new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(0.5f, 0f), new Vector2(0f, 8f), new Vector2(-18f, 52f), 14f, TextAlignmentOptions.TopLeft, out TMP_Text descText);
-        descText.textWrappingMode = TextWrappingModes.Normal;
-        descText.overflowMode = TextOverflowModes.Ellipsis;
+        Transform GameObject = cardObj.transform.Find("GameObject");
+        TMP_Text descText2 = GameObject.transform.Find("Desc")?.GetComponent<TMP_Text>();
+        if (descText2 != null) descText2.text = cardData != null ? cardData.GetShortDescription() : "No data";
 
-        LocalHandCardView hoverView = cardRootObject.AddComponent<LocalHandCardView>();
-        hoverView.Setup(cardRect, layoutElement, descText, cardBackground, cardId, cardIndex, this);
+        UnityEngine.UI.Image artImage = cardObj.transform.Find("ImageCard")?.GetComponent<UnityEngine.UI.Image>();
+        if (artImage != null && cardData != null) artImage.sprite = cardData.cardSprite;
+
+        // ===== ЗАПОЛНЯЕМ АТАКИ =====
+        // Грид для простых префабов
+        Transform simpleGrid = cardObj.transform.Find("SimpeGrid");
+        // Грид для полных префабов
+        Transform fullGrid = GameObject.transform.Find("Grid");
+
+        if (cardData != null && cardData.attacks != null && cardData.attacks.Length > 0)
+        {
+            GameObject simplePrefab = Resources.Load<GameObject>("UI/ImageDiceAttackSimple");
+            GameObject fullPrefab = Resources.Load<GameObject>("UI/ImageDiceAttackFull");
+
+            if (fullGrid != null && fullPrefab != null)
+            {
+                foreach (var attack in cardData.attacks)
+                {
+                    GameObject fullObj = Instantiate(fullPrefab, fullGrid);
+
+                    TMP_Text damageText = fullObj.transform.Find("DamageText")?.GetComponent<TMP_Text>();
+                    if (damageText != null) damageText.text = $"{attack.RollMin}-{attack.RollMax}";
+
+                    TMP_Text effectsText = fullObj.transform.Find("TextCardEffects")?.GetComponent<TMP_Text>();
+                    if (effectsText != null)
+                    {
+                        effectsText.text = GetAttackEffectDescription(attack);
+                    }
+                }
+            }
+
+            if (simpleGrid != null && simplePrefab != null)
+            {
+                for (int i = 0; i < cardData.attacks.Length; i++)
+                {
+                    Instantiate(simplePrefab, simpleGrid);
+                }
+            }
+        }
     }
-
+    private string GetAttackEffectDescription(DataGame.AttackData attack)
+    {
+        switch (attack.type)
+        {
+            case DataGame.AttackData.Type.Damage:
+                return "Damage";
+            case DataGame.AttackData.Type.Block:
+                return $"Block {attack.staggerDamage}";
+            case DataGame.AttackData.Type.Escape:
+                return "Escape";
+            default:
+                return "";
+        }
+    }
     private Vector2 GetHandCardPosition(int cardIndex, int totalCards)
     {
         const float cardWidth = 150f;

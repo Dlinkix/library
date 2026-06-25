@@ -1,0 +1,1287 @@
+fileFormatVersion: 2
+guid: db9835616a42cba43bb22be7a84c7adb
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 8491904596185151299
+    second: SelectedUnitInformationUI_EquipmentNew_0
+  - first:
+      213: -5181419689281209125
+    second: SelectedUnitInformationUI_EquipmentNew_1
+  - first:
+      213: 6073290239606505728
+    second: SelectedUnitInformationUI_EquipmentNew_2
+  - first:
+      213: 417318363084860912
+    second: SelectedUnitInformationUI_EquipmentNew_3
+  - first:
+      213: 3549539821174054895
+    second: SelectedUnitInformationUI_EquipmentNew_4
+  - first:
+      213: 8851311263563132666
+    second: SelectedUnitInformationUI_EquipmentNew_5
+  - first:
+      213: -7270960766338390775
+    second: SelectedUnitInformationUI_EquipmentNew_6
+  - first:
+      213: 7955598671819605651
+    second: SelectedUnitInformationUI_EquipmentNew_7
+  - first:
+      213: 5603108950309257656
+    second: SelectedUnitInformationUI_EquipmentNew_8
+  - first:
+      213: -954746606556250040
+    second: SelectedUnitInformationUI_EquipmentNew_9
+  - first:
+      213: 8534408147884563923
+    second: SelectedUnitInformationUI_EquipmentNew_10
+  - first:
+      213: -4745547694284543285
+    second: SelectedUnitInformationUI_EquipmentNew_11
+  - first:
+      213: -8411575695002116256
+    second: SelectedUnitInformationUI_EquipmentNew_12
+  - first:
+      213: -8591789998882826572
+    second: SelectedUnitInformationUI_EquipmentNew_13
+  - first:
+      213: 7254846363146715781
+    second: SelectedUnitInformationUI_EquipmentNew_14
+  - first:
+      213: -79207384567611061
+    second: SelectedUnitInformationUI_EquipmentNew_15
+  - first:
+      213: -7703420878522189047
+    second: SelectedUnitInformationUI_EquipmentNew_16
+  - first:
+      213: 7947793237006563854
+    second: SelectedUnitInformationUI_EquipmentNew_17
+  - first:
+      213: 8857403779832462934
+    second: SelectedUnitInformationUI_EquipmentNew_18
+  - first:
+      213: 3314134123737016615
+    second: SelectedUnitInformationUI_EquipmentNew_19
+  - first:
+      213: -8100940655678414474
+    second: SelectedUnitInformationUI_EquipmentNew_20
+  - first:
+      213: 2740066551331971270
+    second: SelectedUnitInformationUI_EquipmentNew_21
+  - first:
+      213: -5275340334333006544
+    second: SelectedUnitInformationUI_EquipmentNew_22
+  - first:
+      213: 7785568705544366685
+    second: SelectedUnitInformationUI_EquipmentNew_23
+  - first:
+      213: -5576861304793985302
+    second: SelectedUnitInformationUI_EquipmentNew_24
+  - first:
+      213: 40968162452989484
+    second: SelectedUnitInformationUI_EquipmentNew_25
+  - first:
+      213: 2512859867992555817
+    second: SelectedUnitInformationUI_EquipmentNew_26
+  - first:
+      213: 2677748280347741408
+    second: SelectedUnitInformationUI_EquipmentNew_27
+  - first:
+      213: 2951516892693092376
+    second: SelectedUnitInformationUI_EquipmentNew_28
+  - first:
+      213: 6248046424542834881
+    second: SelectedUnitInformationUI_EquipmentNew_29
+  - first:
+      213: 3131676124382602086
+    second: SelectedUnitInformationUI_EquipmentNew_30
+  - first:
+      213: -856883312718804967
+    second: SelectedUnitInformationUI_EquipmentNew_31
+  - first:
+      213: 5410256681467306740
+    second: SelectedUnitInformationUI_EquipmentNew_32
+  - first:
+      213: 1801283952353426328
+    second: SelectedUnitInformationUI_EquipmentNew_33
+  - first:
+      213: -2368082787588662743
+    second: SelectedUnitInformationUI_EquipmentNew_34
+  - first:
+      213: 5085214641565468692
+    second: SelectedUnitInformationUI_EquipmentNew_35
+  - first:
+      213: -8730297785910317699
+    second: SelectedUnitInformationUI_EquipmentNew_36
+  - first:
+      213: -2005767418860091596
+    second: SelectedUnitInformationUI_EquipmentNew_37
+  - first:
+      213: 6430444200380056482
+    second: SelectedUnitInformationUI_EquipmentNew_38
+  - first:
+      213: 7145837194338976181
+    second: SelectedUnitInformationUI_EquipmentNew_39
+  - first:
+      213: 4969501319096825553
+    second: SelectedUnitInformationUI_EquipmentNew_40
+  - first:
+      213: -6334215351546273094
+    second: SelectedUnitInformationUI_EquipmentNew_41
+  - first:
+      213: 5511063125160859974
+    second: SelectedUnitInformationUI_EquipmentNew_42
+  - first:
+      213: 5778589786850941717
+    second: SelectedUnitInformationUI_EquipmentNew_43
+  - first:
+      213: 1910434049844740741
+    second: SelectedUnitInformationUI_EquipmentNew_44
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_0
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1127
+        width: 1112
+        height: 105
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3477f1afc3e49d570800000000000000
+      internalID: 8491904596185151299
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_1
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 1017
+        width: 1128
+        height: 109
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bdcbd24be36e718b0800000000000000
+      internalID: -5181419689281209125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_2
+      rect:
+        serializedVersion: 2
+        x: 22
+        y: 577
+        width: 622
+        height: 438
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 001c7959b49a84450800000000000000
+      internalID: 6073290239606505728
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_3
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 909
+        width: 52
+        height: 74
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0fdabe517dc9ac500800000000000000
+      internalID: 417318363084860912
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_4
+      rect:
+        serializedVersion: 2
+        x: 808
+        y: 980
+        width: 17
+        height: 17
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fefde2d39af724130800000000000000
+      internalID: 3549539821174054895
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_5
+      rect:
+        serializedVersion: 2
+        x: 828
+        y: 931
+        width: 55
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: afe281da2bc26da70800000000000000
+      internalID: 8851311263563132666
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_6
+      rect:
+        serializedVersion: 2
+        x: 886
+        y: 935
+        width: 52
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 905299ac4bb581b90800000000000000
+      internalID: -7270960766338390775
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_7
+      rect:
+        serializedVersion: 2
+        x: 678
+        y: 914
+        width: 44
+        height: 54
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 396806967d6f76e60800000000000000
+      internalID: 7955598671819605651
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_8
+      rect:
+        serializedVersion: 2
+        x: 723
+        y: 902
+        width: 43
+        height: 71
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8b1cefc57ed32cd40800000000000000
+      internalID: 5603108950309257656
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_9
+      rect:
+        serializedVersion: 2
+        x: 767
+        y: 922
+        width: 43
+        height: 55
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 84084b1150f00c2f0800000000000000
+      internalID: -954746606556250040
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_10
+      rect:
+        serializedVersion: 2
+        x: 811
+        y: 927
+        width: 18
+        height: 51
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 3dddbd64efe407670800000000000000
+      internalID: 8534408147884563923
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_11
+      rect:
+        serializedVersion: 2
+        x: 1290
+        y: 813
+        width: 168
+        height: 155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bcaee79d38d642eb0800000000000000
+      internalID: -4745547694284543285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_12
+      rect:
+        serializedVersion: 2
+        x: 1385
+        y: 956
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 06fd61ac874144b80800000000000000
+      internalID: -8411575695002116256
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_13
+      rect:
+        serializedVersion: 2
+        x: 1460
+        y: 813
+        width: 168
+        height: 155
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4b6d5db6484d3c880800000000000000
+      internalID: -8591789998882826572
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_14
+      rect:
+        serializedVersion: 2
+        x: 1555
+        y: 956
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 582056754546ea460800000000000000
+      internalID: 7254846363146715781
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_15
+      rect:
+        serializedVersion: 2
+        x: 602
+        y: 886
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b41824bad4996eef0800000000000000
+      internalID: -79207384567611061
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_16
+      rect:
+        serializedVersion: 2
+        x: 746
+        y: 861
+        width: 40
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90b7b548683f71590800000000000000
+      internalID: -7703420878522189047
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_17
+      rect:
+        serializedVersion: 2
+        x: 775
+        y: 866
+        width: 24
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: e0a370007db3c4e60800000000000000
+      internalID: 7947793237006563854
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_18
+      rect:
+        serializedVersion: 2
+        x: 17
+        y: 874
+        width: 24
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 65ebd192fc1dbea70800000000000000
+      internalID: 8857403779832462934
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_19
+      rect:
+        serializedVersion: 2
+        x: 744
+        y: 871
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 729685f2d6b2efd20800000000000000
+      internalID: 3314134123737016615
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_20
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 864
+        width: 30
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 671a4cfe46da39f80800000000000000
+      internalID: -8100940655678414474
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_21
+      rect:
+        serializedVersion: 2
+        x: 654
+        y: 571
+        width: 634
+        height: 291
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6c0621dc20ca60620800000000000000
+      internalID: 2740066551331971270
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_22
+      rect:
+        serializedVersion: 2
+        x: 1348
+        y: 820
+        width: 8
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 03d6ac67ae93ac6b0800000000000000
+      internalID: -5275340334333006544
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_23
+      rect:
+        serializedVersion: 2
+        x: 1396
+        y: 815
+        width: 8
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d5aae5cec75eb0c60800000000000000
+      internalID: 7785568705544366685
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_24
+      rect:
+        serializedVersion: 2
+        x: 1408
+        y: 816
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: aee0226d0320b92b0800000000000000
+      internalID: -5576861304793985302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_25
+      rect:
+        serializedVersion: 2
+        x: 1578
+        y: 816
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c266c12a35c819000800000000000000
+      internalID: 40968162452989484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_26
+      rect:
+        serializedVersion: 2
+        x: 1290
+        y: 577
+        width: 556
+        height: 234
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 921080a7cb87fd220800000000000000
+      internalID: 2512859867992555817
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_27
+      rect:
+        serializedVersion: 2
+        x: 1848
+        y: 577
+        width: 168
+        height: 154
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 0ec4a08afd5492520800000000000000
+      internalID: 2677748280347741408
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_28
+      rect:
+        serializedVersion: 2
+        x: 1966
+        y: 580
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8185981e9f4e5f820800000000000000
+      internalID: 2951516892693092376
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_29
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1
+        width: 1323
+        height: 566
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1c0760b9e1585b650800000000000000
+      internalID: 6248046424542834881
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_30
+      rect:
+        serializedVersion: 2
+        x: 1170
+        y: 557
+        width: 10
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 663a561c7d2f57b20800000000000000
+      internalID: 3131676124382602086
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_31
+      rect:
+        serializedVersion: 2
+        x: 1190
+        y: 565
+        width: 6
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9188f63ca2dbb14f0800000000000000
+      internalID: -856883312718804967
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_32
+      rect:
+        serializedVersion: 2
+        x: 1204
+        y: 565
+        width: 7
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4f2ea8a79c7151b40800000000000000
+      internalID: 5410256681467306740
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_33
+      rect:
+        serializedVersion: 2
+        x: 1316
+        y: 194
+        width: 8
+        height: 11
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89b33a706327ff810800000000000000
+      internalID: 1801283952353426328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_34
+      rect:
+        serializedVersion: 2
+        x: 1329
+        y: 48
+        width: 658
+        height: 382
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92a9f075041e22fd0800000000000000
+      internalID: -2368082787588662743
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_35
+      rect:
+        serializedVersion: 2
+        x: 1356
+        y: 36
+        width: 37
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 418002d16cf429640800000000000000
+      internalID: 5085214641565468692
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_36
+      rect:
+        serializedVersion: 2
+        x: 1383
+        y: 45
+        width: 22
+        height: 15
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d7daf673b60c7d680800000000000000
+      internalID: -8730297785910317699
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_37
+      rect:
+        serializedVersion: 2
+        x: 1389
+        y: 29
+        width: 81
+        height: 18
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 437cac8d8251a24e0800000000000000
+      internalID: -2005767418860091596
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_38
+      rect:
+        serializedVersion: 2
+        x: 1415
+        y: 39
+        width: 20
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 2a3cf972ee68d3950800000000000000
+      internalID: 6430444200380056482
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_39
+      rect:
+        serializedVersion: 2
+        x: 1441
+        y: 43
+        width: 38
+        height: 12
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5b14957611d1b2360800000000000000
+      internalID: 7145837194338976181
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_40
+      rect:
+        serializedVersion: 2
+        x: 1504
+        y: 42
+        width: 25
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d6f993ce1737f440800000000000000
+      internalID: 4969501319096825553
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_41
+      rect:
+        serializedVersion: 2
+        x: 1438
+        y: 28
+        width: 6
+        height: 7
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab22248a2b85818a0800000000000000
+      internalID: -6334215351546273094
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_42
+      rect:
+        serializedVersion: 2
+        x: 1443
+        y: 27
+        width: 9
+        height: 8
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 64997f5a6ba3b7c40800000000000000
+      internalID: 5511063125160859974
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_43
+      rect:
+        serializedVersion: 2
+        x: 1439
+        y: 9
+        width: 13
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 51b53fb7bcca13050800000000000000
+      internalID: 5778589786850941717
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: SelectedUnitInformationUI_EquipmentNew_44
+      rect:
+        serializedVersion: 2
+        x: 1441
+        y: 1
+        width: 19
+        height: 9
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 5828ecb75a9338a10800000000000000
+      internalID: 1910434049844740741
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      SelectedUnitInformationUI_EquipmentNew_0: 8491904596185151299
+      SelectedUnitInformationUI_EquipmentNew_1: -5181419689281209125
+      SelectedUnitInformationUI_EquipmentNew_10: 8534408147884563923
+      SelectedUnitInformationUI_EquipmentNew_11: -4745547694284543285
+      SelectedUnitInformationUI_EquipmentNew_12: -8411575695002116256
+      SelectedUnitInformationUI_EquipmentNew_13: -8591789998882826572
+      SelectedUnitInformationUI_EquipmentNew_14: 7254846363146715781
+      SelectedUnitInformationUI_EquipmentNew_15: -79207384567611061
+      SelectedUnitInformationUI_EquipmentNew_16: -7703420878522189047
+      SelectedUnitInformationUI_EquipmentNew_17: 7947793237006563854
+      SelectedUnitInformationUI_EquipmentNew_18: 8857403779832462934
+      SelectedUnitInformationUI_EquipmentNew_19: 3314134123737016615
+      SelectedUnitInformationUI_EquipmentNew_2: 6073290239606505728
+      SelectedUnitInformationUI_EquipmentNew_20: -8100940655678414474
+      SelectedUnitInformationUI_EquipmentNew_21: 2740066551331971270
+      SelectedUnitInformationUI_EquipmentNew_22: -5275340334333006544
+      SelectedUnitInformationUI_EquipmentNew_23: 7785568705544366685
+      SelectedUnitInformationUI_EquipmentNew_24: -5576861304793985302
+      SelectedUnitInformationUI_EquipmentNew_25: 40968162452989484
+      SelectedUnitInformationUI_EquipmentNew_26: 2512859867992555817
+      SelectedUnitInformationUI_EquipmentNew_27: 2677748280347741408
+      SelectedUnitInformationUI_EquipmentNew_28: 2951516892693092376
+      SelectedUnitInformationUI_EquipmentNew_29: 6248046424542834881
+      SelectedUnitInformationUI_EquipmentNew_3: 417318363084860912
+      SelectedUnitInformationUI_EquipmentNew_30: 3131676124382602086
+      SelectedUnitInformationUI_EquipmentNew_31: -856883312718804967
+      SelectedUnitInformationUI_EquipmentNew_32: 5410256681467306740
+      SelectedUnitInformationUI_EquipmentNew_33: 1801283952353426328
+      SelectedUnitInformationUI_EquipmentNew_34: -2368082787588662743
+      SelectedUnitInformationUI_EquipmentNew_35: 5085214641565468692
+      SelectedUnitInformationUI_EquipmentNew_36: -8730297785910317699
+      SelectedUnitInformationUI_EquipmentNew_37: -2005767418860091596
+      SelectedUnitInformationUI_EquipmentNew_38: 6430444200380056482
+      SelectedUnitInformationUI_EquipmentNew_39: 7145837194338976181
+      SelectedUnitInformationUI_EquipmentNew_4: 3549539821174054895
+      SelectedUnitInformationUI_EquipmentNew_40: 4969501319096825553
+      SelectedUnitInformationUI_EquipmentNew_41: -6334215351546273094
+      SelectedUnitInformationUI_EquipmentNew_42: 5511063125160859974
+      SelectedUnitInformationUI_EquipmentNew_43: 5778589786850941717
+      SelectedUnitInformationUI_EquipmentNew_44: 1910434049844740741
+      SelectedUnitInformationUI_EquipmentNew_5: 8851311263563132666
+      SelectedUnitInformationUI_EquipmentNew_6: -7270960766338390775
+      SelectedUnitInformationUI_EquipmentNew_7: 7955598671819605651
+      SelectedUnitInformationUI_EquipmentNew_8: 5603108950309257656
+      SelectedUnitInformationUI_EquipmentNew_9: -954746606556250040
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
