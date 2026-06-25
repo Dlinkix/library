@@ -135,8 +135,10 @@ public class NetworkGamePlayer : NetworkBehaviour
 
     public override void OnStopClient()
     {
-        if (uiObject != null) Destroy(uiObject);
-        if (localHandRoot != null) Destroy(localHandRoot.gameObject);
+        if (uiObject != null)
+            Destroy(uiObject);
+        if (localHandRoot != null)
+            Destroy(localHandRoot.gameObject);
         uiCreated = false;
     }
 
@@ -611,7 +613,12 @@ public class NetworkGamePlayer : NetworkBehaviour
     private void OnLightAmountChanged(int oldValue, int newValue) { UpdateIconLight(); }
     private void OnPlayerNameChanged(string oldName, string newName) { UpdateReadyText(); }
     private void OnReadyChanged(bool oldValue, bool newValue) { if (!isShowingRollResult) UpdateReadyText(); }
-    private void OnHpChanged(int oldValue, int newValue) { UpdateHpView(); }
+    private void OnHpChanged(int oldValue, int newValue) {
+        if (isServer && newValue <= 0)
+        {
+            DestroyPlayer();
+        }
+        UpdateHpView(); }
     #endregion
 
     #region Combat
@@ -829,7 +836,7 @@ public class NetworkGamePlayer : NetworkBehaviour
                 pendingActions.Enqueue(() =>
                 {
                     targetEnemy.PushEnemyUI(this);
-                    ApplyAttack(attack, targetEnemy, roll);
+                    ApplyAttack(attack, targetEnemy, roll); 
                 });
                 pendingActions.Enqueue(() => RpcReturnDiceToGrid(cardIndex));
                 attackIndex++;
@@ -842,19 +849,24 @@ public class NetworkGamePlayer : NetworkBehaviour
 
         if (!isExecutingActions) { isExecutingActions = true; actionTimer = 0f; }
     }
-
     [Server]
-    private void ApplyAttack(DataGame.AttackData attack, NetworkGameEnemy target, int roll)
+    private void ApplyAttack(AttackData attack, NetworkGameEnemy target, int roll)
     {
         if (target == null) return;
+
         switch (attack.type)
         {
-            case DataGame.AttackData.Type.Damage:
-                target.hp -= roll;
+            case AttackData.Type.Damage:
+                int damage = roll;
+                target.hp -= damage;
                 if (target.hp < 0) target.hp = 0;
                 break;
         }
-        if (attack.staggerDamage > 0) target.stagger += attack.staggerDamage;
+
+        if (attack.staggerDamage > 0)
+        {
+            target.stagger += attack.staggerDamage;
+        }
     }
 
     [Server]
@@ -911,7 +923,24 @@ public class NetworkGamePlayer : NetworkBehaviour
         int cardId = dataGame.GetRandomAllCardId();
         if (cardId > 0) playerDeck.Add(cardId);
     }
-
+    [Server]
+    public void DestroyPlayer()
+    {
+        if (hp <= 0)
+        {
+            RpcOnPlayerDestroyed();
+            pendingActions.Clear();
+            isExecutingActions = false;
+            if (AllPlayers.Contains(this))
+                AllPlayers.Remove(this);
+            if (uiObject != null)
+            {
+                Destroy(uiObject);
+                uiObject = null;
+                uiCreated = false;
+            }
+        }
+    }
     [Server] public void SyncHandToOwner() { if (connectionToClient != null) TargetSyncHand(connectionToClient, playerHand.ToArray()); }
 
     [Server]
@@ -955,6 +984,26 @@ public class NetworkGamePlayer : NetworkBehaviour
     [ClientRpc] public void RpcMoveDiceToPlaceholder(int cardIndex, int attackIndex) { if (currentCardView != null && currentCardView.gameObject.activeSelf) currentCardView.MoveDiceToPlaceholder(cardIndex, attackIndex); }
 
     [ClientRpc] public void RpcReturnDiceToGrid(int cardIndex) { if (currentCardView != null && currentCardView.gameObject.activeSelf) currentCardView.ReturnDiceToGrid(cardIndex); }
+
+    [ClientRpc]
+    private void RpcOnPlayerDestroyed()
+    {
+
+        if (uiObject != null)
+        {
+            Destroy(uiObject);
+            uiObject = null;
+            uiCreated = false;
+        }
+        if (localHandRoot != null)
+        {
+            Destroy(localHandRoot.gameObject);
+            localHandRoot = null;
+        }
+
+        HideCardView();    
+    }
+
 
     [ClientRpc]
     public void RpcUpdateDiceValues(int[] values)

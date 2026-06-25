@@ -393,8 +393,13 @@ public class NetworkGameEnemy : NetworkBehaviour
 
     private void OnSpawnIndexChanged(int oldValue, int newValue) { ApplyUIPositionBySpawnIndex(); }
     private void OnDiceRollAmountChanged(int oldValue, int newValue) { }
-    private void OnEnemyNameChanged(string oldValue, string newValue) { UpdateStatusText(); }
-    private void OnHpChanged(int oldValue, int newValue) { UpdateHpView(); }
+    private void OnEnemyNameChanged(string oldValue, string newValue) {     UpdateStatusText(); }
+    private void OnHpChanged(int oldValue, int newValue) {
+        if (isServer && newValue <= 0)
+        {
+            DestroyEnemy();
+        }
+         UpdateHpView(); }
 
     private void CreateUI()
     {
@@ -938,6 +943,35 @@ public class NetworkGameEnemy : NetworkBehaviour
         DiceRollAmount = activeEnemyData.diceRollEnemy;
         maxLight = activeEnemyData.baseStartLight;
         currentLight = maxLight;
+    }
+    [Server]
+    public void DestroyEnemy()
+    {
+        if (hp <= 0)
+        {
+            RpcOnEnemyDestroyed();
+            pendingActions.Clear();
+            isExecutingActions = false;
+            if (AllEnemies.Contains(this))
+                AllEnemies.Remove(this);
+            if (uiObject != null)
+            {
+                Destroy(uiObject);
+                uiObject = null;
+                uiCreated = false;
+            }
+        }
+    }
+
+    [ClientRpc]
+    private void RpcOnEnemyDestroyed()
+    {
+        if (uiObject != null)
+        {
+            Destroy(uiObject);
+            uiObject = null;
+            uiCreated = false;
+        }
     }
 
     private DataGame.EnemyData GetActiveEnemyData()

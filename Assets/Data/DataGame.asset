@@ -21,7 +21,7 @@ MonoBehaviour:
     maxCardOnHand: 15
     dekaPlayer: 10
     baseStartLight: 3
-    cardPlayerIds: 01000000010000000100000001000000010000000100000001000000010000000100000001000000
+    cardPlayerIds: 
     diceRollPlayer: 2
   enemyData:
   - enemyName: 
