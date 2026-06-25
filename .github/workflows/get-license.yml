@@ -8,9 +8,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Request manual activation file
-        uses: game-ci/unity-request-activation-file@v2
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create manual activation file
+        uses: game-ci/unity-request-activation-file@v4
         id: getManualLicenseFile
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           unityVersion: 6000.3.3f1
 
@@ -19,4 +25,3 @@ jobs:
         with:
           name: activation_request
           path: ${{ steps.getManualLicenseFile.outputs.filePath }}
-          if-no-files-found: error
