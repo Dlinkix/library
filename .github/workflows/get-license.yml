@@ -7,7 +7,7 @@ jobs:
   get-license:
     runs-on: ubuntu-latest
     container:
-      image: unityci/editor:ubuntu-6000.3.3f1-linux-il2cpp-3.1.0
+      image: unityci/editor:6000.3.3f1-ubuntu-3.1.0
     steps:
       - name: Activate Unity
         run: |
