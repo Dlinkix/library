@@ -5,22 +5,20 @@ on:
 
 jobs:
   get-license:
-    runs-on: ubuntu-latest
-    container:
-      image: unityci/editor:windows-6000.3.3f1-windows-il2cpp-3.2.2
+    runs-on: windows-latest
     steps:
-      - name: Activate Unity
-        run: |
-          unity-editor \
-            -quit \
-            -batchmode \
-            -nographics \
-            -username ${{ secrets.UNITY_EMAIL }} \
-            -password ${{ secrets.UNITY_PASSWORD }} \
-            -createManualActivationFile \
-            -logfile /dev/stdout
+      - name: Checkout
+        uses: actions/checkout@v4
       
-      - name: Upload .alf file
+      - name: Get Unity license
+        uses: game-ci/unity-request-activation-file@v4
+        with:
+          unityVersion: 6000.3.3f1
+        env:
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      
+      - name: Upload activation file
         uses: actions/upload-artifact@v4
         with:
           name: Unity_activation
