@@ -27,6 +27,14 @@ public class Road25D : MonoBehaviour
     [SerializeField] private Vector2 flyOutOffset = new Vector2(-500f, 800f);
     [SerializeField] private AnimationCurve flyOutCurve = AnimationCurve.EaseInOut(0, 0, 1, 1);
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip[] battleThemes;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private float maxVolume = 0.04f;
+    [SerializeField] private float fadeInDuration = 2f;
+    private int currentThemeIndex = 0;
+    private Coroutine fadeInCoroutine;
+
     private float currentOffset;
     private float targetOffset;
     private Vector2 mouseStartPos;
@@ -44,10 +52,7 @@ public class Road25D : MonoBehaviour
 
     void Start()
     {
-        if (splashImage != null)
-        {
-            splashStartPos = splashImage.anchoredPosition;
-        }
+        if (splashImage != null) splashStartPos = splashImage.anchoredPosition;
         CacheLayerState();
         RestartSplashSequence();
     }
@@ -62,10 +67,7 @@ public class Road25D : MonoBehaviour
         if (layerSpeeds == null || layerSpeeds.Length == 0)
         {
             layerSpeeds = new float[roadLayers.Length];
-            for (int i = 0; i < roadLayers.Length; i++)
-            {
-                layerSpeeds[i] = 0.1f + i * 0.2f;
-            }
+            for (int i = 0; i < roadLayers.Length; i++) layerSpeeds[i] = 0.1f + i * 0.2f;
         }
 
         for (int i = 0; i < roadLayers.Length; i++)
@@ -82,13 +84,8 @@ public class Road25D : MonoBehaviour
     {
         if (splashImage != null)
         {
-            // Принудительно активируем перед установкой позиции
             splashImage.gameObject.SetActive(true);
-
-            // Возвращаем на стартовую позицию
             splashImage.anchoredPosition = Vector2.zero;
-
-            // Убеждаемся что он поверх всего
             splashImage.SetAsLastSibling();
         }
 
@@ -100,113 +97,91 @@ public class Road25D : MonoBehaviour
         targetOffset = 0f;
         isDragging = false;
 
-        if (roadLayers == null)
-        {
-            return;
-        }
+        if (roadLayers == null) return;
 
         for (int i = 0; i < roadLayers.Length; i++)
         {
-            if (roadLayers[i] == null)
-            {
-                continue;
-            }
-
-            if (layerStartPositions != null && i < layerStartPositions.Length)
-            {
-                roadLayers[i].anchoredPosition = layerStartPositions[i];
-            }
-
-            if (layerStartScales != null && i < layerStartScales.Length)
-            {
-                roadLayers[i].localScale = layerStartScales[i];
-            }
+            if (roadLayers[i] == null) continue;
+            if (layerStartPositions != null && i < layerStartPositions.Length) roadLayers[i].anchoredPosition = layerStartPositions[i];
+            if (layerStartScales != null && i < layerStartScales.Length) roadLayers[i].localScale = layerStartScales[i];
         }
     }
 
     void Update()
     {
-        // Îáðàáîòêà çàñòàâêè
-        if (splashState != SplashState.GameReady && splashState != SplashState.Hidden)
-        {
-            UpdateSplash();
-            return;
-        }
+        if (splashState != SplashState.GameReady && splashState != SplashState.Hidden) { UpdateSplash(); return; }
+        if (splashState == SplashState.Hidden) return;
 
-        if (splashState == SplashState.Hidden)
-        {
-            return;
-        }
-
-        // Çàïîìèíàåì âðåìÿ ñòàðòà èãðû
         if (!isGameStarted)
         {
             isGameStarted = true;
             gameStartTime = Time.time;
+            PlayNextTheme();
         }
 
-        // Ïëàâíûé ñòàðò
         float timeSinceStart = Time.time - gameStartTime;
         float startFadeIn = Mathf.Clamp01(timeSinceStart / 1.5f);
 
-        // --- ÓÏÐÀÂËÅÍÈÅ ---
         if (useMouseInput)
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                mouseStartPos = Input.mousePosition;
-                isDragging = true;
-            }
-
-            if (Input.GetMouseButton(0) && isDragging)
-            {
-                float deltaX = (Input.mousePosition.x - mouseStartPos.x) * 0.5f;
-                targetOffset = Mathf.Clamp(deltaX, -maxOffset, maxOffset);
-            }
-
-            if (Input.GetMouseButtonUp(0))
-            {
-                isDragging = false;
-                targetOffset = 0f;
-            }
+            if (Input.GetMouseButtonDown(0)) { mouseStartPos = Input.mousePosition; isDragging = true; }
+            if (Input.GetMouseButton(0) && isDragging) targetOffset = Mathf.Clamp((Input.mousePosition.x - mouseStartPos.x) * 0.5f, -maxOffset, maxOffset);
+            if (Input.GetMouseButtonUp(0)) { isDragging = false; targetOffset = 0f; }
         }
 
-        if (autoMove && !isDragging)
-        {
-            float autoOffset = Mathf.Sin(timeSinceStart * moveSpeed) * maxOffset;
-            targetOffset = autoOffset * startFadeIn;
-        }
+        if (battleThemes != null && battleThemes.Length > 0 && audioSource != null && !audioSource.isPlaying && isGameStarted) PlayNextTheme();
+
+        if (autoMove && !isDragging) targetOffset = Mathf.Sin(timeSinceStart * moveSpeed) * maxOffset * startFadeIn;
 
         currentOffset = Mathf.Lerp(currentOffset, targetOffset, Time.deltaTime * 3f);
 
-        // --- ÎÁÍÎÂËßÅÌ ÑËÎÈ ---
         for (int i = 0; i < roadLayers.Length; i++)
         {
             if (roadLayers[i] == null) continue;
 
             float speed = layerSpeeds[i];
             RectTransform layer = roadLayers[i];
-
             Vector2 pos = layer.anchoredPosition;
             pos.x = layerStartPositions[i].x + currentOffset * speed;
             pos.y = layerStartPositions[i].y;
 
-            if (enableVerticalOffset)
-            {
-                float yOffset = -currentOffset * speed * verticalOffsetIntensity * 0.3f;
-                pos.y += yOffset;
-            }
-
+            if (enableVerticalOffset) pos.y += -currentOffset * speed * verticalOffsetIntensity * 0.3f;
             layer.anchoredPosition = pos;
 
             if (enableScaleEffect)
             {
                 float progress = Mathf.Abs(currentOffset) / maxOffset;
-                float scaleFactor = 1f + progress * scaleIntensity * speed;
-                layer.localScale = layerStartScales[i] * scaleFactor;
+                layer.localScale = layerStartScales[i] * (1f + progress * scaleIntensity * speed);
             }
         }
     }
+
+    private void PlayNextTheme()
+    {
+        if (battleThemes == null || battleThemes.Length == 0 || audioSource == null) return;
+
+        currentThemeIndex = (currentThemeIndex + 1) % battleThemes.Length;
+        audioSource.clip = battleThemes[currentThemeIndex];
+        audioSource.volume = 0f;
+        audioSource.Play();
+
+        if (fadeInCoroutine != null) StopCoroutine(fadeInCoroutine);
+        fadeInCoroutine = StartCoroutine(FadeInVolume());
+    }
+
+    private IEnumerator FadeInVolume()
+    {
+        float elapsed = 0f;
+        while (elapsed < fadeInDuration)
+        {
+            elapsed += Time.deltaTime;
+            audioSource.volume = Mathf.Lerp(0f, maxVolume, elapsed / fadeInDuration);
+            yield return null;
+        }
+        audioSource.volume = maxVolume;
+    }
+
+    public void StopAllThemes() => audioSource?.Stop();
 
     void UpdateSplash()
     {
@@ -215,42 +190,17 @@ public class Road25D : MonoBehaviour
         switch (splashState)
         {
             case SplashState.Showing:
-                if (splashTimer >= splashDuration)
-                {
-                    splashState = SplashState.FlyingOut;
-                    splashTimer = 0f;
-                }
+                if (splashTimer >= splashDuration) { splashState = SplashState.FlyingOut; splashTimer = 0f; }
                 break;
-
             case SplashState.FlyingOut:
                 if (splashImage != null)
                 {
                     float progress = Mathf.Clamp01(splashTimer / flyOutDuration);
                     float easedProgress = flyOutCurve.Evaluate(progress);
-
-                    Vector2 currentPos = splashStartPos + flyOutOffset * easedProgress;
-                    splashImage.anchoredPosition = currentPos;
-
-                    if (progress >= 1f)
-                    {
-                        splashImage.gameObject.SetActive(false);
-                        splashState = SplashState.Hidden;
-                        splashState = SplashState.GameReady;
-                    }
+                    splashImage.anchoredPosition = splashStartPos + flyOutOffset * easedProgress;
+                    if (progress >= 1f) { splashImage.gameObject.SetActive(false); splashState = SplashState.GameReady; }
                 }
                 break;
-        }
-    }
-
-    void SkipSplash()
-    {
-        if (splashState == SplashState.Showing || splashState == SplashState.FlyingOut)
-        {
-            if (splashImage != null)
-            {
-                splashImage.gameObject.SetActive(false);
-            }
-            splashState = SplashState.GameReady;
         }
     }
 }

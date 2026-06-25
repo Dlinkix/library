@@ -27,6 +27,7 @@ public class DataGame : ScriptableObject
     public class EnemyData
     {
         public string enemyName;
+        public Sprite EnemyImage;
         public int maxHealth = 100;
         public int maxStagger = 16;
         public int baseSpeedMin = 1;

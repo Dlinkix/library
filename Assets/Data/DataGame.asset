@@ -25,6 +25,7 @@ MonoBehaviour:
     diceRollPlayer: 2
   enemyData:
   - enemyName: 
+    EnemyImage: {fileID: -2278566297644842510, guid: 3c8b75562ca105b4d87647ead4260d2a, type: 3}
     maxHealth: 10
     maxStagger: 1
     baseSpeedMin: 2
@@ -35,6 +36,7 @@ MonoBehaviour:
     color: {r: 0, g: 0, b: 0, a: 0}
     diceRollEnemy: 3
   - enemyName: Elite Guard
+    EnemyImage: {fileID: -2278566297644842510, guid: 3c8b75562ca105b4d87647ead4260d2a, type: 3}
     maxHealth: 24
     maxStagger: 8
     baseSpeedMin: 2
@@ -45,6 +47,7 @@ MonoBehaviour:
     color: {r: 0.8226415, g: 0.55386466, b: 0.16851744, a: 1}
     diceRollEnemy: 3
   - enemyName: Big Brute
+    EnemyImage: {fileID: -1016312970553176362, guid: 742b87eea2770d241852883191f30c10, type: 3}
     maxHealth: 80
     maxStagger: 20
     baseSpeedMin: 1

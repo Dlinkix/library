@@ -47,53 +47,26 @@ public class FightMapNodeView : MonoBehaviour
         owner = generator;
         nodeId = runtimeNodeId;
         CacheReferences();
-
-        if (button == null)
+        if (button != null)
         {
-            return;
+            button.onClick.RemoveAllListeners();
+            button.onClick.AddListener(HandleClick);
         }
-
-        button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(HandleClick);
     }
 
     public void SetState(bool selectable, bool selected, bool completed, bool visited, int votes, Color selectedColor, Color completedColor, Color visitedColor, Color disabledTint)
     {
         CacheReferences();
-
         if (iconImage != null)
         {
-            if (selected)
-            {
-                iconImage.color = selectedColor;
-            }
-            else if (completed)
-            {
-                iconImage.color = completedColor;
-            }
-            else if (visited)
-            {
-                iconImage.color = visitedColor;
-            }
-            else if (selectable)
-            {
-                iconImage.color = Color.Lerp(baseColor, Color.white, 0.25f);
-            }
-            else
-            {
-                iconImage.color = Color.Lerp(baseColor, disabledTint, 0.65f);
-            }
+            if (selected) iconImage.color = selectedColor;
+            else if (completed) iconImage.color = completedColor;
+            else if (visited) iconImage.color = visitedColor;
+            else if (selectable) iconImage.color = Color.Lerp(baseColor, Color.white, 0.25f);
+            else iconImage.color = Color.Lerp(baseColor, disabledTint, 0.65f);
         }
-
-        if (button != null)
-        {
-            button.interactable = selectable;
-        }
-
-        if (voteText != null)
-        {
-            voteText.text = votes > 0 ? votes.ToString() : string.Empty;
-        }
+        if (button != null) button.interactable = selectable;
+        if (voteText != null) voteText.text = votes > 0 ? votes.ToString() : string.Empty;
     }
 
     public void ApplyMetadata(int runtimeNodeId, int runtimeLane, int runtimeColumn, MapRoomType runtimeRoomType, bool runtimeIsStart, bool runtimeIsBoss)
@@ -108,39 +81,15 @@ public class FightMapNodeView : MonoBehaviour
         ApplyBaseVisual();
     }
 
-    private void Reset()
-    {
-        CacheReferences();
-        ApplyBaseVisual();
-    }
-
-    private void OnValidate()
-    {
-        CacheReferences();
-        ApplyBaseVisual();
-    }
-
-    private void HandleClick()
-    {
-        owner?.HandleNodeSelected(this);
-    }
+    private void Reset() { CacheReferences(); ApplyBaseVisual(); }
+    private void OnValidate() { CacheReferences(); ApplyBaseVisual(); }
+    private void HandleClick() => owner?.HandleNodeSelected(this);
 
     private void CacheReferences()
     {
-        if (iconImage == null)
-        {
-            iconImage = GetComponent<Image>();
-        }
-
-        if (button == null)
-        {
-            button = GetComponent<Button>();
-        }
-
-        if (voteText == null)
-        {
-            voteText = GetComponentInChildren<TextMeshProUGUI>(true);
-        }
+        if (iconImage == null) iconImage = GetComponent<Image>();
+        if (button == null) button = GetComponent<Button>();
+        if (voteText == null) voteText = GetComponentInChildren<TextMeshProUGUI>(true);
 
         if (voteText == null)
         {
@@ -151,7 +100,6 @@ public class FightMapNodeView : MonoBehaviour
             textRect.anchorMax = Vector2.one;
             textRect.offsetMin = Vector2.zero;
             textRect.offsetMax = Vector2.zero;
-
             voteText = textObject.GetComponent<TextMeshProUGUI>();
             voteText.fontSize = 24f;
             voteText.alignment = TextAlignmentOptions.Center;
@@ -162,15 +110,7 @@ public class FightMapNodeView : MonoBehaviour
 
     private void ApplyBaseVisual()
     {
-        if (iconImage != null)
-        {
-            iconImage.color = baseColor;
-            iconImage.raycastTarget = true;
-        }
-
-        if (voteText != null)
-        {
-            voteText.text = string.Empty;
-        }
+        if (iconImage != null) { iconImage.color = baseColor; iconImage.raycastTarget = true; }
+        if (voteText != null) voteText.text = string.Empty;
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 public static class FightMapSceneBuilder
 {
     private const string ConfigPath = "Assets/Data/FightMapConfig.asset";
-    private const string SceneRoadPath = "Canvas/bg/SceneRoad";
     private const string MapRootName = "FightMapRoot";
 
     [MenuItem("Tools/Fight/Build Fight Map In Scene")]
@@ -19,17 +18,11 @@ public static class FightMapSceneBuilder
         }
 
         GameObject sceneRoad = GameObject.Find("Canvas")?.transform.Find("bg/SceneRoad")?.gameObject;
-        if (sceneRoad == null)
-        {
-            Debug.LogError("[FightMapSceneBuilder] SceneRoad not found at Canvas/bg/SceneRoad.");
-            return;
-        }
+        if (sceneRoad == null) return;
 
         FightMapGenerator generator = sceneRoad.GetComponent<FightMapGenerator>();
         if (generator == null)
-        {
             generator = sceneRoad.AddComponent<FightMapGenerator>();
-        }
 
         RectTransform mapRoot = sceneRoad.transform.Find(MapRootName) as RectTransform;
         if (mapRoot == null)
@@ -62,7 +55,5 @@ public static class FightMapSceneBuilder
 
         AssetDatabase.SaveAssets();
         EditorSceneManager.SaveOpenScenes();
-
-        Debug.Log("[FightMapSceneBuilder] Fight map generated and disabled in Fight scene.");
     }
 }

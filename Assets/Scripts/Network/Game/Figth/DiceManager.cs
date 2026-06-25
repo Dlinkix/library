@@ -20,7 +20,6 @@ public class DiceSelectionManager : MonoBehaviour
 
     void Update()
     {
-        // Сброс выбора по правой кнопке мыши
         if (Input.GetMouseButtonDown(1))
         {
             ClearAllSelections();
@@ -29,7 +28,6 @@ public class DiceSelectionManager : MonoBehaviour
 
     public void SelectPlayerDice(DiceRoll dice)
     {
-        // Сбрасываем старый кубик
         if (selectedPlayerDice != null && selectedPlayerDice != dice)
         {
             selectedPlayerDice.SetSelected(false);
@@ -39,7 +37,6 @@ public class DiceSelectionManager : MonoBehaviour
         selectedPlayerDice.SetSelected(true);
         OnPlayerDiceSelected?.Invoke(dice);
 
-        // Показываем линию у нового кубика
         UIAimLine aimLine = dice.GetComponentInChildren<UIAimLine>();
         if (aimLine != null)
         {
@@ -67,16 +64,13 @@ public class DiceSelectionManager : MonoBehaviour
             }
         }
 
-        // ===== ИСПРАВЛЕНО: Ищем локального игрока через connection =====
         NetworkGamePlayer localPlayer = null;
 
-        // Способ 1: через NetworkClient
         if (NetworkClient.connection != null && NetworkClient.connection.identity != null)
         {
             localPlayer = NetworkClient.connection.identity.GetComponent<NetworkGamePlayer>();
         }
 
-        // Способ 2: через AllPlayers (запасной)
         if (localPlayer == null)
         {
             foreach (var player in NetworkGamePlayer.AllPlayers)
@@ -97,9 +91,6 @@ public class DiceSelectionManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("[SelectPlayerDice] Local player not found! Trying alternative method...");
-
-            // Способ 3: найти любой NetworkGamePlayer и проверить isLocalPlayer
             NetworkGamePlayer[] allPlayers = FindObjectsByType<NetworkGamePlayer>(FindObjectsSortMode.None);
             foreach (var player in allPlayers)
             {
@@ -109,14 +100,12 @@ public class DiceSelectionManager : MonoBehaviour
                     player.EnsureLocalHandUI();
                     player.UpdateHandVisibility();
                     player.RefreshLocalHandUI();
-                    Debug.Log("[SelectPlayerDice] Local player found via FindObjectsByType");
                     break;
                 }
             }
         }
 
         UpdateHandVisibilityForAllPlayers();
-        Debug.Log($"Selected player dice: {dice.ownerSlotIndex}, value: {dice.diceValue}");
     }
 
     public void SelectEnemyDice(DiceRoll dice)
@@ -138,7 +127,6 @@ public class DiceSelectionManager : MonoBehaviour
 
     public void ClearAllSelections()
     {
-        // Очищаем только выделение, но не данные кубиков
         if (selectedPlayerDice != null)
         {
             selectedPlayerDice.SetSelected(false);
@@ -155,7 +143,6 @@ public class DiceSelectionManager : MonoBehaviour
         UpdateHandVisibilityForAllPlayers();
     }
 
-    // ===== ОСТАВЛЯЕМ СТАРЫЙ МЕТОД ДЛЯ СОВМЕСТИМОСТИ =====
     public void ClearSelection()
     {
         ClearAllSelections();
@@ -172,13 +159,6 @@ public class DiceSelectionManager : MonoBehaviour
         }
     }
 
-    public DiceRoll GetSelectedPlayerDice()
-    {
-        return selectedPlayerDice;
-    }
-
-    public DiceRoll GetSelectedEnemyDice()
-    {
-        return selectedEnemyDice;
-    }
+    public DiceRoll GetSelectedPlayerDice() => selectedPlayerDice;
+    public DiceRoll GetSelectedEnemyDice() => selectedEnemyDice;
 }

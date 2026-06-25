@@ -84,10 +84,12 @@ public class NetworkGameEnemy : NetworkBehaviour
     private float actionTimer = 0f;
     private bool isExecutingActions = false;
     public bool IsExecutingActions => isExecutingActions;
+
     public override void OnStartServer()
     {
         if (!AllEnemies.Contains(this)) AllEnemies.Add(this);
     }
+
     [System.Serializable]
     public class AISelectionData
     {
@@ -97,6 +99,7 @@ public class NetworkGameEnemy : NetworkBehaviour
         public uint targetNetId;
         public int targetDiceIndex;
     }
+
     public override void OnStartClient()
     {
         if (!AllEnemies.Contains(this))
@@ -196,7 +199,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         SetAllDiceUIVisible(isVisible);
     }
 
-    // ===== ОБНОВЛЕННЫЙ МЕТОД: Управление видимостью UI кубиков =====
     public void SetAllDiceUIVisible(bool visible)
     {
         if (uiObject == null) return;
@@ -211,7 +213,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
     }
 
-    // ===== НОВЫЙ МЕТОД: Обновление диапазонов кубиков =====
     public void UpdateAllDiceRange()
     {
         if (uiObject == null) return;
@@ -232,7 +233,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
     }
 
-    // ===== НОВЫЙ МЕТОД: Обновление результатов кубиков =====
     public void UpdateAllDiceResult()
     {
         if (uiObject == null) return;
@@ -247,7 +247,6 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
     }
 
-    // ===== НОВЫЙ МЕТОД: Обновление значений кубиков =====
     public void UpdateDiceValues(int[] values)
     {
         if (values == null || values.Length == 0) return;
@@ -292,7 +291,6 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         Vector3 enemyPushPos = enemyPos + direction * pushDistance;
 
-        // Ограничиваем позицию границами Pass
         GameObject[] passObjects = GameObject.FindGameObjectsWithTag("Pass");
         foreach (GameObject pass in passObjects)
         {
@@ -425,7 +423,15 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (aimLine != null) Destroy(aimLine);
 
         imagechar = uiObject.transform.Find("ImageChar")?.GetComponent<Image>();
-        if (imagechar != null) imagechar.transform.localRotation = Quaternion.Euler(0, 180, 0);
+        if (imagechar != null)
+        {
+            imagechar.transform.localRotation = Quaternion.Euler(0, 180, 0);
+            DataGame.EnemyData enemyData = GetActiveEnemyData();
+            if (enemyData != null && enemyData.EnemyImage != null)
+            {
+                imagechar.sprite = enemyData.EnemyImage;
+            }
+        }
 
         hpText = uiObject.transform.Find("HpText")?.GetComponent<TMP_Text>();
         staggerText = uiObject.transform.Find("StaggerText")?.GetComponent<TMP_Text>();
@@ -471,10 +477,11 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
     }
+
     private void OnReadyChanged(bool oldValue, bool newValue)
     {
-        // Можно обновить UI если нужно
     }
+
     private void ApplyUIPositionBySpawnIndex()
     {
         if (!uiCreated || uiObject == null || spawnIndex < 0) return;
@@ -552,7 +559,6 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        // Отправляем значения клиентам для обновления UI
         RpcUpdateDiceValues(values.ToArray());
     }
 
@@ -576,13 +582,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     [Command(requiresAuthority = false)]
     public void CmdAISyncDiceSelection(int diceSlotIndex, int cardId, int cardIndex, uint targetNetId, int targetDiceIndex)
     {
-        Debug.Log($"[CmdAISyncDiceSelection] START: diceSlot={diceSlotIndex}, cardId={cardId}, cardIndex={cardIndex}, target={targetNetId}");
-
-        if (FightManager.Instance == null || uiObject == null)
-        {
-            Debug.Log("[CmdAISyncDiceSelection] FightManager or uiObject is null!");
-            return;
-        }
+        if (FightManager.Instance == null || uiObject == null) return;
 
         DiceRoll[] serverDices = uiObject.GetComponentsInChildren<DiceRoll>();
         DiceRoll serverDice = null;
@@ -596,13 +596,8 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        if (serverDice == null)
-        {
-            Debug.Log($"[CmdAISyncDiceSelection] Dice {diceSlotIndex} not found!");
-            return;
-        }
+        if (serverDice == null) return;
 
-        // ===== НАХОДИМ КАРТУ ПО ID, А НЕ ПО ИНДЕКСУ =====
         int actualIndex = -1;
         for (int i = 0; i < enemyHand.Count; i++)
         {
@@ -613,17 +608,10 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        if (actualIndex == -1)
-        {
-            Debug.Log($"[CmdAISyncDiceSelection] Card {cardId} not found in enemy hand!");
-            return;
-        }
+        if (actualIndex == -1) return;
 
-        // ===== ИСПОЛЬЗУЕМ АКТУАЛЬНЫЙ ИНДЕКС =====
         serverDice.SelectTarget(targetNetId, targetDiceIndex);
         serverDice.SelectCard(cardId, actualIndex);
-
-        Debug.Log($"[CmdAISyncDiceSelection] SUCCESS: Synced dice {diceSlotIndex}: card {cardId} at index {actualIndex}, target {targetNetId}");
     }
 
     [Command(requiresAuthority = false)]
@@ -634,7 +622,6 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         isReady = true;
 
-        // Проверяем только игроков, враги готовятся отдельно
         bool allPlayersReady = true;
         foreach (var player in NetworkGamePlayer.AllPlayers)
         {
@@ -657,7 +644,6 @@ public class NetworkGameEnemy : NetworkBehaviour
 
         if (allPlayersReady && allEnemiesReady)
         {
-            Debug.Log("[FightManager] All players and enemies are ready!");
             FightManager.OnAllPlayersReady?.Invoke();
         }
     }
@@ -672,23 +658,14 @@ public class NetworkGameEnemy : NetworkBehaviour
         int currentLight = GetActiveEnemyData()?.baseStartLight ?? 3;
 
         NetworkGamePlayer targetPlayer = GetRandomPlayerTarget();
-        if (targetPlayer == null)
-        {
-            Debug.Log("[AI] No target player found!");
-            return;
-        }
+        if (targetPlayer == null) return;
 
         DiceRoll[] playerDices = targetPlayer.UIObject.GetComponentsInChildren<DiceRoll>();
-        if (playerDices.Length == 0)
-        {
-            Debug.Log("[AI] Target player has no dices!");
-            return;
-        }
+        if (playerDices.Length == 0) return;
 
         List<int> availableHand = new List<int>(enemyHand);
         int syncedCount = 0;
 
-        // ===== ПРОХОДИМ ПО КАЖДОМУ КУБИКУ =====
         foreach (var dice in dices)
         {
             if (dice == null) continue;
@@ -718,22 +695,14 @@ public class NetworkGameEnemy : NetworkBehaviour
                     currentLight -= selectedCard.lightCost;
                     int randomDiceIndex = Random.Range(0, playerDices.Length);
 
-                    // Сохраняем на кубике
                     dice.SelectTarget(targetPlayer.netId, randomDiceIndex);
                     dice.SelectCard(selectedCardId, originalIndex);
 
                     availableHand.RemoveAt(availableHand.IndexOf(selectedCardId));
-
-                    Debug.Log($"[AI] Enemy selected card {selectedCardId} for dice {dice.ownerSlotIndex} (original index: {originalIndex})");
                 }
-            }
-            else
-            {
-                Debug.Log($"[AI] No affordable card for dice {dice.ownerSlotIndex}");
             }
         }
 
-        // ===== СИНХРОНИЗИРУЕМ КАЖДЫЙ КУБИК ОТДЕЛЬНО =====
         foreach (var dice in dices)
         {
             if (dice != null && dice.hasSelection)
@@ -749,15 +718,6 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        // ===== ТОЛЬКО ПОСЛЕ ВСЕХ СИНХРОНИЗАЦИЙ СТАВИМ READY =====
-        if (syncedCount > 0)
-        {
-            Debug.Log($"[AI] Synced {syncedCount} dices, enemy ready!");
-        }
-        else
-        {
-            Debug.Log($"[AI] No dices synced, enemy ready anyway!");
-        }
         CmdSetEnemyReady();
     }
 
@@ -773,8 +733,6 @@ public class NetworkGameEnemy : NetworkBehaviour
     [Server]
     public void QueueCardEffects(CardData card, int cardIndex, NetworkGamePlayer targetPlayer)
     {
-        Debug.Log($"[QueueCardEffects] Applying card {card.cardName} (ID: {card.cardId}) to player {targetPlayer.PlayerName}");
-
         RpcShowCardView(card.cardId, cardIndex);
 
         List<int> rollValues = new List<int>();
@@ -795,23 +753,15 @@ public class NetworkGameEnemy : NetworkBehaviour
                 int roll = rollValues[attackIndex];
                 int currentIndex = attackIndex;
 
-                // ===== 1. АНИМАЦИЯ: ПЕРЕМЕЩАЕМ КУБИК В ПЛЕЙСХОЛДЕР =====
                 pendingActions.Enqueue(() => {
                     RpcMoveDiceToPlaceholder(cardIndex, currentIndex);
                 });
 
-                // ===== 2. ЗАДЕРЖКА ПЕРЕД АТАКОЙ (ЧТОБЫ УВИДЕТЬ АНИМАЦИЮ) =====
-                pendingActions.Enqueue(() => {
-                    Debug.Log($"[QueueCardEffects] Waiting before attack...");
-                });
-
-                // ===== 3. ПРИМЕНЯЕМ АТАКУ С ЗАДЕРЖКОЙ =====
                 pendingActions.Enqueue(() => {
                     targetPlayer.PushPlayerUI(this);
                     ApplyAttackToPlayer(attack, targetPlayer, roll);
                 });
 
-                // ===== 4. АНИМАЦИЯ: ВОЗВРАЩАЕМ КУБИК В ГРИД =====
                 pendingActions.Enqueue(() => {
                     RpcReturnDiceToGrid(cardIndex);
                 });
@@ -836,7 +786,7 @@ public class NetworkGameEnemy : NetworkBehaviour
     [Server]
     private IEnumerator ProcessActionQueue()
     {
-        float totalDelay = 0.5f; // Уменьшил задержку
+        float totalDelay = 0.5f;
 
         while (pendingActions.Count > 0)
         {
@@ -847,19 +797,12 @@ public class NetworkGameEnemy : NetworkBehaviour
         }
 
         isExecutingActions = false;
-
-    
-
-        Debug.Log("[NetworkGameEnemy] All sync actions completed");
     }
-
 
     [Server]
     private void ApplyAttackToPlayer(AttackData attack, NetworkGamePlayer target, int roll)
     {
         if (target == null) return;
-
-        Debug.Log($"[ApplyAttackToPlayer] Applying attack to {target.PlayerName}. Type: {attack.type}, Roll: {roll}");
 
         switch (attack.type)
         {
@@ -867,15 +810,6 @@ public class NetworkGameEnemy : NetworkBehaviour
                 int damage = roll;
                 target.hp -= damage;
                 if (target.hp < 0) target.hp = 0;
-                Debug.Log($"[ApplyAttackToPlayer] Dealt {damage} damage to {target.PlayerName}. HP: {target.hp}");
-                break;
-
-            case AttackData.Type.Block:
-                // Логика блока
-                break;
-
-            case AttackData.Type.Escape:
-                // Логика побега
                 break;
         }
 
@@ -884,6 +818,7 @@ public class NetworkGameEnemy : NetworkBehaviour
             target.stagger += attack.staggerDamage;
         }
     }
+
     [Server]
     private void ApplyPassiveEffect(DataGame.PassiveAction passive)
     {
@@ -912,27 +847,17 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (FightManager.Instance == null || uiObject == null) return;
 
         DiceRoll[] serverDices = uiObject.GetComponentsInChildren<DiceRoll>();
-        Debug.Log($"[CmdSyncAllAIDiceSelections] Found {serverDices.Length} dices");
-
         int syncedCount = 0;
         foreach (var dice in serverDices)
         {
             if (dice != null && dice.hasSelection)
             {
-                // ===== ПЕРЕДАЕМ ТОЛЬКО ID КАРТЫ, ИНДЕКС БУДЕТ НАЙДЕН НА СЕРВЕРЕ =====
-                CmdAISyncDiceSelection(
-                    dice.ownerSlotIndex,
-                    dice.selectedCardId,
-                    -1, 
-                    dice.selectedTargetEnemyNetId,
-                    dice.selectedTargetDiceIndex
-                );
+                CmdAISyncDiceSelection(dice.ownerSlotIndex, dice.selectedCardId, -1, dice.selectedTargetEnemyNetId, dice.selectedTargetDiceIndex);
                 syncedCount++;
             }
         }
-
-        Debug.Log($"[CmdSyncAllAIDiceSelections] Synced {syncedCount} dices");
     }
+
     [Server]
     private NetworkGamePlayer GetRandomPlayerTarget()
     {
@@ -945,12 +870,7 @@ public class NetworkGameEnemy : NetworkBehaviour
             }
         }
 
-        if (alivePlayers.Count == 0)
-        {
-            Debug.LogWarning("[GetRandomPlayerTarget] No alive players found!");
-            return null;
-        }
-
+        if (alivePlayers.Count == 0) return null;
         return alivePlayers[Random.Range(0, alivePlayers.Count)];
     }
 
@@ -960,18 +880,9 @@ public class NetworkGameEnemy : NetworkBehaviour
         if (cardViewPrefab == null)
         {
             cardViewPrefab = Resources.Load<CardView>("UI/CardView");
-            if (cardViewPrefab == null)
-            {
-                Debug.LogError("[NetworkGameEnemy] CardView prefab not found in Resources/UI/CardView!");
-                return;
-            }
         }
 
-        if (uiObject == null)
-        {
-            Debug.LogError("[NetworkGameEnemy] uiObject is null, cannot create CardView!");
-            return;
-        }
+        if (cardViewPrefab == null || uiObject == null) return;
 
         GameObject cardViewObj = Instantiate(cardViewPrefab.gameObject, uiObject.transform);
         currentCardView = cardViewObj.GetComponent<CardView>();
@@ -984,90 +895,36 @@ public class NetworkGameEnemy : NetworkBehaviour
                 rect.anchorMin = new Vector2(0.5f, 0.5f);
                 rect.anchorMax = new Vector2(0.5f, 0.5f);
                 rect.pivot = new Vector2(0.5f, 0.5f);
-                rect.anchoredPosition = new Vector2(0f, 90f); // Центр врага
+                rect.anchoredPosition = new Vector2(0f, 90f);
                 rect.sizeDelta = new Vector2(400f, 300f);
             }
 
             currentCardView.gameObject.SetActive(false);
             isCardViewCreated = true;
-            Debug.Log("[NetworkGameEnemy] CardView created");
         }
     }
 
     [Client]
     public void ShowCardView(DataGame.CardData cardData, int cardIndex)
     {
-        if (!isCardViewCreated)
-            CreateCardView();
-
+        if (!isCardViewCreated) CreateCardView();
         if (currentCardView == null) return;
-
         currentCardView.SetupCard(cardData, cardIndex);
         currentCardView.ShowCardView();
-        Debug.Log($"[NetworkGameEnemy] Showing CardView for card: {cardData.cardName} (index: {cardIndex})");
     }
 
     [Client]
     public void HideCardView()
     {
-        if (currentCardView != null)
-        {
-            currentCardView.HideCardView();
-            Debug.Log("[NetworkGameEnemy] CardView hidden");
-        }
+        if (currentCardView != null) currentCardView.HideCardView();
     }
 
-    [ClientRpc]
-    public void RpcShowCardView(int cardId, int cardIndex)
-    {
-        DataGame.CardData cardData = GetCardData(cardId);
-        if (cardData != null)
-        {
-            ShowCardView(cardData, cardIndex);
-        }
-    }
-
-    [ClientRpc]
-    public void RpcHideCardView()
-    {
-        HideCardView();
-    }
-
-    [ClientRpc]
-    public void RpcMoveDiceToPlaceholder(int cardIndex, int attackIndex)
-    {
-        if (currentCardView != null && currentCardView.gameObject.activeSelf)
-        {
-            currentCardView.MoveDiceToPlaceholder(cardIndex, attackIndex);
-        }
-    }
-
-    [ClientRpc]
-    public void RpcReturnDiceToGrid(int cardIndex)
-    {
-        if (currentCardView != null && currentCardView.gameObject.activeSelf)
-        {
-            currentCardView.ReturnDiceToGrid(cardIndex);
-        }
-    }
-
-    [ClientRpc]
-    public void RpcUpdateAttackRolls(int cardIndex, int[] rollValues)
-    {
-        if (currentCardView != null && currentCardView.gameObject.activeSelf)
-        {
-            currentCardView.UpdateAttackDiceValues(cardIndex, rollValues);
-        }
-    }
-
-    [ClientRpc]
-    public void RpcDisableAttackDice(int cardId, int attackIndex)
-    {
-        if (currentCardView != null && currentCardView.gameObject.activeSelf)
-        {
-            currentCardView.DisableAttackDice(attackIndex);
-        }
-    }
+    [ClientRpc] public void RpcShowCardView(int cardId, int cardIndex) { if (GetCardData(cardId) is DataGame.CardData cardData) ShowCardView(cardData, cardIndex); }
+    [ClientRpc] public void RpcHideCardView() => HideCardView();
+    [ClientRpc] public void RpcMoveDiceToPlaceholder(int cardIndex, int attackIndex) { if (currentCardView != null && currentCardView.gameObject.activeSelf) currentCardView.MoveDiceToPlaceholder(cardIndex, attackIndex); }
+    [ClientRpc] public void RpcReturnDiceToGrid(int cardIndex) { if (currentCardView != null && currentCardView.gameObject.activeSelf) currentCardView.ReturnDiceToGrid(cardIndex); }
+    [ClientRpc] public void RpcUpdateAttackRolls(int cardIndex, int[] rollValues) { if (currentCardView != null && currentCardView.gameObject.activeSelf) currentCardView.UpdateAttackDiceValues(cardIndex, rollValues); }
+    [ClientRpc] public void RpcDisableAttackDice(int cardId, int attackIndex) { if (currentCardView != null && currentCardView.gameObject.activeSelf) currentCardView.DisableAttackDice(attackIndex); }
 
     [Server]
     private void ApplyEnemyStatsFromData()

@@ -40,26 +40,14 @@ public class FightMapGenerator : MonoBehaviour
 
     public static int BuildNodeId(int column, int lane, bool isStart, bool isBoss)
     {
-        if (isStart)
-        {
-            return 0;
-        }
-
-        if (isBoss)
-        {
-            return 9999;
-        }
-
+        if (isStart) return 0;
+        if (isBoss) return 9999;
         return column * 10 + (lane + 1);
     }
 
     public void BuildMap()
     {
-        if (config == null)
-        {
-            Debug.LogError("[FightMapGenerator] FightMapConfig is not assigned.");
-            return;
-        }
+        if (config == null) return;
 
         EnsureMapHierarchy();
         ClearGeneratedContent();
@@ -67,46 +55,24 @@ public class FightMapGenerator : MonoBehaviour
         FightMapNodeView startNode = CreateNode("StartNode", startPosition, specialNodeSize, -1, 0, MapRoomType.Start, true, false);
 
         List<MapRoomType>[] laneRoomPools = BuildLanePools();
-        if (laneRoomPools == null)
-        {
-            ClearGeneratedContent();
-            return;
-        }
+        if (laneRoomPools == null) { ClearGeneratedContent(); return; }
 
         List<FightMapNodeView> previousColumnNodes = new List<FightMapNodeView> { startNode };
         for (int column = 1; column <= config.RoomsPerLane; column++)
         {
             List<FightMapNodeView> currentColumnNodes = new List<FightMapNodeView>(3);
-
             for (int lane = 0; lane < 3; lane++)
             {
                 MapRoomType roomType = laneRoomPools[lane][column - 1];
                 Vector2 position = new Vector2(startPosition.x + columnSpacing * column, GetLaneY(lane));
-                FightMapNodeView node = CreateNode(
-                    $"Lane{lane + 1}_Room{column}_{roomType}",
-                    position,
-                    roomNodeSize,
-                    lane,
-                    column,
-                    roomType,
-                    false,
-                    false);
+                FightMapNodeView node = CreateNode($"Lane{lane + 1}_Room{column}_{roomType}", position, roomNodeSize, lane, column, roomType, false, false);
                 currentColumnNodes.Add(node);
             }
-
             CreateConnections(previousColumnNodes, currentColumnNodes, column == 1);
             previousColumnNodes = currentColumnNodes;
         }
 
-        FightMapNodeView bossNode = CreateNode(
-            "BossNode",
-            bossPosition,
-            specialNodeSize,
-            -1,
-            config.RoomsPerLane + 1,
-            MapRoomType.Boss,
-            false,
-            true);
+        FightMapNodeView bossNode = CreateNode("BossNode", bossPosition, specialNodeSize, -1, config.RoomsPerLane + 1, MapRoomType.Boss, false, true);
         CreateConnections(previousColumnNodes, new List<FightMapNodeView> { bossNode }, false);
 
         InitializeRuntimeNodes();
@@ -130,23 +96,11 @@ public class FightMapGenerator : MonoBehaviour
             return;
         }
 
-        if (node == null || !IsSelectable(node))
-        {
-            return;
-        }
+        if (node == null || !IsSelectable(node)) return;
 
         currentNode = node;
         pathStarted = true;
-
-        if (node.IsBoss)
-        {
-            nextSelectableColumn = node.ColumnIndex;
-        }
-        else
-        {
-            nextSelectableColumn = node.ColumnIndex + 1;
-        }
-
+        nextSelectableColumn = node.IsBoss ? node.ColumnIndex : node.ColumnIndex + 1;
         RefreshNodeStates();
     }
 
@@ -161,10 +115,7 @@ public class FightMapGenerator : MonoBehaviour
         if (mapRoot == null)
         {
             Transform existingRoot = transform.Find(MapRootName);
-            if (existingRoot != null)
-            {
-                mapRoot = existingRoot as RectTransform;
-            }
+            if (existingRoot != null) mapRoot = existingRoot as RectTransform;
         }
 
         if (mapRoot == null)
@@ -182,31 +133,20 @@ public class FightMapGenerator : MonoBehaviour
     private void ClearGeneratedContent()
     {
         nodes.Clear();
-
         RectTransform connectionsRoot = EnsureChildRoot(ConnectionsRootName);
         RectTransform nodesRoot = EnsureChildRoot(NodesRootName);
         DestroyChildrenImmediate(connectionsRoot);
         DestroyChildrenImmediate(nodesRoot);
     }
 
-    private FightMapNodeView CreateNode(
-        string objectName,
-        Vector2 anchoredPosition,
-        Vector2 size,
-        int lane,
-        int column,
-        MapRoomType roomType,
-        bool isStart,
-        bool isBoss)
+    private FightMapNodeView CreateNode(string objectName, Vector2 anchoredPosition, Vector2 size, int lane, int column, MapRoomType roomType, bool isStart, bool isBoss)
     {
         RectTransform nodesRoot = EnsureChildRoot(NodesRootName);
         GameObject nodeObject = new GameObject(objectName, typeof(RectTransform), typeof(Image), typeof(Button), typeof(FightMapNodeView));
         nodeObject.layer = gameObject.layer;
         RectTransform rectTransform = nodeObject.GetComponent<RectTransform>();
         rectTransform.SetParent(nodesRoot, false);
-        rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-        rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        rectTransform.anchorMin = rectTransform.anchorMax = rectTransform.pivot = new Vector2(0.5f, 0.5f);
         rectTransform.anchoredPosition = anchoredPosition;
         rectTransform.sizeDelta = size;
 
@@ -215,11 +155,7 @@ public class FightMapGenerator : MonoBehaviour
 
         Button button = nodeObject.GetComponent<Button>();
         ColorBlock colors = button.colors;
-        colors.normalColor = Color.white;
-        colors.highlightedColor = Color.white;
-        colors.pressedColor = Color.white;
-        colors.selectedColor = Color.white;
-        colors.disabledColor = Color.white;
+        colors.normalColor = colors.highlightedColor = colors.pressedColor = colors.selectedColor = colors.disabledColor = Color.white;
         colors.colorMultiplier = 1f;
         button.colors = colors;
         button.targetGraphic = image;
@@ -234,54 +170,30 @@ public class FightMapGenerator : MonoBehaviour
     {
         for (int fromIndex = 0; fromIndex < fromNodes.Count; fromIndex++)
         {
-            FightMapNodeView fromNode = fromNodes[fromIndex];
             for (int toIndex = 0; toIndex < toNodes.Count; toIndex++)
             {
-                FightMapNodeView toNode = toNodes[toIndex];
-
-                if (!ShouldCreateConnection(fromNode, toNode, fromStart))
-                {
-                    continue;
-                }
-
-                CreateConnectionVisual(fromNode.GetComponent<RectTransform>(), toNode.GetComponent<RectTransform>());
+                if (!ShouldCreateConnection(fromNodes[fromIndex], toNodes[toIndex], fromStart)) continue;
+                CreateConnectionVisual(fromNodes[fromIndex].GetComponent<RectTransform>(), toNodes[toIndex].GetComponent<RectTransform>());
             }
         }
     }
 
     private bool ShouldCreateConnection(FightMapNodeView fromNode, FightMapNodeView toNode, bool fromStart)
     {
-        if (fromNode == null || toNode == null)
-        {
-            return false;
-        }
-
-        if (fromStart)
-        {
-            return !toNode.IsBoss;
-        }
-
-        if (toNode.IsBoss)
-        {
-            return fromNode.ColumnIndex == config.RoomsPerLane;
-        }
-
+        if (fromNode == null || toNode == null) return false;
+        if (fromStart) return !toNode.IsBoss;
+        if (toNode.IsBoss) return fromNode.ColumnIndex == config.RoomsPerLane;
         return Mathf.Abs(fromNode.LaneIndex - toNode.LaneIndex) <= 1;
     }
 
     private void CreateConnectionVisual(RectTransform from, RectTransform to)
     {
         RectTransform connectionsRoot = EnsureChildRoot(ConnectionsRootName);
-        GameObject lineObject = new GameObject(
-            $"{from.gameObject.name}_To_{to.gameObject.name}",
-            typeof(RectTransform),
-            typeof(Image));
+        GameObject lineObject = new GameObject($"{from.gameObject.name}_To_{to.gameObject.name}", typeof(RectTransform), typeof(Image));
         lineObject.layer = gameObject.layer;
         RectTransform rectTransform = lineObject.GetComponent<RectTransform>();
         rectTransform.SetParent(connectionsRoot, false);
-        rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
-        rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        rectTransform.pivot = new Vector2(0.5f, 0.5f);
+        rectTransform.anchorMin = rectTransform.anchorMax = rectTransform.pivot = new Vector2(0.5f, 0.5f);
 
         Vector2 start = from.anchoredPosition;
         Vector2 end = to.anchoredPosition;
@@ -301,107 +213,54 @@ public class FightMapGenerator : MonoBehaviour
     public void InitializeRuntimeNodes()
     {
         nodes.Clear();
-
-        if (mapRoot == null)
-        {
-            EnsureMapHierarchy();
-        }
-
-        if (mapRoot == null)
-        {
-            return;
-        }
+        if (mapRoot == null) EnsureMapHierarchy();
+        if (mapRoot == null) return;
 
         FightMapNodeView[] foundNodes = mapRoot.GetComponentsInChildren<FightMapNodeView>(true);
         for (int i = 0; i < foundNodes.Length; i++)
         {
-            FightMapNodeView node = foundNodes[i];
-            int runtimeNodeId = BuildNodeId(node.ColumnIndex, node.LaneIndex, node.IsStart, node.IsBoss);
-            node.Bind(this, runtimeNodeId);
-            nodes.Add(node);
+            foundNodes[i].Bind(this, BuildNodeId(foundNodes[i].ColumnIndex, foundNodes[i].LaneIndex, foundNodes[i].IsStart, foundNodes[i].IsBoss));
+            nodes.Add(foundNodes[i]);
         }
     }
 
-    public FightMapNodeView[] GetRuntimeNodes()
-    {
-        InitializeRuntimeNodes();
-        return nodes.ToArray();
-    }
-
-    public void SetNodeSelectionHandler(Action<int> handler)
-    {
-        nodeSelectionHandler = handler;
-    }
+    public FightMapNodeView[] GetRuntimeNodes() { InitializeRuntimeNodes(); return nodes.ToArray(); }
+    public void SetNodeSelectionHandler(Action<int> handler) => nodeSelectionHandler = handler;
 
     public void SetMapVisible(bool visible)
     {
-        if (mapRoot == null)
-        {
-            InitializeRuntimeNodes();
-        }
-
-        if (mapRoot != null)
-        {
-            mapRoot.gameObject.SetActive(visible);
-        }
-
-        if (linkedVisualRoots == null)
-        {
-            return;
-        }
-
-        for (int i = 0; i < linkedVisualRoots.Length; i++)
-        {
-            if (linkedVisualRoots[i] != null)
-            {
-                linkedVisualRoots[i].SetActive(visible);
-            }
-        }
+        if (mapRoot == null) InitializeRuntimeNodes();
+        if (mapRoot != null) mapRoot.gameObject.SetActive(visible);
+        if (linkedVisualRoots == null) return;
+        for (int i = 0; i < linkedVisualRoots.Length; i++) if (linkedVisualRoots[i] != null) linkedVisualRoots[i].SetActive(visible);
     }
 
     public void ApplyNodeMetadata(Array descriptors)
     {
-        if (descriptors == null)
-        {
-            return;
-        }
-
+        if (descriptors == null) return;
         InitializeRuntimeNodes();
 
         foreach (object descriptor in descriptors)
         {
-            if (descriptor == null)
-            {
-                continue;
-            }
-
+            if (descriptor == null) continue;
             Type descriptorType = descriptor.GetType();
             int nodeId = (int)descriptorType.GetField("nodeId").GetValue(descriptor);
-            int laneIndex = (int)descriptorType.GetField("laneIndex").GetValue(descriptor);
-            int columnIndex = (int)descriptorType.GetField("columnIndex").GetValue(descriptor);
-            MapRoomType roomType = (MapRoomType)(int)descriptorType.GetField("roomType").GetValue(descriptor);
-            bool isStart = (bool)descriptorType.GetField("isStart").GetValue(descriptor);
-            bool isBoss = (bool)descriptorType.GetField("isBoss").GetValue(descriptor);
-
             FightMapNodeView node = nodes.FirstOrDefault(candidate => candidate.NodeId == nodeId);
             if (node != null)
             {
+                int laneIndex = (int)descriptorType.GetField("laneIndex").GetValue(descriptor);
+                int columnIndex = (int)descriptorType.GetField("columnIndex").GetValue(descriptor);
+                MapRoomType roomType = (MapRoomType)(int)descriptorType.GetField("roomType").GetValue(descriptor);
+                bool isStart = (bool)descriptorType.GetField("isStart").GetValue(descriptor);
+                bool isBoss = (bool)descriptorType.GetField("isBoss").GetValue(descriptor);
                 node.ApplyMetadata(nodeId, laneIndex, columnIndex, roomType, isStart, isBoss);
             }
         }
     }
 
-    public void ApplyRunState(
-        int currentNodeId,
-        int pendingNodeId,
-        IReadOnlyCollection<int> selectableNodeIds,
-        IReadOnlyCollection<int> completedNodeIds,
-        IReadOnlyCollection<int> visitedNodeIds,
-        IReadOnlyDictionary<int, int> voteCounts,
-        bool interactionEnabled)
+    public void ApplyRunState(int currentNodeId, int pendingNodeId, IReadOnlyCollection<int> selectableNodeIds, IReadOnlyCollection<int> completedNodeIds, IReadOnlyCollection<int> visitedNodeIds, IReadOnlyDictionary<int, int> voteCounts, bool interactionEnabled)
     {
         InitializeRuntimeNodes();
-
         for (int i = 0; i < nodes.Count; i++)
         {
             FightMapNodeView node = nodes[i];
@@ -427,42 +286,18 @@ public class FightMapGenerator : MonoBehaviour
 
     private bool IsSelectable(FightMapNodeView node)
     {
-        if (node == null || node.IsStart)
-        {
-            return false;
-        }
-
-        if (!pathStarted)
-        {
-            return node.ColumnIndex == 1;
-        }
-
-        if (currentNode == null)
-        {
-            return false;
-        }
-
-        if (node.IsBoss)
-        {
-            return currentNode.ColumnIndex == config.RoomsPerLane && nextSelectableColumn == node.ColumnIndex;
-        }
-
-        if (node.ColumnIndex != nextSelectableColumn || currentNode.IsBoss)
-        {
-            return false;
-        }
-
+        if (node == null || node.IsStart) return false;
+        if (!pathStarted) return node.ColumnIndex == 1;
+        if (currentNode == null) return false;
+        if (node.IsBoss) return currentNode.ColumnIndex == config.RoomsPerLane && nextSelectableColumn == node.ColumnIndex;
+        if (node.ColumnIndex != nextSelectableColumn || currentNode.IsBoss) return false;
         return Mathf.Abs(currentNode.LaneIndex - node.LaneIndex) <= 1;
     }
 
     private RectTransform EnsureChildRoot(string childName)
     {
         Transform existing = mapRoot.Find(childName);
-        if (existing != null)
-        {
-            return existing as RectTransform;
-        }
-
+        if (existing != null) return existing as RectTransform;
         GameObject childObject = new GameObject(childName, typeof(RectTransform));
         childObject.layer = gameObject.layer;
         RectTransform childRoot = childObject.GetComponent<RectTransform>();
@@ -487,38 +322,24 @@ public class FightMapGenerator : MonoBehaviour
         {
             GameObject child = parent.GetChild(i).gameObject;
 #if UNITY_EDITOR
-            if (!Application.isPlaying)
-            {
-                UnityEngine.Object.DestroyImmediate(child);
-            }
+            if (!Application.isPlaying) UnityEngine.Object.DestroyImmediate(child);
             else
 #endif
-            {
                 UnityEngine.Object.Destroy(child);
-            }
         }
     }
 
-    private float GetLaneY(int laneIndex)
-    {
-        return (1 - laneIndex) * laneSpacing;
-    }
+    private float GetLaneY(int laneIndex) => (1 - laneIndex) * laneSpacing;
 
     private List<MapRoomType>[] BuildLanePools()
     {
         List<MapRoomType>[] lanePools = new List<MapRoomType>[3];
         for (int lane = 0; lane < lanePools.Length; lane++)
         {
-            if (!config.TryBuildLanePool(lane, out List<MapRoomType> roomPool, out string error))
-            {
-                Debug.LogError($"[FightMapGenerator] {error}");
-                return null;
-            }
-
+            if (!config.TryBuildLanePool(lane, out List<MapRoomType> roomPool, out string error)) return null;
             ShuffleLanePool(roomPool, lane);
             lanePools[lane] = roomPool;
         }
-
         return lanePools;
     }
 
@@ -538,24 +359,15 @@ public class FightMapGenerator : MonoBehaviour
     {
         switch (roomType)
         {
-            case MapRoomType.Start:
-                return new Color(0.42f, 0.9f, 0.56f, 1f);
-            case MapRoomType.Mob:
-                return new Color(0.88f, 0.32f, 0.32f, 1f);
-            case MapRoomType.Shop:
-                return new Color(0.95f, 0.73f, 0.27f, 1f);
-            case MapRoomType.RandomEvent:
-                return new Color(0.38f, 0.72f, 1f, 1f);
-            case MapRoomType.Anomaly:
-                return new Color(0.65f, 0.38f, 0.95f, 1f);
-            case MapRoomType.EliteMob:
-                return new Color(1f, 0.46f, 0.22f, 1f);
-            case MapRoomType.Chest:
-                return new Color(0.98f, 0.86f, 0.38f, 1f);
-            case MapRoomType.Boss:
-                return new Color(0.75f, 0.16f, 0.2f, 1f);
-            default:
-                return Color.white;
+            case MapRoomType.Start: return new Color(0.42f, 0.9f, 0.56f, 1f);
+            case MapRoomType.Mob: return new Color(0.88f, 0.32f, 0.32f, 1f);
+            case MapRoomType.Shop: return new Color(0.95f, 0.73f, 0.27f, 1f);
+            case MapRoomType.RandomEvent: return new Color(0.38f, 0.72f, 1f, 1f);
+            case MapRoomType.Anomaly: return new Color(0.65f, 0.38f, 0.95f, 1f);
+            case MapRoomType.EliteMob: return new Color(1f, 0.46f, 0.22f, 1f);
+            case MapRoomType.Chest: return new Color(0.98f, 0.86f, 0.38f, 1f);
+            case MapRoomType.Boss: return new Color(0.75f, 0.16f, 0.2f, 1f);
+            default: return Color.white;
         }
     }
 }

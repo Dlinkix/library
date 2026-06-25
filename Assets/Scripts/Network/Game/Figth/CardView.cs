@@ -13,8 +13,8 @@ public class CardView : MonoBehaviour
     [SerializeField] private Image cardArt;
 
     [Header("Attack Dice")]
-    [SerializeField] private Transform attackGrid; // Grid контейнер
-    [SerializeField] private Transform dicePlaceholder; // Специальное место для активного кубика
+    [SerializeField] private Transform attackGrid;
+    [SerializeField] private Transform dicePlaceholder;
     [SerializeField] private GameObject diceAttackPrefab;
     [SerializeField] private int maxDiceCount = 6;
 
@@ -22,7 +22,7 @@ public class CardView : MonoBehaviour
     private DataGame.CardData cardData;
     private List<DiceAttackRoll> attackDices = new List<DiceAttackRoll>();
     private int activeDiceCount = 0;
-    private int currentActiveDiceIndex = -1; // Индекс активного кубика
+    private int currentActiveDiceIndex = -1;
     private int currentCardIndex = -1;
 
     void Awake()
@@ -64,7 +64,6 @@ public class CardView : MonoBehaviour
         currentCardIndex = cardIndex;
         currentActiveDiceIndex = -1;
 
-
         if (cardNameText != null) cardNameText.text = data.cardName;
         if (costText != null) costText.text = $"Light: {data.lightCost}";
         if (descText != null) descText.text = data.GetShortDescription();
@@ -78,7 +77,6 @@ public class CardView : MonoBehaviour
         foreach (var dice in attackDices)
         {
             dice.gameObject.SetActive(false);
-            // Возвращаем все кубики в Grid
             dice.transform.SetParent(attackGrid);
         }
 
@@ -107,7 +105,6 @@ public class CardView : MonoBehaviour
                     attackDices.Add(dice);
                 }
             }
-            Debug.Log($"[CardView] Added {needMore} more dice, total: {attackDices.Count}");
         }
 
         for (int i = 0; i < attackCount && i < attackDices.Count; i++)
@@ -133,40 +130,30 @@ public class CardView : MonoBehaviour
         }
     }
 
-    // ===== ПЕРЕМЕЩАЕМ КУБИК В ПЛЕЙСХОЛДЕР =====
     public void MoveDiceToPlaceholder(int cardIndex, int attackIndex)
     {
-        if (currentCardIndex != cardIndex) return; 
+        if (currentCardIndex != cardIndex) return;
         if (attackIndex < 0 || attackIndex >= attackDices.Count) return;
-        if (dicePlaceholder == null)
-        {
-            Debug.LogWarning("[CardView] DicePlaceholder is null!");
-            return;
-        }
+        if (dicePlaceholder == null) return;
 
         DiceAttackRoll dice = attackDices[attackIndex];
         if (dice == null || !dice.gameObject.activeSelf) return;
 
-        // Перемещаем кубик в плейсхолдер
         dice.transform.SetParent(dicePlaceholder);
         dice.transform.localPosition = Vector3.zero;
         dice.transform.localRotation = Quaternion.identity;
 
-        // ===== МЕНЯЕМ РАЗМЕР =====
         RectTransform rect = dice.GetComponent<RectTransform>();
         if (rect != null)
         {
-            rect.sizeDelta = new Vector2(30f, 30f); // Увеличиваем для наглядности
+            rect.sizeDelta = new Vector2(30f, 30f);
             rect.localScale = Vector3.one;
         }
 
-        // ===== МЕНЯЕМ ЦВЕТ НА АКТИВНЫЙ =====
         dice.SetActiveState(true);
-
         currentActiveDiceIndex = attackIndex;
     }
 
-    // ===== ВОЗВРАЩАЕМ КУБИК ИЗ ПЛЕЙСХОЛДЕРА В ГРИД =====
     public void ReturnDiceToGrid(int cardIndex)
     {
         if (currentCardIndex != cardIndex) return;
@@ -175,28 +162,21 @@ public class CardView : MonoBehaviour
         DiceAttackRoll dice = attackDices[currentActiveDiceIndex];
         if (dice == null) return;
 
-        // Возвращаем в Grid
         dice.transform.SetParent(attackGrid);
 
-        // ===== ВОССТАНАВЛИВАЕМ РАЗМЕР =====
         RectTransform rect = dice.GetComponent<RectTransform>();
         if (rect != null)
         {
-            rect.sizeDelta = new Vector2(23f, 23f); // Исходный размер для Grid
+            rect.sizeDelta = new Vector2(23f, 23f);
             rect.localScale = Vector3.one;
         }
 
-        // ===== ВОЗВРАЩАЕМ ОРИГИНАЛЬНЫЙ ЦВЕТ =====
         dice.SetActiveState(false);
-
-        // Выключаем кубик (атака выполнена)
         dice.gameObject.SetActive(false);
 
-        Debug.Log($"[CardView] Returned dice {currentActiveDiceIndex} to grid - size: 50x50, color: original, disabled");
         currentActiveDiceIndex = -1;
     }
 
-    // ===== ВЫКЛЮЧАЕМ КОНКРЕТНЫЙ КУБИК =====
     public void DisableAttackDice(int attackIndex)
     {
         if (attackIndex < 0 || attackIndex >= attackDices.Count) return;
@@ -204,13 +184,11 @@ public class CardView : MonoBehaviour
         DiceAttackRoll dice = attackDices[attackIndex];
         if (dice != null && dice.gameObject.activeSelf)
         {
-            // Если кубик в плейсхолдере - сначала возвращаем
             if (dice.transform.parent == dicePlaceholder)
             {
                 dice.transform.SetParent(attackGrid);
             }
             dice.gameObject.SetActive(false);
-            Debug.Log($"[CardView] Disabled attack dice {attackIndex}");
         }
     }
 
@@ -220,7 +198,6 @@ public class CardView : MonoBehaviour
         {
             if (dice != null && dice.gameObject.activeSelf)
             {
-                // Возвращаем все в Grid если они в плейсхолдере
                 if (dice.transform.parent == dicePlaceholder)
                 {
                     dice.transform.SetParent(attackGrid);
@@ -230,7 +207,6 @@ public class CardView : MonoBehaviour
         }
         activeDiceCount = 0;
         currentActiveDiceIndex = -1;
-        Debug.Log("[CardView] Disabled all attack dices");
     }
 
     public void ResetAttackDices()

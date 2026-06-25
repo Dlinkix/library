@@ -17,18 +17,16 @@ public class DiceAttackRoll : MonoBehaviour
     [SerializeField] private Color escapeColor = Color.green;
     [SerializeField] private Color defaultColor = Color.gray;
     [SerializeField] private Color activeColor = Color.yellow;
-    [SerializeField] private Color originalColor;
 
     private int minValue;
     private int maxValue;
     private int rolledValue;
     private DataGame.AttackData.Type attackType;
     private bool isRolled = false;
-
+    private Color originalColor;
 
     void Awake()
     {
-        // Сохраняем оригинальный цвет
         if (diceImage != null)
         {
             originalColor = diceImage.color;
@@ -37,22 +35,18 @@ public class DiceAttackRoll : MonoBehaviour
 
     public void Setup(DataGame.AttackData attackData)
     {
-        // Сохраняем данные
         minValue = attackData.RollMin;
         maxValue = attackData.RollMax;
         attackType = attackData.type;
         typeIcon.gameObject.SetActive(true);
         valueTextRoll.gameObject.SetActive(false);
 
-
-        // Отображаем диапазон
         if (valueText != null)
         {
             valueText.text = $"{minValue}-{maxValue}";
             valueText.color = Color.gray;
         }
 
-        // Устанавливаем цвет в зависимости от типа атаки
         if (diceImage != null)
         {
             switch (attackType)
@@ -72,18 +66,12 @@ public class DiceAttackRoll : MonoBehaviour
             }
         }
 
-        // Показываем иконку типа атаки
-        if (typeIcon != null)
-        {
-            // Можно загрузить иконку в зависимости от типа
-        }
-
         isRolled = false;
     }
 
     public void SetRollResult(int value)
     {
-        typeIcon.gameObject.SetActive(false );
+        typeIcon.gameObject.SetActive(false);
         valueTextRoll.gameObject.SetActive(true);
         rolledValue = value;
         isRolled = true;
@@ -93,27 +81,16 @@ public class DiceAttackRoll : MonoBehaviour
             valueTextRoll.text = value.ToString();
             valueTextRoll.color = Color.white;
         }
-
-        // Можно добавить анимацию или подсветку
-        if (diceImage != null)
-        {
-            // Подсвечиваем результат
-        }
     }
+
     public void SetActiveState(bool isActive)
     {
         if (diceImage != null)
         {
-            if (isActive)
-            {
-                diceImage.color = activeColor; // Желтый для активного
-            }
-            else
-            {
-                diceImage.color = originalColor; // Возвращаем оригинальный цвет
-            }
+            diceImage.color = isActive ? activeColor : originalColor;
         }
     }
+
     public void ResetDice()
     {
         isRolled = false;
@@ -126,13 +103,6 @@ public class DiceAttackRoll : MonoBehaviour
         }
     }
 
-    public int GetRolledValue()
-    {
-        return isRolled ? rolledValue : 0;
-    }
-
-    public bool IsRolled()
-    {
-        return isRolled;
-    }
+    public int GetRolledValue() => isRolled ? rolledValue : 0;
+    public bool IsRolled() => isRolled;
 }

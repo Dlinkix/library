@@ -1085,6 +1085,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalHandCardView
   cardRect: {fileID: 8251502841396679644}
+  hoverOffset: {x: 0, y: 40}
 --- !u!114 &6300123941406361704
 MonoBehaviour:
   m_ObjectHideFlags: 0

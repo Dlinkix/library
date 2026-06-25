@@ -18,7 +18,7 @@ public class NetworkManagerLobby : NetworkManager
 
     public List<NetworkRoomPlayerLobby> RoomPlayers { get; } = new List<NetworkRoomPlayerLobby>();
 
-    #region zalupa
+    #region Z
 
     public override void OnStartServer()
     {
