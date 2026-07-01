@@ -3572,7 +3572,6 @@ MonoBehaviour:
   syncInterval: 0
   actionDuration: 2
   endTurnDuration: 1.5
-  debugMode: 1
   rollingSound: {fileID: 8300000, guid: 9b4f812c9ea6dc8409c51ea2688b717f, type: 3}
   soundVolume: 0.5
 --- !u!114 &459144549
@@ -8012,7 +8011,6 @@ GameObject:
   - component: {fileID: 1109784088}
   - component: {fileID: 1109784087}
   - component: {fileID: 1109784086}
-  - component: {fileID: 1109784090}
   - component: {fileID: 1109784091}
   m_Layer: 5
   m_Name: Canvas
@@ -8104,31 +8102,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1109784090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1109784085}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cb2cb2521af6dcf458d6b2f7da8e61a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SceneMovement
-  backgroundImage: {fileID: 810987022}
-  moveSpeed: 0.2
-  maxOffset: 10
-  autoMove: 1
-  useMouseInput: 0
-  parallaxLayers:
-  - {fileID: 976302702}
-  - {fileID: 1222952123}
-  - {fileID: 1528163651}
-  parallaxSpeeds:
-  - 0.7
-  - 0.35
-  - 0.05
 --- !u!114 &1109784091
 MonoBehaviour:
   m_ObjectHideFlags: 0

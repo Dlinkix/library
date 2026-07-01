@@ -44,6 +44,14 @@ public class NetworkRoomPlayerLobby : NetworkBehaviour
     {
         CmdSetDisplayName(PlayerNameInput.DisplayName);
         lobbyUI.SetActive(true);
+        if (ChatManager.Instance == null && isServer)
+        {
+            Debug.Log("[NetworkRoomPlayerLobby] Создаем ChatManager");
+            GameObject chatManagerObj = new GameObject("ChatManager");
+            chatManagerObj.AddComponent<NetworkIdentity>();
+            ChatManager chatManager = chatManagerObj.AddComponent<ChatManager>();
+            NetworkServer.Spawn(chatManagerObj);
+        }
     }
 
     public override void OnStartClient()
